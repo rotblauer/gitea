@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	// Needed for the MySQL driver
+	"github.com/boltdb/bolt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
@@ -26,6 +27,7 @@ import (
 
 	"code.gitea.io/gitea/models/migrations"
 	"code.gitea.io/gitea/modules/setting"
+	"github.com/boltdb/bolt"
 )
 
 // Engine represents a xorm engine or session.
@@ -67,7 +69,14 @@ var (
 
 	// EnableTiDB enable TiDB
 	EnableTiDB bool
+
+	db *bolt.DB
 )
+
+// GetDB is db getter.
+func GetDB() *bolt.DB {
+	return db
+}
 
 func init() {
 	tables = append(tables,
@@ -111,6 +120,28 @@ func LoadConfigs() {
 	}
 	DbCfg.SSLMode = sec.Key("SSL_MODE").String()
 	DbCfg.Path = sec.Key("PATH").MustString("data/gitea.db")
+}
+
+func InitBoltDB() error {
+	sec := setting.Cfg.Section("server")
+	p := sec.Key("APP_DATA_PATH").String()
+	where := path.Join(p, "chat.db")
+
+	var err error
+	db, err = bolt.Open(where, 0666, nil)
+
+	// return err
+	if err != nil {
+		fmt.Println("Could not initialize Bolt database. ", err)
+	} else {
+		fmt.Println("Bolt db is initialized.")
+		db.Update(func(tx *bolt.Tx) error {
+			_, e := tx.CreateBucketIfNotExists([]byte("chat"))
+			return e
+		})
+	}
+	return err
+	// return GetDB()
 }
 
 // parsePostgreSQLHostPort parses given input in various forms defined in
