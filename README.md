@@ -1,4 +1,4 @@
-# Our ::gogs:: Gitea :heart:.
+# Our ~~gogs~~ Gitea :heart:.
 
 Note `gogs/.gitignore`.
 - `custom/`, where our config stuff lives, specifically `custom/conf/app.ini`.
@@ -18,7 +18,8 @@ $ ./darwin.gitea web -c custom/conf/dev.app.ini # Use a config flag to flag the 
 - ssh to Freya and `cd goggable.areteh.co/gogs`
 - `git fetch rb-gitea`
 - `git merge rb-gitea/rb` or whatever branch you want to update from
-- `psg gitea` .
+- `cd ~/goggable.areteh.co/ && ./kickstart`, where kickerstarter should run a linux build of gitea `web` command, use customizered `prod.app.ini` config file and redirect stderr+out to glogs/datestamped file and do it all in the muthafucking _bg_
+- `psg gitea`. Make sure is up.
 
 
 ### Troubleshooter.
