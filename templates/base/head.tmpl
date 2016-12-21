@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head data-suburl="{{AppSubUrl}}">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<meta name="author" content="{{if .Repository}}{{.Owner.Name}}{{else}}Gitea - Git with a cup of tea{{end}}" />
-	<meta name="description" content="{{if .Repository}}{{.Repository.Name}}{{if .Repository.Description}} - {{.Repository.Description}}{{end}}{{else}}Gitea (Git with a cup of tea) is a painless self-hosted Git service written in Go{{end}}" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="author" content="{{if .Repository}}{{.Owner.Name}}{{else}}Gogs - Go Git Service{{end}}" />
+	<meta name="description" content="{{if .Repository}}{{.Repository.Name}}{{if .Repository.Description}} - {{.Repository.Description}}{{end}}{{else}}Gogs (Go Git Service) is a painless self-hosted Git service written in Go{{end}}" />
 	<meta name="keywords" content="go, git, self-hosted, gogs">
 	<meta name="referrer" content="no-referrer" />
 	<meta name="_csrf" content="{{.CsrfToken}}" />
-	<meta name="_suburl" content="{{AppSubUrl}}" />
-	{{if .GoGetImport}}
-		<meta name="go-import" content="{{.GoGetImport}} git {{.CloneLink.HTTPS}}">
-		<meta name="go-source" content="{{.GoGetImport}} _ {{.GoDocDirectory}} {{.GoDocFile}}">
-	{{end}}
+	<meta name="_suburl" content="{{AppSubUrl}}" /> {{if .GoGetImport}}
+	<meta name="go-import" content="{{.GoGetImport}} git {{.CloneLink.HTTPS}}">
+	<meta name="go-source" content="{{.GoGetImport}} _ {{.GoDocDirectory}} {{.GoDocFile}}"> {{end}}
 
 	<link rel="shortcut icon" href="{{AppSubUrl}}/img/favicon.png" />
 
@@ -33,131 +32,411 @@
 
 	<!-- Stylesheet -->
 	<link rel="stylesheet" href="{{AppSubUrl}}/css/semantic-2.2.1.min.css">
-	<link rel="stylesheet" href="{{AppSubUrl}}/css/index.css?v={{MD5 AppVer}}">
+	<link rel="stylesheet" href="{{AppSubUrl}}/css/gogs.css?v={{MD5 AppVer}}">
 
 	<!-- JavaScript -->
 	<script src="{{AppSubUrl}}/js/semantic-2.2.1.min.js"></script>
-	<script src="{{AppSubUrl}}/js/index.js?v={{MD5 AppVer}}"></script>
+	<script src="{{AppSubUrl}}/js/gogs.js?v={{MD5 AppVer}}"></script>
+
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script> -->
+	<script src="{{AppSubUrl}}/js/marked.js"></script>
+
+	<!-- <script src="https://cdn.jsdelivr.net/markdown-it/8.2.2/markdown-it.min.js"></script> -->
+
+	<script src="{{AppSubUrl}}/js/snowstorm.js"></script>
 
 	<title>{{if .Title}}{{.Title}} - {{end}}{{AppName}}</title>
 
 	<meta name="theme-color" content="{{ThemeColorMetaTag}}">
 </head>
+
 <body>
 	<div class="full height">
-		<noscript>Please enable JavaScript in your browser!</noscript>
+		<noscript>Please enable JavaScript in your browser!</noscript> {{if not .PageIsInstall}}
 
-		{{if not .PageIsInstall}}
-			<div class="following bar light">
-				<div class="ui container">
-					<div class="ui grid">
-						<div class="column">
-							<div class="ui top secondary menu">
-								<a class="item brand" href="{{AppSubUrl}}/">
-									<img class="ui mini image" src="{{AppSubUrl}}/img/favicon.png">
-								</a>
+		  <script>
+		  $(function () {
 
-								{{if .IsSigned}}
-									<a class="item{{if .PageIsDashboard}} active{{end}}" href="{{AppSubUrl}}/">{{.i18n.Tr "dashboard"}}</a>
-									<a class="item{{if .PageIsIssues}} active{{end}}" href="{{AppSubUrl}}/issues">{{.i18n.Tr "issues"}}</a>
-									<a class="item{{if .PageIsPulls}} active{{end}}" href="{{AppSubUrl}}/pulls">{{.i18n.Tr "pull_requests"}}</a>
-								{{else}}
-									<a class="item{{if .PageIsHome}} active{{end}}" href="{{AppSubUrl}}/">{{.i18n.Tr "home"}}</a>
-								{{end}}
+		  	/// SEASONALS
+		  	/// ///////////////////
 
-								<a class="item{{if .PageIsExplore}} active{{end}}" href="{{AppSubUrl}}/explore/repos">{{.i18n.Tr "explore"}}</a>
-								{{/*<div class="item">
-									<div class="ui icon input">
-									<input class="searchbox" type="text" placeholder="{{.i18n.Tr "search_project"}}">
+		  	// Christmas lights.
+			  var hexables = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
+			  var hexablesMini = ['1', '4', '7', 'a', 'd'];
+			  var test = '000000';
+			  var colors = []; // ie {13, '#f231fk'}
+		  	var numColors = 4000;
+		  	var numChristmasLights = 100;
+		  	var windowWidth = $(document).width();
+		  	//make em dance
+		  	function updateRandomWithRandom(max, colors) {
+		  	  var index = getRandomNumber(max);
+		  	 $('#light-'+index)
+		  	 	.fadeOut('100')
+		  	 	.css({"background-color": getRandomColor})
+		  	 	.fadeIn('100');
+		  	}
+		  	function getRandomNumber(max) {
+		  	  return Math.floor(Math.random() * max);
+		  	}
+			  // http://stackoverflow.com/questions/1484506/random-color-generator-in-javascript
+			  function getRandomColor() {
+			      var letters = '0123456789ABCDEF'.split('');
+			      var color = '#'; //'#';
+			      for (var i = 0; i < 6; i++ ) {
+			          color += letters[Math.floor(getRandomNumber(letters.length))];
+			      }
+			      return color;
+			  }
+			  function celebrateChristmas() {
+			  	// colorize nav
+			  	$('.following.bar').addClass('nativity-nav');
+
+			  	// hang christmas lights
+			  	$('#christmas-lights-container-box').show();
+			  	$('#christmas-lights-container-box').css({'height': windowWidth/numChristmasLights});
+		  	  for (var i=1;i<numChristmasLights-1;i++) {
+		  	  	console.log('hanging light');
+		  	  	var div = document.createElement("div");
+		  	  	$(div).attr('id', 'light-' + i.toString())
+		  	  		.attr('class','christmas-light')
+		  		  	.css({
+		  		  		"background-color": getRandomColor(),
+		  		  		"width": windowWidth/numChristmasLights,
+		  		  		"margin-bottom": windowWidth/numChristmasLights,
+		  		  		"border-radius": '50%' });
+		  	  	$('#christmas-lights-container-box').append(div);
+		  	  }
+  	  	  // createPalette(hexables);
+  	    	var clockIt = function () {
+  	    	  updateRandomWithRandom(numChristmasLights, colors);
+  	    	  setTimeout(clockIt, 200); // Tick.
+  	    	};
+  	    	setTimeout(clockIt, 200);
+			  }
+
+			  function celebrateAmerica() {
+			  	$('.following.bar').addClass('fuck-yea-nav');
+			  }
+
+		  	// Check if is Christmas season.
+		  	var now = new Date();
+		  	var start = new Date(now.getFullYear(), 0, 0);
+		  	var diff = now - start;
+		  	var oneDay = 1000 * 60 * 60 * 24;
+		  	var day = Math.floor(diff / oneDay); // 'ordinal' day of year, 1-365/66
+
+		  	if (day > 330 || day < 15) {
+		  		celebrateChristmas();
+		  		// snowstorm timing in source public/js/snowstorm.js
+		  	} else if (now.getMonth() == 6 && now.getDate() == 4) {
+		  		celebrateAmerica();
+		  	}
+
+		  	/// /////////////////// !SEASONALS
+		  	///
+		  	/// GLOBALS.
+		  	///
+
+		  	// http://stackoverflow.com/questions/9101224/invert-text-color-of-a-specific-element-using-jquery
+		  	function invertHex(hexnum){
+		  	  if(hexnum.length != 6) {
+		  	    console.error("Hex color must be six hex numbers in length.");
+		  	    return false;
+		  	  }
+
+		  	  hexnum = hexnum.toUpperCase();
+		  	  var splitnum = hexnum.split("");
+		  	  var resultnum = "";
+		  	  var simplenum = "FEDCBA9876".split("");
+		  	  var complexnum = new Array();
+		  	  complexnum.A = "5";
+		  	  complexnum.B = "4";
+		  	  complexnum.C = "3";
+		  	  complexnum.D = "2";
+		  	  complexnum.E = "1";
+		  	  complexnum.F = "0";
+
+		  	  for(i=0; i<6; i++){
+		  	    if(!isNaN(splitnum[i])) {
+		  	      resultnum += simplenum[splitnum[i]];
+		  	    } else if(complexnum[splitnum[i]]){
+		  	      resultnum += complexnum[splitnum[i]];
+		  	    } else {
+		  	      console.error("Hex colors must only include hex numbers 0-9, and A-F");
+		  	      return false;
+		  	    }
+		  	  }
+
+		  	  return resultnum;
+		  	}
+
+		  	// Colorize commit sha1's everywhere.
+				$('.commit-id, .sha').each(function (index) {
+					var hashy = $(this).text();
+					console.log(index + " - " + hashy.substring(0,6));
+					$(this).css({"color": "#" + hashy.substring(0,6), "background-color": "#" + invertHex(hashy.substring(0,6))});
+				});
+
+				// and highlight news feed
+
+				// var md = window.markdownit(); // other opt (see 2nd cdn)
+				marked.setOptions({
+				  emoji: true // since changed default emoji dir location in marked.js
+				});
+
+				$('.news .content span.commit-mess').each(function(i, block) {
+					// console.log('marking down comms');
+					var t = $(this).text();
+					console.log(t);
+					var m = marked(t); // marked.js via cdn
+					$(this).html(m);
+					// var result = md.render(t);
+					// $(this).html(result);
+				});
+
+
+		  });
+		  </script>
+
+
+		<!-- Ho ho ho! -->
+		<style>
+
+			.nativity-nav {
+				background-color: darkred !important;
+			}
+			.nativity-nav a.item {
+				color: white !important;
+			}
+			.nativity-nav a.item.active {
+				color: white !important;
+				background-color: green !important;
+			}
+			#christmas-lights-container-box {
+				width: 100%;
+				/*background: white;*/
+				overflow: hidden;
+				display: hidden; /*show with hangChristmasLights() */
+				padding-left: 3px;
+			}
+			.christmas-light {
+				display: inline-block;
+				margin-left: 2px;
+				margin-right: 2px;
+				padding: 0px;
+				height: 100%;
+				/*margin-bottom: 3px; dunno why need this spacer*/
+			}
+		</style>
+
+		<style>
+			.fuck-yea-nav {
+				background-color: darkblue !important;
+			}
+			.fuck-yea-nav a.item {
+				color: white !important;
+			}
+			.fuck-yea-nav a.item.active {
+				color: white !important;
+				background-color: darkred !important;
+			}
+
+			/*cuz they're all sideways, don't they see that?!*/
+			.octicon-git-commit {
+				-webkit-transform: rotate(90deg);
+				 -moz-transform: rotate(90deg);
+				 -o-transform: rotate(90deg);
+				 -ms-transform: rotate(90deg);
+				 transform: rotate(90deg);
+
+
+			}
+			span.time-since.poping.up {
+				font-size: 10px;
+			}
+
+			.feeds .news .push.news .content ul img {
+				max-width: 100%;
+			}
+		/*	.text.mega-octicon.octicon-git-commit {
+				color: #4183C4 !important;
+			}
+
+			.octicon-repo {
+				color: darkgreen !important;
+			}*/
+		</style>
+
+		<div class="following bar light nativity-nav">
+
+			<!-- hidden usually... -->
+			<div id="christmas-lights-container-box" ></div>
+
+			<div class="ui container">
+				<div class="ui grid">
+					<div class="column">
+						<div class="ui top secondary menu">
+							<a class="item brand" href="{{AppSubUrl}}/">
+								<img class="ui mini image" src="{{AppSubUrl}}/img/favicon.png">
+							</a>
+
+
+							{{if .IsSigned}}
+							<a class="item{{if .PageIsDashboard}} active{{end}}" href="{{AppSubUrl}}/">{{.i18n.Tr "dashboard"}}</a>
+							<a class="item{{if .PageIsIssues}} active{{end}}" href="{{AppSubUrl}}/issues">{{.i18n.Tr "issues"}}</a>
+							<a class="item{{if .PageIsPulls}} active{{end}}" href="{{AppSubUrl}}/pulls">{{.i18n.Tr "pull_requests"}}</a> {{else}}
+							<a class="item{{if .PageIsHome}} active{{end}}" href="{{AppSubUrl}}/">{{.i18n.Tr "home"}}</a> {{end}}
+
+							<a class="item{{if .PageIsExplore}} active{{end}}" href="{{AppSubUrl}}/explore/repos">{{.i18n.Tr "explore"}}</a> {{/*
+							<div class="item">
+								<div class="ui icon input">
+									<input class="searchbox" type="text" placeholder="{{.i18n.Tr " search_project "}}">
 									<i class="search icon"></i>
-									</div>
-									</div>*/}}
+								</div>
+							</div>*/}} {{if .IsSigned}}
+							<div class="right menu">
 
-								{{if .IsSigned}}
-									<div class="right menu">
-										<div class="ui dropdown head link jump item poping up" data-content="{{.i18n.Tr "create_new"}}" data-variation="tiny inverted">
-											<span class="text">
-												<i class="octicon octicon-plus"><span class="sr-only">{{.i18n.Tr "create_new"}}</span></i>
-												<i class="octicon octicon-triangle-down"></i>
-											</span>
-											<div class="menu">
-												<a class="item" href="{{AppSubUrl}}/repo/create">
-													<i class="octicon octicon-plus"></i> {{.i18n.Tr "new_repo"}}
-												</a>
-												<a class="item" href="{{AppSubUrl}}/repo/migrate">
-													<i class="octicon octicon-repo-clone"></i> {{.i18n.Tr "new_migrate"}}
-												</a>
-												<a class="item" href="{{AppSubUrl}}/org/create">
-													<i class="octicon octicon-organization"></i> {{.i18n.Tr "new_org"}}
-												</a>
-											</div><!-- end content create new menu -->
-										</div><!-- end dropdown menu create new -->
 
-										<div class="ui dropdown head link jump item poping up" tabindex="-1" data-content="{{.i18n.Tr "user_profile_and_more"}}" data-variation="tiny inverted">
-											<span class="text avatar">
-												<img class="ui small rounded image" src="{{.SignedUser.RelAvatarLink}}">
-												<span class="sr-only">{{.i18n.Tr "user_profile_and_more"}}</span>
-												<i class="octicon octicon-triangle-down" tabindex="-1"></i>
-											</span>
-											<div class="menu" tabindex="-1">
-												<div class="ui header">
-													{{.i18n.Tr "signed_in_as"}} <strong>{{.SignedUser.Name}}</strong>
-												</div>
+								<!-- chatty	 -->
+								<span id="get-chatty" style="background-color: black; color: lightgreen;" class="item">
+												<i class="octicon octicon-squirrel"></i>
+												<span id="chat-unread-count"></span>
+								</span>
 
-												<div class="divider"></div>
-												<a class="item" href="{{AppSubUrl}}/{{.SignedUser.Name}}">
-													<i class="octicon octicon-person"></i>
-													{{.i18n.Tr "your_profile"}}<!-- Your profile -->
-												</a>
-												<a class="{{if .PageIsUserSettings}}active{{end}} item" href="{{AppSubUrl}}/user/settings">
-													<i class="octicon octicon-settings"></i>
-													{{.i18n.Tr "your_settings"}}<!-- Your settings -->
-												</a>
-												<a class="item" target="_blank" rel="noopener" href="https://docs.gitea.io" rel="noreferrer">
-													<i class="octicon octicon-question"></i>
-													{{.i18n.Tr "help"}}<!-- Help -->
-												</a>
-												{{if .IsAdmin}}
-													<div class="divider"></div>
+								<!-- cat hack -->
+								<a href="http://chat.areteh.co:5000/hack" style="color: darkblue;" target="_blank" class="item">
+												/hack <i class="octicon octicon-chevron-right"></i>
+									</a>
 
-													<a class="{{if .PageIsAdmin}}active{{end}} item" href="{{AppSubUrl}}/admin">
-														<i class="icon settings"></i>
-														{{.i18n.Tr "admin_panel"}}<!-- Admin Panel -->
-													</a>
-												{{end}}
+								<!-- etherpad -->
+								<!-- <a href="http://ether.areteh.co:9001" class="item" style="color: darkblue;" target="_blank"> -->
+								<!-- ether&nbsp;<i class="octicon octicon-keyboard"></i> -->
+								<!-- &nbsp;<i class="octicon octicon-chevron-right"></i></a> -->
 
-												<div class="divider"></div>
-												<a class="item" href="{{AppSubUrl}}/user/logout">
-													<i class="octicon octicon-sign-out"></i>
-													{{.i18n.Tr "sign_out"}}<!-- Sign Out -->
-												</a>
-											</div><!-- end content avatar menu -->
-										</div><!-- end dropdown avatar menu -->
-									</div><!-- end signed user right menu -->
+								<script>
+									$('span#get-chatty').click(function() {
+										$('#chatty').slideToggle(300);
+										window.setTimeout(function() {
+											$('#chat-messages-container').scrollTop($('#chat-messages-container').prop('scrollHeight') + 50);
+											// fancify animation...
+											// $('#chat-messages-container').animate({scrollTop: $('#chat-messages-container').prop('scrollHeight') + 50}, 500);
+											return false;
+										}, 100);
 
-								{{else}}
+									});
+								</script>
 
-									<a class="item" target="_blank" rel="noopener" href="https://docs.gitea.io" rel="noreferrer">{{.i18n.Tr "help"}}</a>
-									<div class="right menu">
-										{{if .ShowRegistrationButton}}
-											<a class="item{{if .PageIsSignUp}} active{{end}}" href="{{AppSubUrl}}/user/sign_up">
-												<i class="octicon octicon-person"></i> {{.i18n.Tr "register"}}
-											</a>
-										{{end}}
-										<a class="item{{if .PageIsSignIn}} active{{end}}" href="{{AppSubUrl}}/user/login?redirect_to={{.Link}}">
-											<i class="octicon octicon-sign-in"></i> {{.i18n.Tr "sign_in"}}
+
+								<div class="ui dropdown head link jump item poping up" data-content="{{.i18n.Tr " create_new "}}" data-variation="tiny inverted">
+									<span class="text">
+													<i class="octicon octicon-plus"><span class="sr-only">{{.i18n.Tr "create_new"}}</span></i>
+									<i class="octicon octicon-triangle-down"></i>
+									</span>
+									<div class="menu">
+										<a class="item" href="{{AppSubUrl}}/repo/create">
+											<i class="octicon octicon-plus"></i> {{.i18n.Tr "new_repo"}}
 										</a>
-									</div><!-- end anonymous right menu -->
+										<a class="item" href="{{AppSubUrl}}/repo/migrate">
+											<i class="octicon octicon-repo-clone"></i> {{.i18n.Tr "new_migrate"}}
+										</a>
+										<a class="item" href="{{AppSubUrl}}/org/create">
+											<i class="octicon octicon-organization"></i> {{.i18n.Tr "new_org"}}
+										</a>
+									</div>
+									<!-- end content create new menu -->
+								</div>
+								<!-- end dropdown menu create new -->
 
+								<div class="ui dropdown head link jump item poping up" tabindex="-1" data-content="{{.i18n.Tr " user_profile_and_more "}}" data-variation="tiny inverted">
+									<span class="text avatar">
+													<img class="ui small rounded image" src="{{.SignedUser.AvatarLink}}">
+													<span class="sr-only">{{.i18n.Tr "user_profile_and_more"}}</span>
+									<i class="octicon octicon-triangle-down" tabindex="-1"></i>
+									</span>
+									<div class="menu" tabindex="-1">
+										<div class="ui header">
+											{{.i18n.Tr "signed_in_as"}} <strong>{{.SignedUser.Name}}</strong>
+										</div>
+
+										<div class="divider"></div>
+										<a class="item" href="{{AppSubUrl}}/{{.SignedUser.Name}}">
+											<i class="octicon octicon-person"></i> {{.i18n.Tr "your_profile"}}
+											<!-- Your profile -->
+										</a>
+										<a class="{{if .PageIsUserSettings}}active{{end}} item" href="{{AppSubUrl}}/user/settings">
+											<i class="octicon octicon-settings"></i> {{.i18n.Tr "your_settings"}}
+											<!-- Your settings -->
+										</a>
+										<a class="item" target="_blank" href="http://gogs.io/docs" rel="noreferrer">
+											<i class="octicon octicon-question"></i> {{.i18n.Tr "help"}}
+											<!-- Help -->
+										</a>
+										{{if .IsAdmin}}
+										<div class="divider"></div>
+
+										<a class="{{if .PageIsAdmin}}active{{end}} item" href="{{AppSubUrl}}/admin">
+											<i class="icon settings"></i> {{.i18n.Tr "admin_panel"}}
+											<!-- Admin Panel -->
+										</a>
+										{{end}}
+
+										<div class="divider"></div>
+										<a class="item" href="{{AppSubUrl}}/user/logout">
+											<i class="octicon octicon-sign-out"></i> {{.i18n.Tr "sign_out"}}
+											<!-- Sign Out -->
+										</a>
+									</div>
+									<!-- end content avatar menu -->
+								</div>
+								<!-- end dropdown avatar menu -->
+							</div>
+							<!-- end signed user right menu -->
+
+							{{else}}
+
+					<!-- 		<a class="item" target="_blank" href="http://gogs.io/docs" rel="noreferrer">{{.i18n.Tr "help"}}</a> -->
+							<div class="right menu">
+								{{if .ShowRegistrationButton}}
+								<a class="item{{if .PageIsSignUp}} active{{end}}" href="{{AppSubUrl}}/user/sign_up">
+									<i class="octicon octicon-person"></i> {{.i18n.Tr "register"}}
+								</a>
 								{{end}}
-							</div><!-- end top menu -->
-						</div><!-- end column -->
-					</div><!-- end grid -->
-				</div><!-- end container -->
-			</div><!-- end bar -->
+								<a class="item{{if .PageIsSignIn}} active{{end}}" href="{{AppSubUrl}}/user/login">
+									<i class="octicon octicon-sign-in"></i> {{.i18n.Tr "sign_in"}}
+								</a>
+							</div>
+							<!-- end anonymous right menu -->
+
+							{{end}}
+						</div>
+						<!-- end top menu -->
+					</div>
+					<!-- end column -->
+				</div>
+				<!-- end grid -->
+			</div>
+			<!-- end container -->
+		</div>
+		<!-- end bar -->
+
+
+		<!-- feeling chatty kathy? -->
+		{{if .IsSigned}}
+		<!-- <div id='chatty' class="ui container" style="display: none;"> -->
+		<!-- 	<iframe id="theFrame" src="http://www.chat.areteh.co:5000" style="width:100%; height: 60vh;" frameborder="0"> -->
+		<!-- 	</iframe> -->
+		<!-- </div> -->
+		<div id="chatty" class="ui container " style="display: none;">
+			{{ template "chat/chat.tmpl" . }}
+		</div>
 		{{end}}
-{{/*
+
+
+
+		{{end}} {{/*
 	</div>
 </body>
+
 </html>
 */}}
