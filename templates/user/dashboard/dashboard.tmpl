@@ -3,10 +3,45 @@
 	{{template "user/dashboard/navbar" .}}
 	<div class="ui container">
 		<div class="ui grid">
-			<div class="ten wide column">
-				{{template "user/dashboard/feeds" .}}
-			</div>
 			<div class="six wide column">
+				<!-- xkcd -->
+				<script>
+					$(function () {
+
+						// xkcd comic of the day json here
+						// http://xkcd.com/info.0.json
+						// {"month": "11", "num": 1766, "link": "", "year": "2016", "news": "", "safe_title": "Apple Spectrum", "transcript": "", "alt": "If I were trapped on a desert island, and could have an unlimited supply of any one type of apple, I'd be like, \"How did this situation happen?\"", "img": "http:\/\/imgs.xkcd.com\/comics\/apple_spectrum.png", "title": "Apple Spectrum", "day": "30"}
+
+						var linker; // for xkcd link
+						// this is a dynamic mirrory JSONP version of the plain old JSON
+						$.getJSON('http://dynamic.xkcd.com/api-0/jsonp/comic/?callback=?', function (data) {
+						    console.log(data);
+						    linker = data.img;
+						    $("<p></p>").html(data.safe_title + ": " + data.alt).addClass("text light gray").appendTo("#xkcd-image");
+						    $( "<img>" ).attr( "src", data.img ).appendTo( "#xkcd-image" );
+						});
+						// click to see raw bigger img (in new window)
+						$('#xkcd-image').click(function () {
+							window.open(linker);
+							return false;
+						})
+					});
+				</script>
+				<style>
+				    #xkcd-image img {
+				        max-width: 100%;
+				    }
+				    #xkcd-image {
+				    	background-color: #f0f0f0;
+				    	padding: 10px;
+				    	border-radius: 5px
+				    }
+				</style>
+
+				<!-- the latest and greatest tttweets -->
+				<a class="twitter-timeline" href="https://twitter.com/tophtucker" data-tweet-limit="1">Tweets by tophtucker</a>
+				<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 				<div class="ui {{if not .ContextUser.IsOrganization}}three{{else}}two{{end}} item tabable menu">
 					<a class="item active" data-tab="repos">{{.i18n.Tr "repository"}}</a>
 					{{if not .ContextUser.IsOrganization}}
@@ -124,7 +159,15 @@
 						</ul>
 					</div>
 				</div>
+
+				<!-- xkcd down below -->
+				<div id="xkcd-image"></div>
 			</div>
+
+			<div class="ten wide column">
+				{{template "user/dashboard/feeds" .}}
+			</div>
+
 		</div>
 	</div>
 </div>

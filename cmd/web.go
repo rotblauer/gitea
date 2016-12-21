@@ -39,6 +39,8 @@ import (
 	"github.com/go-macaron/toolbox"
 	"github.com/urfave/cli"
 	macaron "gopkg.in/macaron.v1"
+
+	"github.com/olahol/melody"
 )
 
 // CmdWeb represents the available web sub-command.
@@ -181,6 +183,57 @@ func runWeb(ctx *cli.Context) error {
 	m.Combo("/install", routers.InstallInit).Get(routers.Install).
 		Post(bindIgnErr(auth.InstallForm{}), routers.InstallPost)
 	m.Get("/^:type(issues|pulls)$", reqSignIn, user.Issues)
+
+	// ***** START: Chatty Kathy *****
+
+	mm := melody.New()
+	mm.Config.MaxMessageSize = 1024 * 1000
+
+	// Open Bolt DB.
+	if bolterr := models.InitBoltDB(); bolterr == nil {
+		defer models.GetDB().Close()
+	}
+
+	// Chat.
+	// Incoming is a json stringified message obj or '[!]***' string for typing status
+	mm.HandleMessage(func(s *melody.Session, msg []byte) {
+
+		fmt.Println("Handling WS message:")
+		fmt.Println(string(msg))
+
+		// is typing
+		if string(msg) == "***" {
+			mm.BroadcastOthers([]byte("***"), s)
+
+			// is not typing
+		} else if string(msg) == "!***" {
+			mm.BroadcastOthers([]byte("!***"), s)
+
+			// sent message
+		} else {
+			ps1, err := models.SaveChatMsg(s, msg)
+			if err != nil {
+				fmt.Println(err)
+			}
+			mm.Broadcast(ps1)
+		}
+
+		// // Now check for @SMS.
+		// go func() {
+		// 	_, err := catchat.DelegateSendSMS(msg)
+		// 	if err != nil {
+		// 		log.Fatalln(err)
+		// }
+		// }()
+	})
+
+	m.Get("/chat-ws", reqSignIn, func(resp http.ResponseWriter, req *http.Request) {
+		// resp and req injected by Macaron
+		mm.HandleRequest(resp, req)
+	})
+	// Get chat messages json.
+	m.Get("/r/chat", reqSignIn, chat.GetChatData) // Get chat.txt database.
+	// ***** END: Chatty Kathy *****
 
 	// ***** START: User *****
 	m.Group("/user", func() {
