@@ -24,7 +24,6 @@ import (
 
 	"code.gitea.io/gitea/models/migrations"
 	"code.gitea.io/gitea/modules/setting"
-	"github.com/boltdb/bolt"
 )
 
 // Engine represents a xorm engine or session.

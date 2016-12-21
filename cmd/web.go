@@ -25,6 +25,7 @@ import (
 	"code.gitea.io/gitea/routers"
 	"code.gitea.io/gitea/routers/admin"
 	apiv1 "code.gitea.io/gitea/routers/api/v1"
+	"code.gitea.io/gitea/routers/chat"
 	"code.gitea.io/gitea/routers/dev"
 	"code.gitea.io/gitea/routers/org"
 	"code.gitea.io/gitea/routers/repo"
