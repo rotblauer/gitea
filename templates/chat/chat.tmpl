@@ -1,0 +1,364 @@
+{{ define "chat/chat.tmpl" }}
+
+
+
+
+  <!-- bootstrap -->
+ <!-- <link rel="stylesheet" href="{{AppSubUrl}}/assets/bootstrap-3.3.6-dist/css/bootstrap.min.css"> -->
+
+  <!-- momentjs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+
+ <!-- highlightjs   -->
+ <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/default.min.css">
+ <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
+
+ <script src="{{AppSubUrl}}/js/apple-notify.js"></script>
+
+ <link href="{{AppSubUrl}}/css/chat.css" rel="stylesheet"/>
+
+
+		<div id="catRoom" >
+
+			<!-- DISCONNECTED ALERT -->
+        <div id="disconnected-alert" style="display: none;">
+        <div style="display: table; position: absolute; z-index: 100; margin-left: auto; margin-right: auto; text-align: center; width: 90%; height: 60vh; background: rgba(200, 10, 10, 0.4);" class="text-center">
+          <h1 id="disconnected-text" style="display: table-cell; vertical-align: middle;" class="ui text blue">
+            You've been disconnected, please try refreshing.
+          </h1>
+        </div>
+        </div>
+
+      <div id="chat-messages-container">
+          <div id="chat-messages" class="ui grid"></div>
+      </div>
+                <div class="input-holder " >
+                  <div class="form-group">
+                    <span id="other-is-typing" style="display: none; float: left; z-index: 50; color: white; background-color: dodgerblue;" class="label label-info">Somebody else is typing...</span>
+      							<span id="count-remaining-characters" style="display: none; float: right; z-index: 50; color: white; background-color: darkred;" class="label label-info">5000/5000</span>
+                    <textarea class="form-control" placeholder="$ echo" rows="3" id="text" type="text"></textarea>
+
+                  </div>
+                </div>
+        <!-- <a id="open-chatty-full" class="ui right text blue" target="_blank" href="http://www.chat.areteh.co:5000"><span class="octicon octicon-device-desktop"></span></a> -->
+
+					<!-- NOTICES (INPUT ADVICE) -->
+          <!-- <p id="hold-text-input-advice" style="padding-left: 1rem; padding-right: 1rem; background: lightgreen; font-family: monospace;"> -->
+          <!-- <small id="toggle-text-input-advice">?</small> -->
+          <!-- <small id="text-input-advice" style="display:none;"> -->
+          <!-- <br> -->
+          <!-- shift-return to begin newline <br><br> -->
+          <!--   ~~<del>strikethrough</del>~~<br> -->
+          <!--   <em>_italic_</em><br> -->
+          <!--   <strong>__bold__</strong><br> -->
+          <!--   <code>`code`</code><br> -->
+          <!--   [linkalias](href)<br> -->
+          <!--   ```&lt;language&gt;<br> -->
+          <!--   codefence <br> -->
+          <!--   ```<br> -->
+          <!-- </small> -->
+          <!-- </p> -->
+          <!-- <script> -->
+          <!--   $("#hold-text-input-advice").click(function () { -->
+          <!--     $("#text-input-advice").toggle(); -->
+          <!--   }); -->
+          <!-- </script> -->
+
+					  <!-- FORM GROUP INPUT -->
+
+
+
+    </div>
+
+
+	  <script>
+
+	  	$(function() {
+	  	        var url = "ws://" + window.location.host + "/chat-ws";
+	  	        var ws = new WebSocket(url);
+	  	        var chat = $("#chat-messages");
+	  	        var text = $("#text");
+	  	        var isTypingDisplay = $("#other-is-typing");
+	  	        var data = [];
+	  	        var ipData = {};
+	  	        var maxMessageLength = 5000; // :christmas_treeeeeeeeee:. damn hackers keep pushing the limits of what's possible.
+	  	        // function doEmojify() {
+	  	        // 	emojify.run(chat);
+	  	        // }
+
+	  	        var entityMap = {
+	  	          "&": "&amp;",
+	  	          "<": "&lt;",
+	  	          ">": "&gt;",
+	  	          '"': '&quot;',
+	  	          "'": '&#39;',
+	  	          "/": '&#x2F;'
+	  	        };
+
+	  	        function escapeHtml(string) {
+	  	          return String(string).replace(/[&<>"'\/]/g, function (s) {
+	  	            return entityMap[s];
+	  	          });
+	  	        }
+	  	        function formatDate(unixString, form) {
+
+	  	        		// unix is a unix timestamp in milliseconds
+	  	        		if (unixString) { // check if present
+	  	        			var a = moment(parseInt(unixString));
+	  	        			var b = a.toNow(true)//.local().format(form);
+	  	        			if (a.isValid()) {
+	  	        				return b + " ago";
+	  	        			} else {
+	  	        				return unixString;
+	  	        			}
+	  	        		} else {
+	  	        			return "";
+	  	        		}
+	  	        }
+	  	        function emphasizeHTML(string) {
+	  	            return '<em>' + string + '</em>';
+	  	        }
+	  	        function smallifyHTML(string) {
+	  	            return '<small>' + string + '</small>';
+	  	        }
+	  	        function strongifyHTML(string) {
+	  	            return '<strong>' + string + '</strong>';
+	  	        }
+	  	        function classifyString(string, classs) {
+	  	            return '<span class="' + classs + '">' + string + '</span>';
+	  	        }
+	  	        function formatPS1(line) {
+	  	            /* console.log("formatting line: " + JSON.stringify(line));*/
+	  	            var ps = "";
+	  	            var m = ''; // printable message
+	  	            // check if is a typing status...
+	  	            if (line["unix"] === "") {
+	  	                return "";
+	  	            }
+	  	          	// var out = "<div style='display: table-row; margin-top: 10px; ' >";
+	  	          	var out = "<div class='ui row ancatline' >";
+	  	            var timeFormat = "kk:mmdddDMMM";
+	  	            // var ps = "<div style='display: table-cell;vertical-align: top; min-width:300px;' >";
+	  	             var ps = "<div class='ui five wide column' style='text-align: right;'>";
+	  	            ps += "<span style='color: palegreen;'>" + formatDate(line["unix"], timeFormat) + " | " + "</span>";
+								if (line['userId'] > 0) {
+									ps += strongifyHTML(line["userName"] + "@" + line["city"]) + " $ " + "</div>";
+								} else {
+	  	            ps += strongifyHTML(line["city"]) + " $ " + "</div>";
+								}
+
+
+								if (line["message"].length > maxMessageLength) {
+									m = line["message"].substring(0,maxMessageLength);
+								} else {
+									m = line["message"];
+								}
+  	            // var says = '<div class="ui chat-message has-emoji" style="display: table-cell; padding-left: 10px;vertical-align: top;">' + m + '</div>';
+  	            var says = '<div class="ui eleven wide column chat-message">' + m + '</div>';
+  	            out += ps + says;
+  	            out += "</div>";
+  	            return out;
+	  	        }
+	  	        // get JSON.parsed data now
+	  	        function renderData(data) {
+	  	            html = "";
+	  	            $.each(data, function() {
+	  	                // console.log(this);
+	  	                html += formatPS1(this);
+	  	            });
+	  	            chat.html(html);
+	  	            // highlight.js each pre
+	  	            $('pre').each(function(i, block) {
+	  	                hljs.highlightBlock(block);
+	  	            });
+
+	  	           	// add class .has-emoji to each chat-message's child element type 'p'
+	  	            $('.chat-message').children('p').addClass('has-emoji is-chat-p');
+
+	  	            var hasEmoji = document.getElementsByClassName('has-emoji');
+	  	            for (var i = 0; i < hasEmoji.length; i++) {
+	  	                emojify.run(hasEmoji[i]);
+	  	            }
+	  	        }
+	  	        function showOtherIsTyping() {
+	  	            isTypingDisplay.show();
+	  	        }
+	  	        function hideOtherIsTyping() {
+	  	            isTypingDisplay.hide();
+	  	        }
+	  	        function scrollChat() {
+	  	            var div = $('#chat-messages-container');
+	  	            div.scrollTop(div.prop('scrollHeight') + 50);
+	  	        }
+	  	        function getChatJSON() {
+	  	            $.ajax({
+	  	                type: "GET",
+	  	                url: "/r/chat",
+	  	                error: function(e) {
+	  	                  console.log("Error ajaxing chat data.");
+	  										console.log(e);
+	  	                },
+	  	                success: function(res) {
+												console.log('got messages')
+	  	                  /* console.log("Got AJAX chat/r: ", res);*/
+	  	                    data = res;
+	  	                    renderData(res);
+	  	                    scrollChat();
+	  	                    // doEmojify();
+								        /* console.log('data -> ', data);*/
+												if (chatIsHidden()) {
+													notifyUnreadMessages();
+												}
+
+	  	                }
+	  	            });
+	  	        }
+	  	        function strip(html) {
+	  	            var tmp = document.createElement("DIV");
+	  	            tmp.innerHTML = html;
+	  	            return tmp.textContent || tmp.innerText || "";
+	  	        }
+	  	        // Get ip
+	  	        $.getJSON('//freegeoip.net/json/?callback=?', function(data) {
+	  	            ipData = data;
+	  	        });
+
+
+				function notifyUnreadMessages() {
+					var numberUnread = countMessagesLaterThan(getLastTimeRead());
+					if (numberUnread > 0) {
+             return setUnreadNotifier(numberUnread);
+					}
+					return false;
+				}
+				function countMessagesLaterThan(timeUnixMilliseconds) {
+					var c = 0;
+					for (var i = 0; i < data.length; i++) {
+						var msg = data[i];
+						if (( parseInt( msg['unix'] ) > timeUnixMilliseconds ) && (msg['userId'] !== {{.SignedUser.ID}})) {
+							c++;
+						}
+					}
+					return c;
+				}
+				function getLastTimeRead() {
+					return window.localStorage.getItem('squirrel_chat_last_open');
+				}
+				function setLastTimeRead(to) {
+					return window.localStorage.setItem('squirrel_chat_last_open', to);
+				}
+				function setUnreadNotifier(to) {
+					$('#chat-unread-count').text(to);
+				}
+				function chatIsHidden() {
+				  return $('#chatty').is(":hidden");
+				}
+
+				// Set last read time to now. On opening and closing chat window.
+				$('#get-chatty').on('click', function() {
+						setLastTimeRead(Date.now());
+					  setUnreadNotifier(''); // clear notifier
+				});
+				/* console.log('countMessagesLaterThan', countMessagesLaterThan());*/
+
+				ws.onopen = function (evt) {
+					console.log('ws connected');
+				};
+	  	  ws.onclose = function(evt) {
+	  	    $('#disconnected-alert').show();
+	  	  };
+	  	  ws.onmessage = function(msgEvt) {
+					console.log("got message");
+   				/* console.log("WSonmessage: ", msgEvt);*/
+
+	  	    // If the message is not about another person typing.
+	  	      if (msgEvt.data !== "***" && msgEvt.data !== "!***") {
+	  	        var formattedMsg = JSON.parse(msgEvt.data);
+	  	        hideOtherIsTyping();
+	  	        data.push(formattedMsg);
+	  	        chat.append(formatPS1(formattedMsg));
+	  	        // local notification.
+								/* console.log("ipData.ip: " + ipData.ip);*/
+							/* console.log("formattedMsg['ip']: " + formattedMsg['ip']);*/
+
+	  	        if (ipData.ip !== formattedMsg['ip']) {
+	  	          notify({
+	  	            text: strip(formattedMsg['message']),
+	  	            body: formattedMsg['city'],
+	  	            tag: formattedMsg['unixNano']
+	  	          });
+	  	        }
+	  	        scrollChat();
+							if (chatIsHidden()) {
+								notifyUnreadMessages();
+							}
+
+							// doEmojify();
+							var hasEmoji = document.getElementsByClassName('has-emoji');
+							for (var i = 0; i < hasEmoji.length; i++) {
+							    emojify.run(hasEmoji[i]);
+							}
+
+	  	      // If another person is typing.
+	  	      } else if (msgEvt.data === "***") {
+	  	        // other is typing
+	  	        showOtherIsTyping();
+	  	      // Another person is not typing anymore.
+	  	      } else if (msgEvt.data === "!***") {
+	  	        hideOtherIsTyping();
+	  	      }
+	  	  };
+
+	  	  $('.form-group').on('input', '#text', function() {
+	  	    // console.log("I inputted! Value: " + $("#text").val());
+
+	  	    var v = $('#text').val();
+	  	    if (v.length > maxMessageLength) {
+	  	    	$('#count-remaining-characters').show().text((maxMessageLength - v.length).toString() + "/" + maxMessageLength.toString());
+	  	    }
+	  	    if (v !== "") {
+	  	      ws.send('***');
+	  	    } else {
+	  	      ws.send("!***");
+	  	    }
+	  	  });
+	  	  function makeOutgoingMessage(rawMessage) {
+	  	    return {
+	  	      // http://stackoverflow.com/questions/6002808/is-there-any-way-to-get-current-time-in-nanoseconds-using-javascript
+	  	      unixNano: ( 1000 * (window.performance.timing.navigationStart + window.performance.now()) ).toString(), // awesome...
+	  	      unix: ( Date.now() / 1 ).toString(),
+	  	      message: rawMessage.substring(0,maxMessageLength),
+	  	      ip: ipData.ip,
+	  	      lat: ipData.latitude.toString(),
+	  	      lon: ipData.longitude.toString(),
+	  	      city: ipData.city,
+	  	      subdiv: ipData.region_name,
+	  	      countryIsoCode: ipData.country_code,
+	  	      tz: ipData.time_zone,
+						// sign it
+						userName: {{.SignedUser.Name}},
+						userId: {{.SignedUser.ID}}
+	  	    };
+	  	  }
+	  	  // Push return to send message.
+	  	    text.keyup(function(e) {
+	  	      if (!e.shiftKey && e.which == 13 && $.trim(text.val()).length > 0) {
+	  	        var formattedMsg = makeOutgoingMessage(text.val());
+	  	        /* console.log("sending message: " + JSON.stringify(formattedMsg, null, 2));*/
+	  	        ws.send(JSON.stringify(formattedMsg));
+	  	        // Reset text value
+	  	        text.val('');
+	  	        $('#count-remaining-characters').text(maxMessageLength.toString() + "/" + maxMessageLength.toString());
+	  	      }
+	  	    });
+	  	  // get data and handle it on doc ready
+	  	  getChatJSON();
+	  	});
+	  </script>
+
+
+
+
+
+
+		{{ end }}
