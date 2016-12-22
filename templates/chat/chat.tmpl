@@ -140,7 +140,7 @@
 	  	            var timeFormat = "kk:mmdddDMMM";
 	  	            // var ps = "<div style='display: table-cell;vertical-align: top; min-width:300px;' >";
 	  	             var ps = "<div class='ui five wide column' style='text-align: right;'>";
-	  	            ps += "<span style='color: palegreen;'>(" + formatDate(line["unix"], timeFormat) + "@" + "</span>";
+	  	            ps += "<span style='color: palegreen;'>" + formatDate(line["unix"], timeFormat) + ",";
 								// if have user id, we should
 								if (line['userId'] > 0) {
 									//ps += strongifyHTML(line["userName"] + "@" + line["city"]) + " $ " + "</div>";
@@ -148,6 +148,7 @@
 									ps += ") "
 									ps += strongifyHTML(line["userName"]);
 									ps += " $ ";
+									ps += "</span>"
 									ps += "</div>";
 								} else {
 	  	            				ps += strongifyHTML(line["city"]) + " $ " + "</div>";
