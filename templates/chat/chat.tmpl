@@ -360,7 +360,7 @@
                 url: "//textbelt.com/text",
                 data: {
                 	"number": parseInt(phoneNum),
-                	"message": encodeURIComponent(message + " <3 " + {{.SignedUser.Name}} + "@rbgit")
+                	"message": message + " <3 " + {{.SignedUser.Name}} + "@rbgit"
                 },
                 error: function(e) {
                   alert("Error ajax posting sms to " + recipient + "\nCheck the console logs.");
