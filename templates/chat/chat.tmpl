@@ -329,6 +329,49 @@
 	  	      ws.send("!***");
 	  	    }
 	  	  });
+
+	  	  function storePhonenumber(recipient) {
+	  	  	var personsNumber = prompt("Please enter the mobile phone number of " + recipient, "1113334444");
+  	  	    if (personsNumber != null) {
+  	  	        // document.getElementById("demo").innerHTML =
+  	  	        // "Hello " + personsNumber + "! How are you today?";
+  	  	        localStorage.setItem("gitea-phonebook-" + recipient, personsNumber.trim());
+  	  	        return personsNumber.trim();
+  	  	    } else {
+  	  	    	return null;
+  	  	    }
+	  	  }
+
+	  	  function sendSMS(recipient, message) {
+
+	  	  	var phoneNum = localStorage.getItem("gitea-phonebook-" + recipient);
+	  	  	if (phoneNum == null) {
+	  	  		num = storePhonenumber(recipient);
+	  	  		if (num) {
+	  	  			phoneNum = num;
+	  	  		} else {
+	  	  			alert("can't send sms without phone number");
+	  	  			return null;
+	  	  		}
+	  	  	}
+
+            $.ajax({
+                type: "POST",
+                url: "//textbelt.com/text",
+                data: {
+                	"number": parseInt(phoneNum),
+                	"message": encodeURIComponent(message + " <3 " + {{.SignedUser.Name}} + "@rbgit")
+                },
+                error: function(e) {
+                  alert("Error ajax posting sms to " + recipient + "\nCheck the console logs.");
+					console.log(e);
+                },
+                success: function(res) {
+					alert('sent sms OK')
+                    console.log(res);
+                }
+            });
+	  	  }
 	  	  function makeOutgoingMessage(rawMessage) {
 	  	    return {
 	  	      // http://stackoverflow.com/questions/6002808/is-there-any-way-to-get-current-time-in-nanoseconds-using-javascript
@@ -347,12 +390,34 @@
 						userId: {{.SignedUser.ID}}
 	  	    };
 	  	  }
+
+	  	  // check for smssering
+	  	  function delegateSMS(message) {
+	  	  	// var str = 'here  jl@ there bubbafett';
+	  	  	var re = /@(\w*)/g;
+	  	  	var found = str.match(message);
+	  	  	if (found == null) {
+	  	  		return null;
+	  	  	}
+
+	  	  	name = found.replace("@", "");
+	  	  	if (name === "") {
+	  	  		return null;
+	  	  	}
+
+	  	  	return sendSMS(name, message)
+
+	  	  }
 	  	  // Push return to send message.
 	  	    text.keyup(function(e) {
 	  	      if (!e.shiftKey && e.which == 13 && $.trim(text.val()).length > 0) {
 	  	        var formattedMsg = makeOutgoingMessage(text.val());
 	  	        /* console.log("sending message: " + JSON.stringify(formattedMsg, null, 2));*/
 	  	        ws.send(JSON.stringify(formattedMsg));
+
+	  	        // send sms if @someone
+	  	        delegateSMS(text.val());
+
 	  	        // Reset text value
 	  	        text.val('');
 	  	        $('#count-remaining-characters').text(maxMessageLength.toString() + "/" + maxMessageLength.toString());
