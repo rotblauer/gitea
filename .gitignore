@@ -48,6 +48,7 @@ coverage.out
 # ie darwin.gitea, linux.gitea
 /darwin.gitea
 /linux.gitea
+/gogs
 # This is binary build, ie `gogs` which somehow is depended on for some
 # repo's git hooks. It will be rynced to the server.
 /gogs
