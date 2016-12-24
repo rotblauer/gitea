@@ -296,15 +296,16 @@
 	  	          });
 	  	        }
 	  	        scrollChat();
-							if (chatIsHidden()) {
-								notifyUnreadMessages();
-							}
 
-							// doEmojify();
-							var hasEmoji = document.getElementsByClassName('has-emoji');
-							for (var i = 0; i < hasEmoji.length; i++) {
-							    emojify.run(hasEmoji[i]);
-							}
+					if (chatIsHidden()) {
+						notifyUnreadMessages();
+					}
+
+					// doEmojify();
+					var hasEmoji = document.getElementsByClassName('has-emoji');
+					for (var i = 0; i < hasEmoji.length; i++) {
+					    emojify.run(hasEmoji[i]);
+					}
 
 	  	      // If another person is typing.
 	  	      } else if (msgEvt.data === "***") {
@@ -314,7 +315,17 @@
 	  	      } else if (msgEvt.data === "!***") {
 	  	        hideOtherIsTyping();
 	  	      }
+
+	  	      ensureMarked();
 	  	  };
+	  	  function ensureMarked() {
+	  	  	$('.is-chat-p').each(function(i, el) {
+	  	  		// console.log('marking down comms');
+	  	  		var t = $(this).text();
+	  	  		var m = marked(t); // marked.js via cdn
+	  	  		$(this).html(m);
+	  	  	});
+	  	  }
 
 	  	  $('.form-group').on('input', '#text', function() {
 	  	    // console.log("I inputted! Value: " + $("#text").val());
@@ -329,6 +340,7 @@
 	  	      ws.send("!***");
 	  	    }
 	  	  });
+
 
 	  	  function storePhonenumber(recipient) {
 	  	  	var personsNumber = prompt("Please enter the mobile phone number of " + recipient, "1113334444");
