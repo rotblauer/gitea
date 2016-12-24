@@ -46,7 +46,8 @@ coverage.out
 
 # Rotblauer naming convention for binary builds.
 # ie darwin.gitea, linux.gitea
-*.gitea
+/darwin.gitea
+/linux.gitea
 # This is binary build, ie `gogs` which somehow is depended on for some
 # repo's git hooks. It will be rynced to the server.
 /gogs
