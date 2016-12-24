@@ -171,11 +171,47 @@
 		  	  return resultnum;
 		  	}
 
+		  	// returns either black (000000) or white (ffffff)
+		  	// depending if argued hex is mostly light or dark, respectively
+		  	function oppositeContrast (hexnum) {
+		  		var keys = {
+		  			'0': 0,
+		  			'1': 1,
+		  			'2': 2,
+		  			'3': 3,
+		  			'4': 4,
+		  			'5': 5,
+		  			'6': 6,
+		  			'7': 7,
+		  			'8': 8,
+		  			'9': 9,
+		  			'a': 10,
+		  			'b': 11,
+		  			'c': 12,
+		  			'd': 13,
+		  			'e': 14,
+		  			'f': 15
+		  		};
+		  		var hexes = hexnum.split(""); // per character -> array
+		  		var hexSum = 0;
+		  		var halfHex = 15*6/2;  // higher is brighter
+		  		for (n in hexes) {
+		  			var char = hexes[n];
+		  			hexSum += keys[char];
+		  		}
+		  		if (hexSum <= halfHex) {
+		  			return 'ffffff';
+		  		} else {
+		  			return '000000';
+		  		}
+
+		  	}
+
 		  	// Colorize commit sha1's everywhere.
 				$('.commit-id, .sha').each(function (index) {
 					var hashy = $(this).text();
 					console.log(index + " - " + hashy.substring(0,6));
-					$(this).css({"color": "#" + hashy.substring(0,6), "background-color": "#" + invertHex(hashy.substring(0,6))});
+					$(this).css({"color": "#" + oppositeContrast(hashy.substring(0,6)), "background-color": "#" + hashy.substring(0,6)});
 				});
 
 				// and highlight news feed

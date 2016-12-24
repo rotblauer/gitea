@@ -61,7 +61,7 @@
 									{{range $push.Commits}}
 										<li>
 										<div class="ui grid">
-											<ui class="four wide column"><img class="img-8" src="{{$push.AvatarLink .AuthorEmail}}"> <a class="commit-id" href="{{$repoLink}}/commit/{{.Sha1}}">{{ShortSha .Sha1}}</a> </ui>
+											<ui class="four wide column"><img class="img-8" src="{{$push.AvatarLink .AuthorEmail}}"> <a class="commit-id" style="padding: 1px;" href="{{$repoLink}}/commit/{{.Sha1}}">{{ShortSha .Sha1}}</a> </ui>
 											<div class="ui twelve wide column">
 												<span class="commit-mess">{{.Message}}</span>
 											</div>
