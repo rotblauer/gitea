@@ -395,7 +395,7 @@
 	  	  function delegateSMS(message) {
 	  	  	// var str = 'here  jl@ there bubbafett';
 	  	  	var re = /@(\w*)/g;
-	  	  	var found = str.match(message);
+	  	  	var found = message.match(re);
 	  	  	if (found == null) {
 	  	  		return null;
 	  	  	}
