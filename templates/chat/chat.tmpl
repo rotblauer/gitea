@@ -283,7 +283,7 @@
 	  	        var formattedMsg = JSON.parse(msgEvt.data);
 	  	        hideOtherIsTyping();
 	  	        data.push(formattedMsg);
-	  	        chat.append(formatPS1(formattedMsg));
+	  	        chat.append(formatPS1(marked(formattedMsg)));
 	  	        // local notification.
 								/* console.log("ipData.ip: " + ipData.ip);*/
 							/* console.log("formattedMsg['ip']: " + formattedMsg['ip']);*/
@@ -316,16 +316,16 @@
 	  	        hideOtherIsTyping();
 	  	      }
 
-	  	      ensureMarked();
+	  	      // ensureMarked();
 	  	  };
-	  	  function ensureMarked() {
-	  	  	$('.is-chat-p').each(function(i, el) {
-	  	  		// console.log('marking down comms');
-	  	  		var t = $(this).text();
-	  	  		var m = marked(t); // marked.js via cdn
-	  	  		$(this).html(m);
-	  	  	});
-	  	  }
+	  	  // function ensureMarked() {
+	  	  // 	$('.is-chat-p').each(function(i, el) {
+	  	  // 		// console.log('marking down comms');
+	  	  // 		var t = $(this).text();
+	  	  // 		var m = marked(t); // marked.js via cdn
+	  	  // 		$(this).html(m);
+	  	  // 	});
+	  	  // }
 
 	  	  $('.form-group').on('input', '#text', function() {
 	  	    // console.log("I inputted! Value: " + $("#text").val());
