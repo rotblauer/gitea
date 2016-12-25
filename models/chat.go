@@ -70,6 +70,12 @@ func AllChatMsgs() (ChatMessages, error) {
 		return err
 	})
 	sort.Sort(msgs)
+
+	// Just last 100 if more than 100 msgs exist.
+	// TODO: Paginate.
+	if len(msgs) > 100 {
+		return msgs[len(msgs)-100:], err
+	}
 	return msgs, err
 }
 
