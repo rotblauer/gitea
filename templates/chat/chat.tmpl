@@ -286,6 +286,10 @@
 
 	  	        // ensure marked() here.  blah.
 	  	        chat.append(formatPS1(formattedMsg));
+
+	  	        // add emoji class to last (newest) chat message elem
+	  	        $('.chat-message').last().children('p').last().addClass('has-emoji is-chat-p');
+
 	  	        // local notification.
 								/* console.log("ipData.ip: " + ipData.ip);*/
 							/* console.log("formattedMsg['ip']: " + formattedMsg['ip']);*/
@@ -317,17 +321,7 @@
 	  	      } else if (msgEvt.data === "!***") {
 	  	        hideOtherIsTyping();
 	  	      }
-
-	  	      // ensureMarked();
 	  	  };
-	  	  // function ensureMarked() {
-	  	  // 	$('.is-chat-p').each(function(i, el) {
-	  	  // 		// console.log('marking down comms');
-	  	  // 		var t = $(this).text();
-	  	  // 		var m = marked(t); // marked.js via cdn
-	  	  // 		$(this).html(m);
-	  	  // 	});
-	  	  // }
 
 	  	  $('.form-group').on('input', '#text', function() {
 	  	    // console.log("I inputted! Value: " + $("#text").val());
@@ -374,14 +368,14 @@
                 url: "//textbelt.com/text",
                 data: {
                 	"number": parseInt(phoneNum),
-                	"message": message + " <3 " + {{.SignedUser.Name}} + "@rbgit"
+                	"message": message + "(<3 " + {{.SignedUser.Name}} + "@rbgit)"
                 },
                 error: function(e) {
                   alert("Error ajax posting sms to " + recipient + "\nCheck the console logs.");
 					console.log(e);
                 },
                 success: function(res) {
-					alert('sent sms OK')
+					alert('Success!')
                     console.log(res);
                 }
             });
