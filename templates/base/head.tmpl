@@ -232,10 +232,13 @@
 					var t = $(this).text();
 					console.log(t);
 					var m = marked(t); // marked.js via cdn
+					// m = m.replace("<p>","<span>")
+					// m = m.replace("</p>", "</span>")
 					$(this).html(m);
 
+					// no work cuz i think not rendered as dom element yet...
 					// $(this).first('p').changeElementType('span'); // cuz it makes a <p> which breaks the line
-					$(this).first('p').css({"display": "inline"});
+					// $(this).first('p').css({"display": "inline"});
 				});
 		  });
 		  </script>
@@ -302,6 +305,9 @@
 			}
 			.repo-commit-message img {
 				max-width: 100%;
+			}
+			td.repo-commit-message span p:first-child {
+				display: inline;
 			}
 		/*	.text.mega-octicon.octicon-git-commit {
 				color: #4183C4 !important;
