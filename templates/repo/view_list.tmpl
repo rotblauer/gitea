@@ -47,9 +47,9 @@
 						<a href="{{EscapePound $.TreeLink}}/{{EscapePound $entry.Name}}">{{$entry.Name}}</a>
 					</td>
 				{{end}}
-				<td class="message collapsing has-emoji">
+				<td class="repo-commit-message message collapsing has-emoji">
 					<a rel="nofollow" class="ui sha label" href="{{$.RepoLink}}/commit/{{$commit.ID}}">{{ShortSha $commit.ID.String}}</a>
-					{{RenderCommitMessage false $commit.Summary $.RepoLink $.Repository.ComposeMetas}}
+					<span>{{RenderCommitMessage false $commit.Summary $.RepoLink $.Repository.ComposeMetas}}</span>
 				</td>
 				<td class="text grey right age">{{TimeSince $commit.Committer.When $.Lang}}</td>
 			</tr>
