@@ -55,6 +55,20 @@
 		<noscript>Please enable JavaScript in your browser!</noscript> {{if not .PageIsInstall}}
 
 		  <script>
+		  // http://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery
+		  (function($) {
+		      $.fn.changeElementType = function(newType) {
+		          var attrs = {};
+
+		          $.each(this[0].attributes, function(idx, attr) {
+		              attrs[attr.nodeName] = attr.nodeValue;
+		          });
+
+		          this.replaceWith(function() {
+		              return $("<" + newType + "/>", attrs).append($(this).contents());
+		          });
+		      };
+		  })(jQuery);
 		  $(function () {
 
 		  	/// SEASONALS
@@ -219,7 +233,8 @@
 					console.log(t);
 					var m = marked(t); // marked.js via cdn
 					$(this).html(m);
-					$(this).css({"display": "inline"});
+
+					$(this).first('p').changeElementType('span'); // cuz it makes a <p> which breaks the line
 				});
 		  });
 		  </script>
