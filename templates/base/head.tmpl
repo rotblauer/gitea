@@ -202,6 +202,7 @@
 				  emoji: true // since changed default emoji dir location in marked.js
 				});
 
+				// markdown feed commit messages
 				$('.news .content span.commit-mess').each(function(i, block) {
 					// console.log('marking down comms');
 					var t = $(this).text();
@@ -211,6 +212,14 @@
 					// var result = md.render(t);
 					// $(this).html(result);
 				});
+
+				// markdown repo commit messages
+				$(".repo-commit-message").each(function(i, block) {
+					var t = $(this).text();
+					console.log(t);
+					var m = marked(t); // marked.js via cdn
+					$(this).html(m);
+				})
 
 
 		  });
@@ -274,6 +283,9 @@
 			}
 
 			.feeds .news .push.news .content ul img {
+				max-width: 100%;
+			}
+			.repo-commit-message img {
 				max-width: 100%;
 			}
 		/*	.text.mega-octicon.octicon-git-commit {
