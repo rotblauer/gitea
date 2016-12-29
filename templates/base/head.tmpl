@@ -234,7 +234,8 @@
 					var m = marked(t); // marked.js via cdn
 					$(this).html(m);
 
-					$(this).first('p').changeElementType('span'); // cuz it makes a <p> which breaks the line
+					// $(this).first('p').changeElementType('span'); // cuz it makes a <p> which breaks the line
+					$(this).first('p').css({"display": "inline"});
 				});
 		  });
 		  </script>
