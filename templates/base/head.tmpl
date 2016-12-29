@@ -214,7 +214,7 @@
 				});
 
 				// markdown repo commit messages
-				$(".repo-commit-message").each(function(i, block) {
+				$("td.repo-commit-message span").each(function(i, block) {
 					var t = $(this).text();
 					console.log(t);
 					var m = marked(t); // marked.js via cdn
