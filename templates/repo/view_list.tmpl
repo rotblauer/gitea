@@ -49,7 +49,7 @@
 				{{end}}
 				<td class="repo-commit-message message collapsing has-emoji">
 					<a rel="nofollow" class="ui sha label" href="{{$.RepoLink}}/commit/{{$commit.ID}}">{{ShortSha $commit.ID.String}}</a>
-					<span>{{RenderCommitMessage false $commit.Summary $.RepoLink $.Repository.ComposeMetas}}</span>
+					{{RenderCommitMessage false $commit.Summary $.RepoLink $.Repository.ComposeMetas}}
 				</td>
 				<td class="text grey right age">{{TimeSince $commit.Committer.When $.Lang}}</td>
 			</tr>
