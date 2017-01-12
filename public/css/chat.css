@@ -87,6 +87,11 @@ div.chat-message p {
 		color: black;
 
 	}
+    #catRoom .hljs {
+     padding: 1rem;
+    margin: 2 0 6 0rem;
+       background-color: white !important;
+    }
     #catRoom pre {
     display: block;
     padding: 1rem;
