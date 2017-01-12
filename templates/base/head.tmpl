@@ -37,6 +37,10 @@
 	<!-- JavaScript -->
 	<script src="{{AppSubUrl}}/js/semantic-2.2.1.min.js"></script>
 	<script src="{{AppSubUrl}}/js/gogs.js?v={{MD5 AppVer}}"></script>
+	<!-- <script src="{{AppSubUrl}}/js/reddit.min.js"> -->
+	<script src="{{AppSubUrl}}/js/money.js"></script>
+
+	</script>
 
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script> -->
 	<script src="{{AppSubUrl}}/js/marked.js"></script>
@@ -240,6 +244,34 @@
 					// $(this).first('p').changeElementType('span'); // cuz it makes a <p> which breaks the line
 					// $(this).first('p').css({"display": "inline"});
 				});
+
+
+							  var demo = function (data) {
+							  fx.rates = data.rates;
+							  console.log(data.rates);
+							  var rate = fx(1).to("EUR");
+							  var ticker = "<span>$1 == ";
+							  for (i in fx.rates) {
+							  if (i !== "") {
+							  var r = fx.rates[i];
+							  console.log("i", i);
+							  console.log("r", r);
+							  ticker += "<strong>" + fx(1).to(i).toFixed(3) + "</strong>" +  i
+							  for (var i = 0 ; i < 5; i++) {
+							  ticker += "&nbsp;";
+							  }
+							  }
+
+							  }
+							  ticker += "</span>";
+
+							  $('#currency-ticker').append(ticker);
+
+
+							  }
+							  $.getJSON("http://api.fixer.io/latest?base=USD", demo);
+
+
 		  });
 		  </script>
 
@@ -316,6 +348,24 @@
 			.octicon-repo {
 				color: darkgreen !important;
 			}*/
+			/* Make it a marquee */
+.marquee {
+	margin: 0 auto;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.marquee span {
+	display: inline-block;
+	padding-left: 100%;
+	animation: marquee 45s linear infinite;
+}
+
+/* Make it move */
+@keyframes marquee {
+	0%   { transform: translate(0, 0); }
+	100% { transform: translate(-100%, 0); }
+}
 		</style>
 
 		<div class="following bar light nativity-nav">
@@ -355,8 +405,11 @@
 								</span>
 
 								<!-- cat hack -->
-								<a href="http://chat.areteh.co:5000/hack" style="color: darkblue;" target="_blank" class="item">
-												/hack <i class="octicon octicon-chevron-right"></i>
+								<a href="http://chat.areteh.co:5000/hack" style="color: blue;" target="_blank" class="item">
+									<sub>
+									<i class="octicon octicon-file"></i></sub>
+									<sup>
+									<i class="octicon octicon-chevron-right"></i></sup>
 									</a>
 
 								<!-- etherpad -->
@@ -477,6 +530,17 @@
 		<!-- 	<iframe id="theFrame" src="http://www.chat.areteh.co:5000" style="width:100%; height: 60vh;" frameborder="0"> -->
 		<!-- 	</iframe> -->
 		<!-- </div> -->
+
+		<style>
+			#currency-ticker {
+			color: yellow;
+			background-color: black;
+			}
+		</style>
+
+		<div id="currency-ticker" class="ui marquee">
+		</div>
+
 		<div id="chatty" class="ui container " style="display: none;">
 			{{ template "chat/chat.tmpl" . }}
 		</div>
