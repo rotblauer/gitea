@@ -59,6 +59,36 @@
 		<noscript>Please enable JavaScript in your browser!</noscript> {{if not .PageIsInstall}}
 
 		  <script>
+
+		  var quotes = [
+		      "Don't ruin the present with the past or the future.",
+		      "Belief? Disbelief? A Jedi cares not for such things.",
+		      '"[B]eing conscious does not oblige me to have theories about things; it only obliges me to be conscious." -Fernando Pessoa',
+		      '"The crowd is untruth." -Kierkegaard','"I understand without knowledge, like a blind man to whom people speak of color." -Fernando Pessoa',
+		      '"[A]ll excellent things are as difficult as they are rare." -Spinoza',
+		      '"Self-transformation is never definitive, but demands perpetual reconquest." -Pierre Hadot',
+		      '"A man is not idle because he is absorbed in thought. There is a visible labor and there is an invisible labor." -Victor Hugo',
+		      "Death comes too fast for adequate knowledge so hopefully that provides adequate humility.",
+		      'Salvation requires subtlety.',
+		      '"There\'s only one rule that I know of, babies&#8212;God damn it, you\'ve got to be kind." -Vonnegut',
+		      '"To what extent can truth endure incorporation?  That is the question; that is the experiment." -Nietzsche',
+		      "Truth is counterintuitive.",
+		      '"It is sometimes an appropriate response to reality to go insane." -Philip K. Dick',
+		      '"It is in the thick of a calamity that one gets hardened to the truth&#8212;in other words, to silence." -Albert Camus',
+		      "Everything in moderation, especially ideologies.",
+		      "Wisdom is just the ability to recognize how stupid you are a bit faster.",
+		      '"I believe more and more, that God must not be judged on this earth.  It is one of His sketches that has turned out badly." -Van Gogh',
+		      '"The longing for rest and peace must itself be thrust aside; it coincides with the acceptance of iniquity." -Camus',
+		      '"Now I see the secret of the making of the best persons, It is to grow in the open air and to eat and sleep with the earth." -Whitman',
+		      '"There is no possible salvation for the man who feels real compassion." -Albert Camus',
+		      '"No man is exempt from saying silly things; the mischief is to say them deliberately." -Montaigne',
+		      "\"A lot of people were opposed to it.  A lot of people were for it.  I myself think about it as little as possible.\"  -Kurt Vonnegut",
+		      '"I will unravel things as best I may. What I shall say is neither fixed nor certain: I am no Pythian Apollo; I am a little man seeking the probable through conjecture." -Montaigne',
+		      '"You are in quest of what <i>is</i>. Why on earth do you set out to walk that road with a man who has neither pace nor style?" -Michel de Montaigne',
+		      '"The wise man can pick up a grain of sand and envision a whole universe. But the stupid man will just lie down on some seaweed and roll around until he\'s completely draped in it. Then he\'ll stand up and go, \'Hey, I\'m Vine Man.\'" -Jack Handey',
+		      'Ask Better Questions.  Get Better Answers.',
+		      'Facts, no matter how convincing, rarely trump a good solid dose of repetition.'];
+
 		  // http://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery
 		  (function($) {
 		      $.fn.changeElementType = function(newType) {
@@ -245,31 +275,37 @@
 					// $(this).first('p').css({"display": "inline"});
 				});
 
+			function getRandomQuote() {
+				var quotient = Math.floor(Math.random()*quotes.length);
+				return quotes[quotient];
+			}
 
-							  var demo = function (data) {
-							  fx.rates = data.rates;
-							  console.log(data.rates);
-							  var rate = fx(1).to("EUR");
-							  var ticker = "<span>$1 == ";
-							  for (i in fx.rates) {
-							  if (i !== "") {
-							  var r = fx.rates[i];
-							  console.log("i", i);
-							  console.log("r", r);
-							  ticker += "<strong>" + fx(1).to(i).toFixed(3) + "</strong>" +  i
-							  for (var i = 0 ; i < 5; i++) {
-							  ticker += "&nbsp;";
-							  }
-							  }
-
-							  }
-							  ticker += "</span>";
-
-							  $('#currency-ticker').append(ticker);
+			  var demo = function (data) {
+			  fx.rates = data.rates;
+			  console.log(data.rates);
+			  var rate = fx(1).to("EUR");
+			  var ticker = "<span>$1 == ";
+			  for (i in fx.rates) {
+			  if (i !== "") {
+			  var r = fx.rates[i];
+			  console.log("i", i);
+			  console.log("r", r);
+			  ticker += "<strong>" + fx(1).to(i).toFixed(3) + "</strong>" +  i
+			  for (var i = 0 ; i < 5; i++) {
+			  ticker += "&nbsp;";
+			  }
+			  }
 
 
-							  }
-							  $.getJSON("http://api.fixer.io/latest?base=USD", demo);
+			  }
+			  ticker += getRandomQuote();
+			  ticker += "</span>";
+
+			  $('#currency-ticker').append(ticker);
+
+
+			  }
+			  $.getJSON("http://api.fixer.io/latest?base=USD", demo);
 
 
 		  });
