@@ -37,10 +37,60 @@
 				    	border-radius: 5px
 				    }
 				</style>
+				<script>
+					$(function () {
+
+					function chooseContent(tobe) {
+					   localStorage.setItem("sidebarpref", tobe);
+					}
+					function getContentChoice() {
+					   return localStorage.getItem("sidebarpref");
+					}
+					function stowToph() {
+					$("#tophstuff").hide();
+					$("#repostuff").show();
+					$("#chooseToph").css({ "color":"blue", "text-decoration":"underline"});
+					$("#stowToph").css({ "color":"black", "text-decoration":"none" });
+					localStorage.setItem("sidebarpref", "notoph");
+					console.log("hiding toph");
+					}
+					function showToph() {
+					$("#tophstuff").show();
+					$("#repostuff").hide();
+					localStorage.setItem("sidebarpref", "toph");
+					console.log("showing toph");
+					$("#chooseToph").css({ "color":"black", "text-decoration":"none" });
+					$("#stowToph").css({ "color":"blue", "text-decoration":"underline"});
+					}
+					var c = getContentChoice();
+					console.log(c);
+					switch(c) {
+					case "toph":
+					   showToph();
+					break;
+					case "notoph":
+					   stowToph();
+					break;
+					default:
+					showToph();
+					}
+					$("#chooseToph").click(showToph);
+					$("#stowToph").click(stowToph);
+					});
+				</script>
 
 				<!-- the latest and greatest tttweets -->
+				<small id="chooseToph" >toph</small>
+				<small id="stowToph">repos</small>
+
+				<div id="tophstuff">
 				<a class="twitter-timeline" href="https://twitter.com/tophtucker" data-tweet-limit="1">Tweets by tophtucker</a>
 				<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+				<!-- xkcd down below -->
+				<div id="xkcd-image"></div>
+				</div>
+
+				<div id="repostuff" style="display:none;">
 
 				<div class="ui {{if not .ContextUser.IsOrganization}}three{{else}}two{{end}} item tabable menu">
 					<a class="item active" data-tab="repos">{{.i18n.Tr "repository"}}</a>
@@ -159,9 +209,8 @@
 						</ul>
 					</div>
 				</div>
+				</div>
 
-				<!-- xkcd down below -->
-				<div id="xkcd-image"></div>
 			</div>
 
 			<div class="ten wide column">
