@@ -298,7 +298,7 @@
 
 
 			  }
-			  ticker += getRandomQuote();
+			  <!-- ticker += getRandomQuote(); -->
 			  ticker += "</span>";
 
 			  $('#currency-ticker').append(ticker);
@@ -394,7 +394,7 @@
 .marquee span {
 	display: inline-block;
 	padding-left: 100%;
-	animation: marquee 45s linear infinite;
+	animation: marquee 75s linear infinite;
 }
 
 /* Make it move */
@@ -402,9 +402,12 @@
 	0%   { transform: translate(0, 0); }
 	100% { transform: translate(-100%, 0); }
 }
+
 		</style>
 
-		<div class="following bar light nativity-nav">
+		<div id="currency-ticker" class="ui marquee">
+		</div>
+		<div class="following bar light">
 
 			<!-- hidden usually... -->
 			<div id="christmas-lights-container-box" ></div>
@@ -441,12 +444,10 @@
 								</span>
 
 								<!-- cat hack -->
-								<a href="http://chat.areteh.co:5000/hack" style="color: blue;" target="_blank" class="item">
-									<sub>
-									<i class="octicon octicon-file"></i></sub>
-									<sup>
-									<i class="octicon octicon-chevron-right"></i></sup>
-									</a>
+								<a href="http://chat.areteh.co:5000/hack" style="color: #1e70bf; " target="_blank" class="item">
+									<i class="octicon octicon-file" ></i><span></span></a>
+									<!-- <sup><i class="octicon octicon-chevron-right"></i></sup> -->
+
 
 								<!-- etherpad -->
 								<!-- <a href="http://ether.areteh.co:9001" class="item" style="color: darkblue;" target="_blank"> -->
@@ -569,13 +570,10 @@
 
 		<style>
 			#currency-ticker {
-			color: yellow;
-			background-color: black;
+			color: #1e70bf;
 			}
 		</style>
 
-		<div id="currency-ticker" class="ui marquee">
-		</div>
 
 		<div id="chatty" class="ui container " style="display: none;">
 			{{ template "chat/chat.tmpl" . }}
