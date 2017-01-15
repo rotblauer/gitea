@@ -1137,7 +1137,7 @@ function searchRepositories() {
         $('.page.buttons').hide();
 
         $.ajax({
-            url: suburl + '/api/v1/repos/search?q=' + keyword + "&uid=" + $searchRepoBox.data('uid'),
+            url: suburl + '/api/v1/repos/search?q=' + keyword , // + "&uid=" + $searchRepoBox.data('uid'),
             dataType: "json",
             success: function (response) {
                 console.log("got response", response);
