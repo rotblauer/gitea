@@ -1115,24 +1115,30 @@ function searchUsers() {
 
 // FIXME: merge common parts in two functions
 function searchRepositories() {
+    console.log("searching repos");
     if (!$('#search-repo-box .results').length) {
+        console.log("there is not lenght");
         return;
     }
 
     var $searchRepoBox = $('#search-repo-box');
     var $results = $searchRepoBox.find('.results');
     $searchRepoBox.keyup(function () {
+        console.log("keying up in searchrepobox");
         var $this = $(this);
         var keyword = $this.find('input').val();
         if (keyword.length < 2) {
             $results.hide();
+            $('.ui.repository.list').show();
             return;
         }
+        $('.ui.repository.list').hide();
 
         $.ajax({
             url: suburl + '/api/v1/repos/search?q=' + keyword + "&uid=" + $searchRepoBox.data('uid'),
             dataType: "json",
             success: function (response) {
+                console.log("got response", response);
                 var notEmpty = function (str) {
                     return str && str.length > 0;
                 };
@@ -1142,7 +1148,7 @@ function searchRepositories() {
                 if (response.ok && response.data.length) {
                     var html = '';
                     $.each(response.data, function (i, item) {
-                        html += '<div class="item"><i class="icon octicon octicon-repo"></i> <span class="fullname">' + item.full_name + '</span></div>';
+                        html += '<div class="item"><a href="/' + item.full_name + '"><i class="octicon octicon-repo"></i> <span class="fullname">' + item.full_name + '</span></a></div>';
                     });
                     $results.html(html);
                     $this.find('.results .item').click(function () {
