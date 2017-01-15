@@ -65,8 +65,9 @@ func Search(ctx *context.APIContext) {
 			return
 		}
 		results[i] = &api.Repository{
-			ID:       repos[i].ID,
-			FullName: path.Join(repos[i].Owner.Name, repos[i].Name),
+			ID:          repos[i].ID,
+			FullName:    path.Join(repos[i].Owner.Name, repos[i].Name),
+			Description: repos[i].Description,
 		}
 	}
 
