@@ -1130,9 +1130,11 @@ function searchRepositories() {
         if (keyword.length < 2) {
             $results.hide();
             $('.ui.repository.list').show();
+            $('.page.buttons').show();
             return;
         }
         $('.ui.repository.list').hide();
+        $('.page.buttons').hide();
 
         $.ajax({
             url: suburl + '/api/v1/repos/search?q=' + keyword + "&uid=" + $searchRepoBox.data('uid'),
