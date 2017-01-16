@@ -109,13 +109,14 @@ func GetDrawings(ids []string) (Drawings, error) {
 func PostDrawing(drawing Drawing) (Drawing, error) {
 	var err error
 	drawingJSON, err := json.Marshal(drawing)
+	fmt.Println("jsoned drawingJSON:", drawingJSON)
 	// This can go in a go routine --
 	go func() {
 		GetDB().Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte("drawings"))
 			e := b.Put([]byte(drawing.NewsID), drawingJSON)
 			if e != nil {
-				fmt.Println(e)
+				fmt.Println("Didn't save post drawing in bolt.", e)
 				return e
 			}
 			return nil

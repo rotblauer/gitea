@@ -6,7 +6,8 @@ import (
 	// "github.com/gogits/gogs/modules/context"
 	"code.gitea.io/gitea/models"
 	"code.gitea.io/gitea/modules/context"
-	"fmt"
+	// "fmt"
+	"log"
 	"strings"
 )
 
@@ -41,14 +42,23 @@ func GetDrawings(c *context.Context) {
 
 //PostDrawing saves a single drawing
 func PostDrawing(c *context.Context, drawing models.Drawing) {
+
+	q := c.Query("drawing")
+	log.Println(q)
+
+	// fmt.Println("prepostering")
+	// fmt.Println(drawing)
+	// c.JSON(200, drawing)
+
 	d, err := models.PostDrawing(drawing)
-	fmt.Println("priting line")
-	fmt.Println(d, err)
+	log.Println("priting line")
+	log.Println(d, err)
 	if err != nil {
 		c.JSON(500, err.Error())
 	} else {
 		c.JSON(200, d)
 	}
+
 }
 
 //PatchDrawing updates a drawing
@@ -63,7 +73,7 @@ func PatchDrawing(c *context.Context, drawing models.Drawing) {
 
 //DeleteDrawing updates a drawing
 func DeleteDrawing(c *context.Context) {
-	did := c.Params("id")
+	did := c.Params(":id")
 	err := models.DeleteDrawing(did)
 	if err != nil {
 		c.JSON(500, err.Error())

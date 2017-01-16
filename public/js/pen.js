@@ -89,22 +89,39 @@ function saveDrawing() {
   // currentDrawingData["canvas"].selectable = false;
   // fabric.util.removeListener(fabric.document, 'mousedown', this.onMouseDown); fabric.util.removeListener(fabric.document, 'mousemove', this.onMouseMove);
   // currentDrawingData["canvas"].set({selectable:false});
-  currentDrawingData["imageData"] = currentDrawingData["canvas"].toJSON();
+  currentDrawingData["imageData"] = JSON.stringify(currentDrawingData["canvas"].toJSON());
     delete currentDrawingData["canvasJQ"];
   delete currentDrawingData["canvas"];
     //send currentDrawingData to bolt
   currentDrawingData["authorId"] = "1";
   currentDrawingData["authorName"] = "ia";
-  var d = JSON.stringify(currentDrawingData);
+  // var d = JSON.stringify(currentDrawingData);
+  var d = currentDrawingData;
   console.log(d);
-    $.post("/r/pen",
-         d,
-         function (res) {
-           console.log("success", res);
-         },
-         function (e) {
-           console.log(e);
-         });
+
+  $.ajax({
+    type: "POST",
+    url: "/r/pen",
+    data: currentDrawingData,
+    dataType: 'json',
+    success: function (res) {
+      console.log(res);
+    },
+    error: function (res) {
+      console.log(res);
+    }
+  });
+
+  // $.ajax({
+  //   type: "POST",
+  //   url: "/r/pen?drawing=" + $.param(currentDrawingData),
+  //   success: function (res) {
+  //     console.log(res);
+  //   },
+  //   error: function (res) {
+  //     console.log(res);
+  //   }
+  // });
 
 }
 function clearAndQuitDrawing() {
