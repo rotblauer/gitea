@@ -6,6 +6,7 @@ import (
 	// "github.com/gogits/gogs/modules/context"
 	"code.gitea.io/gitea/models"
 	"code.gitea.io/gitea/modules/context"
+	"fmt"
 	"strings"
 )
 
@@ -41,6 +42,8 @@ func GetDrawings(c *context.Context) {
 //PostDrawing saves a single drawing
 func PostDrawing(c *context.Context, drawing models.Drawing) {
 	d, err := models.PostDrawing(drawing)
+	fmt.Println("priting line")
+	fmt.Println(d, err)
 	if err != nil {
 		c.JSON(500, err.Error())
 	} else {

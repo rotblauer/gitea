@@ -40,10 +40,13 @@ type Drawing struct {
 
 // Position is data for how to size and place the drawing relative to the news item
 type Position struct {
-	Width  int `json:"width"`
-	Height int `json:"height"`
-	Top    int `json:"top"`
-	Left   int `json:"left"`
+	Width    int    `json:"width"`
+	Height   int    `json:"height"`
+	Top      int    `json:"top"`
+	Left     int    `json:"left"`
+	Position string `json:"position"`
+	Display  string `json:"display"`
+	ZIndex   string `json:"z-index"`
 }
 
 // ChatMessages is a bunch of chat messages. Stop bothering me.
