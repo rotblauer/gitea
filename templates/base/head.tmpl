@@ -41,6 +41,8 @@
 	<script src="{{AppSubUrl}}/js/gogs.js?v={{MD5 AppVer}}"></script>
 	<!-- <script src="{{AppSubUrl}}/js/reddit.min.js"> -->
 	<script src="{{AppSubUrl}}/js/money.js"></script>
+	<script src="{{AppSubUrl}}/js/fabric.min.js"></script>
+
 
 	</script>
 
@@ -50,6 +52,9 @@
 	<!-- <script src="https://cdn.jsdelivr.net/markdown-it/8.2.2/markdown-it.min.js"></script> -->
 
 	<script src="{{AppSubUrl}}/js/snowstorm.js"></script>
+
+	<link href="{{AppSubUrl}}/css/pen.css" rel="stylesheet"/>
+	<script src="{{AppSubUrl}}/js/pen.js"></script>
 
 	<title>{{if .Title}}{{.Title}} - {{end}}{{AppName}}</title>
 
@@ -151,7 +156,7 @@
 			  	$('#christmas-lights-container-box').show();
 			  	$('#christmas-lights-container-box').css({'height': windowWidth/numChristmasLights});
 		  	  for (var i=1;i<numChristmasLights-1;i++) {
-		  	  	console.log('hanging light');
+				//console.log('hanging light');
 		  	  	var div = document.createElement("div");
 		  	  	$(div).attr('id', 'light-' + i.toString())
 		  	  		.attr('class','christmas-light')
@@ -196,7 +201,7 @@
 		  	// http://stackoverflow.com/questions/9101224/invert-text-color-of-a-specific-element-using-jquery
 		  	function invertHex(hexnum){
 		  	  if(hexnum.length != 6) {
-		  	    console.error("Hex color must be six hex numbers in length.");
+				//console.error("Hex color must be six hex numbers in length.");
 		  	    return false;
 		  	  }
 
@@ -218,7 +223,7 @@
 		  	    } else if(complexnum[splitnum[i]]){
 		  	      resultnum += complexnum[splitnum[i]];
 		  	    } else {
-		  	      console.error("Hex colors must only include hex numbers 0-9, and A-F");
+				  //console.error("Hex colors must only include hex numbers 0-9, and A-F");
 		  	      return false;
 		  	    }
 		  	  }
@@ -246,7 +251,7 @@
 		  	// Colorize commit sha1's everywhere.
 				$('.commit-id, .sha').each(function (index) {
 					var hashy = $(this).text();
-					console.log(index + " - " + hashy.substring(0,6));
+					//console.log(index + " - " + hashy.substring(0,6));
 					$(this).css({"color": "#" + oppositeContrast(hashy.substring(0,6)), "background-color": "#" + hashy.substring(0,6)});
 				});
 
@@ -261,7 +266,7 @@
 				$('.news .content span.commit-mess').each(function(i, block) {
 					// console.log('marking down comms');
 					var t = $(this).text();
-					console.log(t);
+					//console.log(t);
 					var m = marked(t); // marked.js via cdn
 					$(this).html(m);
 					// var result = md.render(t);
@@ -271,7 +276,7 @@
 				// markdown repo commit messages
 				$("td.repo-commit-message span").each(function(i, block) {
 					var t = $(this).text();
-					console.log(t);
+					//console.log(t);
 					var m = marked(t); // marked.js via cdn
 					// m = m.replace("<p>","<span>")
 					// m = m.replace("</p>", "</span>")
@@ -289,14 +294,11 @@
 
 			  var demo = function (data) {
 			  fx.rates = data.rates;
-			  console.log(data.rates);
 			  var rate = fx(1).to("EUR");
 			  var ticker = "<span>$1 == ";
 			  for (i in fx.rates) {
 			  if (i !== "") {
 			  var r = fx.rates[i];
-			  console.log("i", i);
-			  console.log("r", r);
 			  ticker += "<strong>" + fx(1).to(i).toFixed(3) + "</strong>" +  i
 			  for (var i = 0 ; i < 5; i++) {
 			  ticker += "&nbsp;";

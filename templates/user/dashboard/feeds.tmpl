@@ -1,10 +1,18 @@
 {{range .Feeds}}
-	<div class="news">
+
+	<div id="news-{{.GetCreate}}" class="news news-box">
 	<!-- 	<div class="ui left">
 			<img class="ui avatar image" src="{{.ActAvatar}}" alt="">
 		</div> -->
+
 		<div class="ui grid">
-			<div class="ui one wide column" style="text-align: center;">
+
+		<!-- <p id="testes-{{.GetCreate}}" class="testes"> -->
+		<!-- 	.GetCreate -- {{.GetCreate}} -->
+		<!-- </p> -->
+
+
+			<div id="icon-{{.GetCreate}}"class="ui one wide column iconthing" style="text-align: center;">
 				<i class="text grey mega-octicon octicon-{{ActionIcon .GetOpType}}"></i>
 			</div>
 			<div class="ui fifteen wide column">
@@ -49,6 +57,10 @@
 								{{ $index := index .GetIssueInfos 0}}
 								{{$.i18n.Tr "action.reopen_pull_request" .GetRepoLink $index .ShortRepoPath | Str2html}}
 							{{end}}
+
+							<span>
+								<i id="pencil.{{.GetCreate}}" class="pencilMode octicon octicon-pencil"></i>
+							</span>
 						</p>
 
 					<!-- </p> -->

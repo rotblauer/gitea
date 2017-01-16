@@ -1,0 +1,20 @@
+#userfeeds {
+    position: relative;
+}
+.news-box {
+    position: relative;
+}
+
+.feed-pen {
+    /* border: 1px solid red; */
+    /* display: none; */
+    position: absolute;
+    display: float;
+    /* top: -50px; */
+    /* left: -50px; */
+    /* width: 100%; */
+    /* height: 100%; */
+
+    /* z-index: 1000; */
+    /* pointer-events: none; */
+}
