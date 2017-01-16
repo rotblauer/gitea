@@ -234,6 +234,11 @@ func runWeb(ctx *cli.Context) error {
 	})
 	// Get chat messages json.
 	m.Get("/r/chat", reqSignIn, chat.GetChatData) // Get chat.txt database.
+	m.Get("/r/pen", reqSignIn, chat.GetDrawings)  // get drawings from chat given a json obj of availabe news createdats
+	m.Post("/r/pen", reqSignIn, bindIgnErr(models.Drawing{}), chat.PostDrawing)
+	m.Patch("/r/pen", reqSignIn, bindIgnErr(models.Drawing{}), chat.PatchDrawing)
+	m.Delete("/r/pen/:id", reqSignIn, chat.DeleteDrawing)
+
 	// ***** END: Chatty Kathy *****
 
 	// ***** START: User *****

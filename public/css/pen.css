@@ -5,6 +5,25 @@
     position: relative;
 }
 
+#drawing-controls {
+    display: none;
+    text-align: center;
+    width: 100%;
+    /* background-color: salmon !important; */
+    color: blue;
+    display: float;
+    position: fixed;
+    top: 40px;
+    z-index: 500;
+}
+#drawing-controls span {
+    border: 1px solid lightblue;
+    margin: 3px;
+    padding: 3px;
+    background-color: #AFEEEE;
+
+}
+
 .feed-pen {
     /* border: 1px solid red; */
     /* display: none; */

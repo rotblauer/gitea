@@ -121,6 +121,7 @@ func LoadConfigs() {
 	DbCfg.Path = sec.Key("PATH").MustString("data/gitea.db")
 }
 
+// InitBoltDB sets up initial stuff, like the file and necesary buckets
 func InitBoltDB() error {
 	sec := setting.Cfg.Section("server")
 	p := sec.Key("APP_DATA_PATH").String()
@@ -136,7 +137,11 @@ func InitBoltDB() error {
 		fmt.Println("Bolt db is initialized.")
 		db.Update(func(tx *bolt.Tx) error {
 			_, e := tx.CreateBucketIfNotExists([]byte("chat"))
-			return e
+			if e != nil {
+				return e
+			}
+			_, ed := tx.CreateBucketIfNotExists([]byte("drawings"))
+			return ed
 		})
 	}
 	return err
@@ -160,15 +165,15 @@ func parsePostgreSQLHostPort(info string) (string, string) {
 
 func parseMSSQLHostPort(info string) (string, string) {
 	host, port := "127.0.0.1", "1433"
-		if strings.Contains(info, ":") {
-			host = strings.Split(info, ":")[0]
-				port = strings.Split(info, ":")[1]
-		} else if strings.Contains(info, ",") {
-			host = strings.Split(info, ",")[0]
-				port = strings.TrimSpace(strings.Split(info, ",")[1])
-		} else if len(info) > 0 {
-			host = info
-		}
+	if strings.Contains(info, ":") {
+		host = strings.Split(info, ":")[0]
+		port = strings.Split(info, ":")[1]
+	} else if strings.Contains(info, ",") {
+		host = strings.Split(info, ",")[0]
+		port = strings.TrimSpace(strings.Split(info, ",")[1])
+	} else if len(info) > 0 {
+		host = info
+	}
 	return host, port
 }
 
