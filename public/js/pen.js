@@ -74,28 +74,28 @@ function renderDrawing(drawingInfo) {
 
   console.log("rending drawing", drawingInfo.imageData);
 
-  drawingContainer.css(drawingInfo.position);
   drawingContainer.attr("id", "pen-" + drawingInfo.nid);
+  drawingContainer.css(drawingInfo.position);
   drawingCanvas.attr("id", "canvas-"+drawingInfo.nid);
   drawingCanvas.attr("height", drawingInfo.position.height);
   drawingCanvas.attr("width", drawingInfo.position.width);
-  // drawingCanvas.css({"z-index": drawingInfo.position.zindex});
+  drawingCanvas.css({"z-index": 1000});
 
-  $("#news-" + drawingInfo.nid).append(drawingContainer);
-  drawingContainer.append(drawingCanvas);
+  //double check news item exists?
+  if ($("#news-" + drawingInfo.nid).length) {
 
-  var c = new fabric.Canvas("canvas-" + drawingInfo.nid);
-  c.loadFromJSON( drawingInfo.imageData , function() {
-    c.renderAll();
-  },function(o,object){
-    console.log(o,object);
-  });
+    $("#news-" + drawingInfo.nid).append(drawingContainer);
+    drawingContainer.append(drawingCanvas);
 
+    var c = new fabric.Canvas("canvas-" + drawingInfo.nid);
+    c.loadFromJSON( drawingInfo.imageData , function() {
+      c.renderAll();
+    },function(o,object){
+      console.log(o,object);
+    });
+
+  }
   $("#createDrawing-" + drawingInfo.nid).hide();
-
-  $('.feed-pen').css({'pointer-events': "none"});
-
-
 }
 
 
@@ -199,11 +199,12 @@ function getSavedDrawings(idsarray) {
         trash.show();
         trash.click(deleteDrawing);
       }
+      $('.feed-pen').css({'pointer-events': "none"});
     },
     error: function (res) {
       console.log("couldnt get saved darwing", res);
     }
-  })
+  });
 }
 
 
@@ -215,6 +216,7 @@ $(function() {
     getSavedDrawings(feedItemsIds);
 
     console.log(feedItemsIds);
+    //btw these don't work
     authorName = '{{.SignedUser.Name}}';
     authorId = '{{.SignedUser.ID}}';
 
