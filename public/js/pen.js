@@ -88,6 +88,8 @@ function renderDrawing(drawingInfo) {
     console.log(o,object);
   });
 
+  $("#createDrawing-" + drawingInfo.nid).hide();
+
   $('.feed-pen').css({'pointer-events': "none"});
 
 
@@ -124,6 +126,12 @@ function deleteDrawing(e) {
       console.log(res);
       $("#pen-" + nid).remove(); //takes everythign inside too
       $("#deleteDrawing-" + nid).hide();
+      $("#createDrawing-" + nid).show();
+      $("#createDrawing-" + nid).click(function (e) {
+        //gets just the formatted date data, which is our nid
+        console.log($( e.currentTarget ).data("nid"));
+        buildDrawing($( e.currentTarget ).data("nid"));
+      });
     },
     error: function (res) {
       console.log(res);
@@ -156,6 +164,8 @@ function saveDrawing() {
     success: function (res) {
       console.log(res);
       $("#deleteDrawing-" + res.nid).show();
+      $("#deleteDrawing-" + res.nid).click(deleteDrawing);
+      $("#createDrawing-" + res.nid).hide();
       stopDrawingUI();
     },
     error: function (res) {
@@ -167,6 +177,7 @@ function saveDrawing() {
 function clearAndQuitDrawing() {
     //clearcurrentdrawing data
     stopDrawingUI();
+  currentDrawingData["canvasJQ"].remove();
     currentDrawingData.canvas.clear();
     currentDrawingData = {};
 }

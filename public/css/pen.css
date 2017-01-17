@@ -17,12 +17,21 @@
     top: 40px;
     z-index: 1001;
 }
-#drawing-controls span {
-    border: 1px solid lightblue;
+#drawing-controls button {
+    /* border: 1px solid lightblue; */
     margin: 3px;
     padding: 3px;
-    background-color: #AFEEEE;
-
+    border: 1px solid white;
+    border-radius: 3px;
+    /* background-color: #AFEEEE; */
+}
+#clearAndQuit {
+    background-color: firebrick;
+    color: white;
+}
+#saveDrawing {
+    background-color: forestgreen;
+    color: white;
 }
 
 .feed-pen {
