@@ -31,7 +31,6 @@ function getDrawingPositionByNewsItem(nid) {
 function buildDrawing(e) {
     var nid = $( e.currentTarget ).data("nid");
     if (!drawingUnderway) {
-        startDrawingUI();
         currentDrawingData["nid"] = nid;
       currentDrawingData["authorId"] = $(e.currentTarget).data("authorid");
       currentDrawingData["authorName"] = $(e.currentTarget).data("authorname");
@@ -64,6 +63,7 @@ function buildDrawing(e) {
           currentDrawingData["canvas"].freeDrawingBrush.width = 1;
           currentDrawingData["canvas"].freeDrawingBrush.shadowBlur = 0;
         }
+      startDrawingUI(nid);
     }
 }
 
@@ -99,11 +99,16 @@ function renderDrawing(drawingInfo) {
 }
 
 
-function startDrawingUI() {
+function startDrawingUI(nid) {
     $("#drawing-controls").show();
-    $('.feed-pen').each(function (i, el) {
-        $(el).css({"pointer-events":"all"});
-    });
+
+  $("#pen-" + nid).css({"pointer-events":"all"});
+  // currentDrawingData["canvasJQ"].css({"pointer-events": "all"});
+
+    // $('.feed-pen').each(function (i, el) {
+    //     $(el).css({"pointer-events":"all"});
+    // });
+
     drawingUnderway = true;
 }
 
