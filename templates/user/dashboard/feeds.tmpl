@@ -56,10 +56,12 @@
 							{{else if eq .GetOpType 15}}
 								{{ $index := index .GetIssueInfos 0}}
 								{{$.i18n.Tr "action.reopen_pull_request" .GetRepoLink $index .ShortRepoPath | Str2html}}
-							{{end}}
+              {{end}}
 
 							<span>
-                <i id='createDrawing-{{.GetCreate.Format "Jan022006150405UTC"}}' data-nid='{{.GetCreate.Format "Jan022006150405UTC"}}' class="pencilIcon octicon octicon-pencil"></i>
+                <i id='createDrawing-{{.GetCreate.Format "Jan022006150405UTC"}}'
+                   data-nid='{{.GetCreate.Format "Jan022006150405UTC"}}'
+                   class="pencilIcon octicon octicon-pencil"></i>
                 <i data-nid='{{.GetCreate.Format "Jan022006150405UTC"}}' id='deleteDrawing-{{.GetCreate.Format "Jan022006150405UTC"}}' class="deleteDrawingIcon octicon octicon-trashcan" style="display: none; color: red;"></i>
 							</span>
 						</p>

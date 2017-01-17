@@ -28,10 +28,13 @@ function getDrawingPositionByNewsItem(nid) {
     return position;
 }
 
-function buildDrawing(nid) {
+function buildDrawing(e) {
+    var nid = $( e.currentTarget ).data("nid");
     if (!drawingUnderway) {
         startDrawingUI();
         currentDrawingData["nid"] = nid;
+      currentDrawingData["authorId"] = $(e.currentTarget).data("authorid");
+      currentDrawingData["authorName"] = $(e.currentTarget).data("authorname");
         currentDrawingData["position"] = getDrawingPositionByNewsItem(nid);
       currentDrawingData["position"]["zindex"] = 1000;
 
@@ -127,11 +130,7 @@ function deleteDrawing(e) {
       $("#pen-" + nid).remove(); //takes everythign inside too
       $("#deleteDrawing-" + nid).hide();
       $("#createDrawing-" + nid).show();
-      $("#createDrawing-" + nid).click(function (e) {
-        //gets just the formatted date data, which is our nid
-        console.log($( e.currentTarget ).data("nid"));
-        buildDrawing($( e.currentTarget ).data("nid"));
-      });
+      $("#createDrawing-" + nid).click(buildDrawing);
     },
     error: function (res) {
       console.log(res);
@@ -219,11 +218,7 @@ $(function() {
     authorName = '{{.SignedUser.Name}}';
     authorId = '{{.SignedUser.ID}}';
 
-    $(".pencilIcon").click(function (e) {
-      //gets just the formatted date data, which is our nid
-      console.log($( e.currentTarget ).data("nid"));
-      buildDrawing($( e.currentTarget ).data("nid"));
-    });
+    $(".pencilIcon").click(buildDrawing);
 
     $("#clearAndQuit").click(clearAndQuitDrawing);
     $("#saveDrawing").click(saveDrawing);
