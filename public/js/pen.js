@@ -209,7 +209,7 @@ function getSavedDrawings(idsarray) {
 
 
 $(function() {
-  if (location.pathname == "/") {
+  if (location.pathname == "/" || "/org/rotblauer/dashboard") {
     var feedItems = $(".news-box");
     var feedItemsIds = getAllFoodIds(feedItems);
 
