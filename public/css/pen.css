@@ -1,5 +1,6 @@
 #userfeeds {
     position: relative;
+    overflow: hidden;
 }
 .news-box {
     position: relative;
@@ -14,7 +15,7 @@
     display: float;
     position: fixed;
     top: 40px;
-    z-index: 500;
+    z-index: 1001;
 }
 #drawing-controls span {
     border: 1px solid lightblue;

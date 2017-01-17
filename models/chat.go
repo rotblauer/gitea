@@ -46,7 +46,7 @@ type Position struct {
 	Left     int    `json:"left"`
 	Position string `json:"position"`
 	Display  string `json:"display"`
-	ZIndex   string `json:"z-index"`
+	ZIndex   int    `json:"zindex"`
 }
 
 // ChatMessages is a bunch of chat messages. Stop bothering me.
@@ -91,14 +91,16 @@ func GetDrawings(ids []string) (Drawings, error) {
 			c := b.Cursor()
 			for drawingkey, drawingval := c.First(); drawingkey != nil; drawingkey, drawingval = c.Next() {
 				//only if drawing is in given drawings key set (we don't want all drawings just feeded times)
-				if indexOf(ids, string(drawingkey)) > -1 {
+				//but if no ids given, return em all
+				if (len(ids) == 0) || (indexOf(ids, string(drawingkey)) > -1) {
 					var drawing Drawing
 					json.Unmarshal(drawingval, &drawing)
 					drawings = append(drawings, drawing)
 				}
 			}
 		} else {
-			err = errors.New("No drawings yet.")
+			//cuz its not an error if no drawings
+			return nil
 		}
 		return err
 	})
@@ -109,7 +111,9 @@ func GetDrawings(ids []string) (Drawings, error) {
 func PostDrawing(drawing Drawing) (Drawing, error) {
 	var err error
 	drawingJSON, err := json.Marshal(drawing)
-	fmt.Println("jsoned drawingJSON:", drawingJSON)
+	fmt.Println("model drawing", drawing)
+	fmt.Println("model jsoned drawingJSON string:", string(drawingJSON))
+	fmt.Println("model drawing.NewsID string", string(drawing.NewsID))
 	// This can go in a go routine --
 	go func() {
 		GetDB().Update(func(tx *bolt.Tx) error {
@@ -160,21 +164,31 @@ func PatchDrawing(drawing Drawing) (Drawing, error) {
 func DeleteDrawing(did string) error {
 	var err error
 
-	err = GetDB().View(func(tx *bolt.Tx) error {
+	fmt.Println("Drawing model to delete drawing with id ", did)
+	if did == "" {
+		return errors.New("Model didn't get an id to delete by.")
+	}
+	err = GetDB().Update(func(tx *bolt.Tx) error {
 		var err error
 		b := tx.Bucket([]byte("drawings"))
 
 		c := b.Cursor()
 		for drawingkey, _ := c.First(); drawingkey != nil; drawingkey, _ = c.Next() {
+			fmt.Println("cursing through drawings", string(drawingkey))
 			if did == string(drawingkey) {
-				eb := b.Delete(drawingkey)
-				if eb != nil {
-					return eb
+				fmt.Println("got a match on id")
+				err = b.Delete(drawingkey)
+				if err != nil {
+					fmt.Println("But could not delete", err)
+					return err
 				}
 			}
 		}
-		return err
+		return nil
 	})
+	if err != nil {
+		fmt.Println("The error was with opening view to bdb", err)
+	}
 	return err
 }
 

@@ -8,7 +8,6 @@ import (
 	"code.gitea.io/gitea/modules/context"
 	// "fmt"
 	"log"
-	"strings"
 )
 
 // const (
@@ -28,11 +27,9 @@ func GetChatData(c *context.Context) {
 	}
 }
 
-//GetDrawings gets drawings given a set of ids
-func GetDrawings(c *context.Context) {
-	ids := c.Query("nids") //news ids in UTC separated by ;
-	splitIds := strings.Split(ids, ";")
-	drawings, err := models.GetDrawings(splitIds)
+//GetDrawings gets drawings given a set of ids []string
+func GetDrawings(c *context.Context, ids []string) {
+	drawings, err := models.GetDrawings(ids)
 	if err != nil {
 		c.JSON(500, err.Error())
 	} else {
@@ -43,12 +40,8 @@ func GetDrawings(c *context.Context) {
 //PostDrawing saves a single drawing
 func PostDrawing(c *context.Context, drawing models.Drawing) {
 
-	q := c.Query("drawing")
-	log.Println(q)
-
-	// fmt.Println("prepostering")
-	// fmt.Println(drawing)
-	// c.JSON(200, drawing)
+	log.Println("router post drawing", drawing)
+	log.Println("router post drawing.NewsID", drawing.NewsID)
 
 	d, err := models.PostDrawing(drawing)
 	log.Println("priting line")
@@ -74,6 +67,10 @@ func PatchDrawing(c *context.Context, drawing models.Drawing) {
 //DeleteDrawing updates a drawing
 func DeleteDrawing(c *context.Context) {
 	did := c.Params(":id")
+	log.Println("deleting with id", did)
+	if did == "" {
+		c.JSON(500, "Didn't get the id right. Params faults.")
+	}
 	err := models.DeleteDrawing(did)
 	if err != nil {
 		c.JSON(500, err.Error())

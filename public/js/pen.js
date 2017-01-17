@@ -33,6 +33,7 @@ function buildDrawing(nid) {
         startDrawingUI();
         currentDrawingData["nid"] = nid;
         currentDrawingData["position"] = getDrawingPositionByNewsItem(nid);
+      currentDrawingData["position"]["zindex"] = 1000;
 
         //setup holster
         var drawingContainer = $(penTemplate);
@@ -41,6 +42,7 @@ function buildDrawing(nid) {
 
         //assign attrs
         drawingContainer.css(currentDrawingData.position); //put container in its place
+      drawingContainer.attr("id", "pen-" + nid);
         currentDrawingData["canvasJQ"].attr("id", "canvas-" + nid);
         currentDrawingData["canvasJQ"].attr("height", currentDrawingData.position.height);
         currentDrawingData["canvasJQ"].attr("width", currentDrawingData.position.width);
@@ -64,6 +66,30 @@ function buildDrawing(nid) {
 
 function renderDrawing(drawingInfo) {
     //drawingInfo is obj
+  var drawingContainer = $(penTemplate);
+  var drawingCanvas = $("<canvas></canvas>");
+
+  console.log("rending drawing", drawingInfo.imageData);
+
+  drawingContainer.css(drawingInfo.position);
+  drawingContainer.attr("id", "pen-" + drawingInfo.nid);
+  drawingCanvas.attr("id", "canvas-"+drawingInfo.nid);
+  drawingCanvas.attr("height", drawingInfo.position.height);
+  drawingCanvas.attr("width", drawingInfo.position.width);
+  // drawingCanvas.css({"z-index": drawingInfo.position.zindex});
+
+  $("#news-" + drawingInfo.nid).append(drawingContainer);
+  drawingContainer.append(drawingCanvas);
+
+  var c = new fabric.Canvas("canvas-" + drawingInfo.nid);
+  c.loadFromJSON( drawingInfo.imageData , function() {
+    c.renderAll();
+  },function(o,object){
+    console.log(o,object);
+  });
+
+  $('.feed-pen').css({'pointer-events': "none"});
+
 
 }
 
@@ -84,6 +110,27 @@ function stopDrawingUI() {
     drawingUnderway = false;
 }
 
+function deleteDrawing(e) {
+  // send DELETE request
+  //cuz called from trashcan
+  var nid = $( e.currentTarget ).data("nid");
+  $.ajax({
+    type: "DELETE",
+    url: "/r/pen/" + nid,
+    beforeSend: function(request) {
+      request.setRequestHeader("X-CSRFToken", Cookies.get("_csrf"));
+    },
+    success: function (res) {
+      console.log(res);
+      $("#pen-" + nid).remove(); //takes everythign inside too
+      $("#deleteDrawing-" + nid).hide();
+    },
+    error: function (res) {
+      console.log(res);
+    }
+  });
+}
+
 function saveDrawing() {
     stopDrawingUI();
   // currentDrawingData["canvas"].selectable = false;
@@ -95,57 +142,79 @@ function saveDrawing() {
     //send currentDrawingData to bolt
   currentDrawingData["authorId"] = "1";
   currentDrawingData["authorName"] = "ia";
-  // var d = JSON.stringify(currentDrawingData);
-  var d = currentDrawingData;
-  console.log(d);
+  var authorizationToken = Cookies.get("_csrf");
 
   $.ajax({
     type: "POST",
     url: "/r/pen",
-    data: currentDrawingData,
+    beforeSend: function(request) {
+      request.setRequestHeader("X-CSRFToken", authorizationToken);
+      request.setRequestHeader("Content-Type", "application/json");
+    },
+    data: JSON.stringify( currentDrawingData ),
     dataType: 'json',
     success: function (res) {
       console.log(res);
+      $("#deleteDrawing-" + res.nid).show();
+      stopDrawingUI();
     },
     error: function (res) {
       console.log(res);
     }
   });
-
-  // $.ajax({
-  //   type: "POST",
-  //   url: "/r/pen?drawing=" + $.param(currentDrawingData),
-  //   success: function (res) {
-  //     console.log(res);
-  //   },
-  //   error: function (res) {
-  //     console.log(res);
-  //   }
-  // });
-
 }
+
 function clearAndQuitDrawing() {
     //clearcurrentdrawing data
     stopDrawingUI();
     currentDrawingData.canvas.clear();
     currentDrawingData = {};
 }
+function getSavedDrawings(idsarray) {
+  $.ajax({
+    type: "GET",
+    url: "/r/pen",
+    beforeSend: function(request) {
+      request.setRequestHeader("X-CSRFToken", Cookies.get("_csrf"));
+      request.setRequestHeader("Content-Type", "application/json");
+    },
+    data: JSON.stringify( idsarray ),
+    dataType: 'json',
+    success: function (res) {
+      console.log("got saved darwing", res);
+      for (i in res) {
+        console.log("drawing", res[i]);
+        var trash = $("#deleteDrawing-" + res[i].nid);
+        renderDrawing(res[i]);
+        trash.show();
+        trash.click(deleteDrawing);
+      }
+    },
+    error: function (res) {
+      console.log("couldnt get saved darwing", res);
+    }
+  })
+}
 
 
 $(function() {
+  if (location.pathname == "/") {
     var feedItems = $(".news-box");
     var feedItemsIds = getAllFoodIds(feedItems);
-    console.log(feedItemsIds);
-  authorName = '{{.SignedUser.Name}}';
-  authorId = '{{.SignedUser.ID}}';
 
-  $(".pencilIcon").click(function (e) {
-    //gets just the formatted date data, which is our nid
-    console.log($( e.currentTarget ).data("nid"));
-    buildDrawing($( e.currentTarget ).data("nid"));
-  });
+    getSavedDrawings(feedItemsIds);
+
+    console.log(feedItemsIds);
+    authorName = '{{.SignedUser.Name}}';
+    authorId = '{{.SignedUser.ID}}';
+
+    $(".pencilIcon").click(function (e) {
+      //gets just the formatted date data, which is our nid
+      console.log($( e.currentTarget ).data("nid"));
+      buildDrawing($( e.currentTarget ).data("nid"));
+    });
 
     $("#clearAndQuit").click(clearAndQuitDrawing);
     $("#saveDrawing").click(saveDrawing);
-
+  }
 });
