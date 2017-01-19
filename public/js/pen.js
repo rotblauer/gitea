@@ -59,7 +59,7 @@ function buildDrawing(e) {
 
         currentDrawingData["canvas"].freeDrawingBrush = new fabric["Pencil" + 'Brush'](currentDrawingData["canvas"]);
         if (currentDrawingData["canvas"].freeDrawingBrush) {
-          currentDrawingData["canvas"].freeDrawingBrush.color = "#000000";
+          currentDrawingData["canvas"].freeDrawingBrush.color = getFaveColor();
           currentDrawingData["canvas"].freeDrawingBrush.width = 1;
           currentDrawingData["canvas"].freeDrawingBrush.shadowBlur = 0;
         }
@@ -98,27 +98,41 @@ function renderDrawing(drawingInfo) {
   $("#createDrawing-" + drawingInfo.nid).hide();
 }
 
+function saveFaveColor(stringey) {
+  window.localStorage.setItem("myfavoritecolor", stringey);
+}
+function getFaveColor() {
+  var f = window.localStorage.getItem("myfavoritecolor");
+  if (typeof(f) === "undefined" || f === null) { //cuz idk which is get when it doesntget
+    return "#000000"; //default black
+  }
+  return f;
+}
 
 function startDrawingUI(nid) {
-    $("#drawing-controls").show();
+  $("#drawing-controls").show();
 
   $("#pen-" + nid).css({"pointer-events":"all"});
-  // currentDrawingData["canvasJQ"].css({"pointer-events": "all"});
 
-    // $('.feed-pen').each(function (i, el) {
-    //     $(el).css({"pointer-events":"all"});
-    // });
   $("#colorp-red").click(function (e) {
     currentDrawingData["canvas"].freeDrawingBrush.color = "#ff0000";
+    saveFaveColor("#ff0000");
+    // window.localStorage.setItem("myfavoritecolor", "#ff0000");
   });
   $("#colorp-blue").click(function (e) {
     currentDrawingData["canvas"].freeDrawingBrush.color = "#0000ff";
+    saveFaveColor("#0000ff");
+    // window.localStorage.setItem("myfavoritecolor", "#0000ff");
   });
   $("#colorp-yellow").click(function (e) {
     currentDrawingData["canvas"].freeDrawingBrush.color = "#ffd700";
+    saveFaveColor("#ffd700");
+    // window.localStorage.setItem("myfavoritecolor", "#ffd700");
   });
   $("#colorp-black").click(function (e) {
     currentDrawingData["canvas"].freeDrawingBrush.color = "#000000";
+    saveFaveColor("#000000");
+    // window.localStorage.setItem("myfavoritecolor", "#000000");
   });
 
 
@@ -224,7 +238,9 @@ function saveDrawing() {
 function clearAndQuitDrawing() {
     //clearcurrentdrawing data
     stopDrawingUI();
-  currentDrawingData["canvasJQ"].remove();
+  if (typeof( currentDrawingData["canvasJQ"] ) !== "undefined") {
+    currentDrawingData["canvasJQ"].remove();
+  }
     currentDrawingData.canvas.clear();
     currentDrawingData = {};
 }
