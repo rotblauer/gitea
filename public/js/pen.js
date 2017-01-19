@@ -108,6 +108,45 @@ function startDrawingUI(nid) {
     // $('.feed-pen').each(function (i, el) {
     //     $(el).css({"pointer-events":"all"});
     // });
+  $("#colorp-red").click(function (e) {
+    currentDrawingData["canvas"].freeDrawingBrush.color = "#ff0000";
+  });
+  $("#colorp-blue").click(function (e) {
+    currentDrawingData["canvas"].freeDrawingBrush.color = "#0000ff";
+  });
+  $("#colorp-yellow").click(function (e) {
+    currentDrawingData["canvas"].freeDrawingBrush.color = "#ffd700";
+  });
+  $("#colorp-black").click(function (e) {
+    currentDrawingData["canvas"].freeDrawingBrush.color = "#000000";
+  });
+
+
+  $("body").keypress(function (e) {
+    console.log(e.which);
+    switch(e.which) {
+    case 97: //a
+      currentDrawingData["canvas"].freeDrawingBrush.color = "#000000";
+      break;
+    case 115: //s
+      currentDrawingData["canvas"].freeDrawingBrush.color = "#ff0000";
+      break;
+    case 100: ///d
+      currentDrawingData["canvas"].freeDrawingBrush.color = "#0000ff";
+      break;
+    case 102: //f
+      currentDrawingData["canvas"].freeDrawingBrush.color = "#ffd700";
+      break;
+
+      // save
+    case 119: //w
+      saveDrawing();
+      break;
+    case 113: //q
+      clearAndQuitDrawing();
+      break;
+    }
+  });
 
     drawingUnderway = true;
 }
@@ -148,8 +187,12 @@ function saveDrawing() {
   // currentDrawingData["canvas"].selectable = false;
   // fabric.util.removeListener(fabric.document, 'mousedown', this.onMouseDown); fabric.util.removeListener(fabric.document, 'mousemove', this.onMouseMove);
   // currentDrawingData["canvas"].set({selectable:false});
+  if (typeof currentDrawingData["canvas"] == "undefined") {
+    console.log("canvas was undefined. returning on save");
+    return
+  }
   currentDrawingData["imageData"] = JSON.stringify(currentDrawingData["canvas"].toJSON());
-    delete currentDrawingData["canvasJQ"];
+  delete currentDrawingData["canvasJQ"];
   delete currentDrawingData["canvas"];
     //send currentDrawingData to bolt
   currentDrawingData["authorId"] = "1";

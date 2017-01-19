@@ -8,9 +8,11 @@
 
 #drawing-controls {
     display: none;
-    text-align: center;
+    text-align: left;
+    padding-left: 40px;
+    margin-left: 25%;
     width: 100%;
-    /* background-color: salmon !important; */
+    /* background-color: white ; */
     color: blue;
     display: float;
     position: fixed;
@@ -23,6 +25,8 @@
     padding: 3px;
     border: 1px solid white;
     border-radius: 3px;
+    padding-left:8px;
+    padding-right:8px;
     /* background-color: #AFEEEE; */
 }
 #clearAndQuit {
@@ -32,6 +36,22 @@
 #saveDrawing {
     background-color: forestgreen;
     color: white;
+}
+#colorp-black {
+    color: white;
+    background-color: black;
+}
+#colorp-red {
+    color: white;
+    background-color: red;
+}
+#colorp-blue {
+    color: white;
+    background-color: blue;
+}
+#colorp-yellow {
+    color: white;
+    background-color: gold;
 }
 
 .feed-pen {
