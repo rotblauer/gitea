@@ -5,6 +5,15 @@ var drawingUnderway = false;
 var authorName;
 var authorId;
 
+function showLoading() {
+    var loadingIcon = $("#drawings-loading-icon");
+    loadingIcon.show();
+}
+function hideLoading() {
+    var loadingIcon = $("#drawings-loading-icon");
+    loadingIcon.hide();
+}
+
 function getAllFoodIds(feedItems) {
     var foodIds = [];
     feedItems.each(function(i, el) {
@@ -208,6 +217,7 @@ function deleteDrawing(e) {
 }
 
 function saveDrawing() {
+    showLoading();
     stopDrawingUI();
   // currentDrawingData["canvas"].selectable = false;
   // fabric.util.removeListener(fabric.document, 'mousedown', this.onMouseDown); fabric.util.removeListener(fabric.document, 'mousemove', this.onMouseMove);
@@ -245,8 +255,10 @@ function saveDrawing() {
       $("#deleteDrawing-" + res.nid).click(deleteDrawing);
       $("#createDrawing-" + res.nid).hide();
       stopDrawingUI();
+        hideLoading();
     },
     error: function (res) {
+        hideLoading();
         alert(res, JSON.parse(res));
       // console.log(res);
     }
@@ -263,6 +275,7 @@ function clearAndQuitDrawing() {
     currentDrawingData = {};
 }
 function getSavedDrawings(idsarray) {
+    showLoading();
   $.ajax({
     type: "GET",
     url: "/r/pen",
@@ -282,8 +295,10 @@ function getSavedDrawings(idsarray) {
         trash.click(deleteDrawing);
       }
       $('.feed-pen').css({'pointer-events': "none"});
+        hideLoading();
     },
     error: function (res) {
+        hideLoading();
         alert("couldn't get saved drawings", res);
       // console.log("couldnt get saved darwing", res);
     }
