@@ -87,6 +87,7 @@ function renderDrawing(drawingInfo) {
     $("#news-" + drawingInfo.nid).append(drawingContainer);
     drawingContainer.append(drawingCanvas);
 
+      //this is shit.
     var c = new fabric.Canvas("canvas-" + drawingInfo.nid);
     c.loadFromJSON( drawingInfo.imageData , function() {
       c.renderAll();
