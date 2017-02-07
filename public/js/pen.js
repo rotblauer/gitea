@@ -217,6 +217,7 @@ function deleteDrawing(e) {
 }
 
 function saveDrawing() {
+    if (!drawingUnderway) { return; }
     showLoading();
     stopDrawingUI();
   // currentDrawingData["canvas"].selectable = false;
