@@ -69,31 +69,40 @@ function buildDrawing(e) {
 
 function renderDrawing(drawingInfo) {
     //drawingInfo is obj
-  var drawingContainer = $(penTemplate);
-  var drawingCanvas = $("<canvas></canvas>");
+  var drawingContainer = $(penTemplate); //div
 
-  console.log("rending drawing", drawingInfo.imageData);
+    // var drawingCanvas = $("<canvas></canvas>");
+    var drawingPNG = $("<img/>");
+
+  // console.log("rending drawing", drawingInfo.imageData);
 
   drawingContainer.attr("id", "pen-" + drawingInfo.nid);
   drawingContainer.css(drawingInfo.position);
-  drawingCanvas.attr("id", "canvas-"+drawingInfo.nid);
-  drawingCanvas.attr("height", drawingInfo.position.height);
-  drawingCanvas.attr("width", drawingInfo.position.width);
-  drawingCanvas.css({"z-index": 1000});
+
+    drawingPNG.attr("id", "canvas-" + drawingInfo.nid);
+    drawingPNG.attr("height", drawingInfo.position.height);
+    drawingPNG.attr("width", drawingInfo.position.width);
+    drawingPNG.css({"z-index": 1000});
+    drawingPNG.attr("src", drawingInfo.imageData);
+    // console.log("drawingInfo", drawingInfo.imageData);
+
+  // drawingCanvas.attr("id", "canvas-"+drawingInfo.nid);
+  // drawingCanvas.attr("height", drawingInfo.position.height);
+  // drawingCanvas.attr("width", drawingInfo.position.width);
+  // drawingCanvas.css({"z-index": 1000});
 
   //double check news item exists?
   if ($("#news-" + drawingInfo.nid).length) {
 
     $("#news-" + drawingInfo.nid).append(drawingContainer);
-    drawingContainer.append(drawingCanvas);
+    drawingContainer.append(drawingPNG);
 
-      //this is shit.
-    var c = new fabric.Canvas("canvas-" + drawingInfo.nid);
-    c.loadFromJSON( drawingInfo.imageData , function() {
-      c.renderAll();
-    },function(o,object){
-      console.log(o,object);
-    });
+    // var c = new fabric.Canvas("canvas-" + drawingInfo.nid);
+    // c.loadFromJSON( drawingInfo.imageData , function() {
+    //   c.renderAll();
+    // },function(o,object){
+    //   console.log(o,object);
+    // });
 
   }
   $("#createDrawing-" + drawingInfo.nid).hide();
@@ -185,14 +194,15 @@ function deleteDrawing(e) {
       request.setRequestHeader("X-CSRFToken", Cookies.get("_csrf"));
     },
     success: function (res) {
-      console.log(res);
+      // console.log(res);
       $("#pen-" + nid).remove(); //takes everythign inside too
       $("#deleteDrawing-" + nid).hide();
       $("#createDrawing-" + nid).show();
       $("#createDrawing-" + nid).click(buildDrawing);
     },
     error: function (res) {
-      console.log(res);
+        alert(res, JSON.parse(res));
+      // console.log(res);
     }
   });
 }
@@ -206,7 +216,13 @@ function saveDrawing() {
     console.log("canvas was undefined. returning on save");
     return
   }
-  currentDrawingData["imageData"] = JSON.stringify(currentDrawingData["canvas"].toJSON());
+
+  // currentDrawingData["imageData"] = JSON.stringify(currentDrawingData["canvas"].toJSON());
+
+    // store drawing as png data instead of as "redrawable" canvas drawing json
+    var drawingPNGData = currentDrawingData["canvas"].toDataURL("image/png");
+    currentDrawingData["imageData"] = drawingPNGData;
+
   delete currentDrawingData["canvasJQ"];
   delete currentDrawingData["canvas"];
     //send currentDrawingData to bolt
@@ -224,14 +240,15 @@ function saveDrawing() {
     data: JSON.stringify( currentDrawingData ),
     dataType: 'json',
     success: function (res) {
-      console.log(res);
+      // console.log(res);
       $("#deleteDrawing-" + res.nid).show();
       $("#deleteDrawing-" + res.nid).click(deleteDrawing);
       $("#createDrawing-" + res.nid).hide();
       stopDrawingUI();
     },
     error: function (res) {
-      console.log(res);
+        alert(res, JSON.parse(res));
+      // console.log(res);
     }
   });
 }
@@ -256,9 +273,9 @@ function getSavedDrawings(idsarray) {
     data: JSON.stringify( idsarray ),
     dataType: 'json',
     success: function (res) {
-      console.log("got saved darwing", res);
+      // console.log("got saved darwing", res);
       for (i in res) {
-        console.log("drawing", res[i]);
+        // console.log("drawing", res[i]);
         var trash = $("#deleteDrawing-" + res[i].nid);
         renderDrawing(res[i]);
         trash.show();
@@ -267,7 +284,8 @@ function getSavedDrawings(idsarray) {
       $('.feed-pen').css({'pointer-events': "none"});
     },
     error: function (res) {
-      console.log("couldnt get saved darwing", res);
+        alert("couldn't get saved drawings", res);
+      // console.log("couldnt get saved darwing", res);
     }
   });
 }
@@ -280,7 +298,7 @@ $(function() {
 
     getSavedDrawings(feedItemsIds);
 
-    console.log(feedItemsIds);
+    // console.log(feedItemsIds);
     //btw these don't work
     authorName = '{{.SignedUser.Name}}';
     authorId = '{{.SignedUser.ID}}';
