@@ -1,0 +1,118 @@
+.nativity-nav {
+    background-color: darkred !important;
+}
+
+.nativity-nav a.item {
+    color: white !important;
+}
+
+.nativity-nav a.item.active {
+    color: white !important;
+    background-color: green !important;
+}
+
+#christmas-lights-container-box {
+    width: 100%;
+    /*background: white;*/
+    overflow: hidden;
+    display: hidden;
+    /*show with hangChristmasLights() */
+    padding-left: 3px;
+}
+
+.christmas-light {
+    display: inline-block;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding: 0px;
+    height: 100%;
+    /*margin-bottom: 3px; dunno why need this spacer*/
+}
+
+.fuck-yea-nav {
+    background-color: darkblue !important;
+}
+
+.fuck-yea-nav a.item {
+    color: white !important;
+}
+
+.fuck-yea-nav a.item.active {
+    color: white !important;
+    background-color: darkred !important;
+}
+
+
+/*cuz they're all sideways, don't they see that?!*/
+
+.octicon-git-commit {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+i.text.grey.mega-octicon.octicon-comment-discussion {
+    color: green !important;
+}
+
+i.text.grey.mega-octicon.octicon-issue-closed {
+    color: red !important;
+}
+
+i.text.grey.mega-octicon.octicon-issue-opened {
+    color: gold !important;
+}
+
+span.time-since.poping.up {
+    font-size: 10px;
+}
+
+.feeds .news .push.news .content ul img {
+    max-width: 100%;
+}
+
+.repo-commit-message img {
+    max-width: 100%;
+}
+
+td.repo-commit-message span p:first-child {
+    display: inline;
+}
+
+
+/*	.text.mega-octicon.octicon-git-commit {
+				color: #4183C4 !important;
+			}
+
+			.octicon-repo {
+				color: darkgreen !important;
+			}*/
+
+
+/* Make it a marquee */
+
+.marquee {
+    margin: 0 auto;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.marquee span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 75s linear infinite;
+}
+
+
+/* Make it move */
+
+@keyframes marquee {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(-100%, 0);
+    }
+}
