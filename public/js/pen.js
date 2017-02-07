@@ -11,7 +11,7 @@ function showLoading() {
 }
 function hideLoading() {
     var loadingIcon = $("#drawings-loading-icon");
-    // loadingIcon.hide();
+    loadingIcon.hide();
 }
 
 function getAllFoodIds(feedItems) {
