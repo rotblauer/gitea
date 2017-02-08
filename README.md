@@ -1,5 +1,7 @@
 # Our ~~gogs~~ Gitea :heart:.
 
+[![volkswagen status](https://auchenberg.github.io/volkswagen/volkswargen_ci.svg?v=1)](https://github.com/auchenberg/volkswagen)
+
 Note `gogs/.gitignore`.
 - `custom/`, where our config stuff lives, specifically `custom/conf/app.ini`.
 - `data/`, where non-repo related data lives; sessions, avatars, chat.db
