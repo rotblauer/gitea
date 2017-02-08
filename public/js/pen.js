@@ -286,7 +286,7 @@ function getSavedDrawings(idsarray) {
       request.setRequestHeader("X-CSRFToken", Cookies.get("_csrf"));
       request.setRequestHeader("Content-Type", "application/json");
     },
-    data: JSON.stringify( idsarray ),
+      data: JSON.stringify({ids: idsarray }),
     dataType: 'json',
     success: function (res) {
         console.log("queried for drawing idsarray of length:", idsarray.length );

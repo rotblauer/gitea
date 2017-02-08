@@ -28,8 +28,9 @@ func GetChatData(c *context.Context) {
 }
 
 //GetDrawings gets drawings given a set of ids []string
-func GetDrawings(c *context.Context, ids []string) {
-	drawings, err := models.GetDrawings(ids)
+func GetDrawings(c *context.Context, q models.DrawingsQ) {
+	log.Println("getting drawings for ids: ", q.IDs)
+	drawings, err := models.GetDrawings(q.IDs)
 	if err != nil {
 		c.JSON(500, err.Error())
 	} else {

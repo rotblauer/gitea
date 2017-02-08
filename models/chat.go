@@ -57,6 +57,11 @@ type Position struct {
 	ZIndex   int    `json:"zindex"`
 }
 
+// DrawingsQ is receiver when Frontend asks for ids:[id1, id2]
+type DrawingsQ struct {
+	IDs []string `json:"ids"`
+}
+
 // ChatMessages is a bunch of chat messages. Stop bothering me.
 type ChatMessages []ChatMessageForm
 
@@ -104,6 +109,7 @@ func GetDrawings(ids []string) (Drawings, error) {
 				//only if drawing is in given drawings key set (we don't want all drawings just feeded times)
 				//but if no ids given, return em all
 				if (len(ids) == 0) || (indexOf(ids, string(drawingkey)) > -1) {
+					// if indexOf(ids, string(drawingkey)) > -1 {
 					var drawing Drawing
 					json.Unmarshal(drawingval, &drawing)
 					drawing.CanvasData = "" // so send less data over da wires
