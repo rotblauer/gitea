@@ -92,7 +92,9 @@ function renderDrawing(drawingInfo) {
     drawingPNG.attr("height", drawingInfo.position.height);
     drawingPNG.attr("width", drawingInfo.position.width);
     drawingPNG.css({"z-index": 1000});
-    drawingPNG.attr("src", drawingInfo.imageData);
+    // drawingPNG.attr("src", drawingInfo.imageData);
+    drawingPNG.attr("src", "/drawing/"+drawingInfo.nid+".png");
+
     // console.log("drawingInfo", drawingInfo.imageData);
 
   // drawingCanvas.attr("id", "canvas-"+drawingInfo.nid);
@@ -210,7 +212,7 @@ function deleteDrawing(e) {
       $("#createDrawing-" + nid).click(buildDrawing);
     },
     error: function (res) {
-        alert(res, JSON.parse(res));
+        alert(res);
       // console.log(res);
     }
   });
@@ -260,7 +262,7 @@ function saveDrawing() {
     },
     error: function (res) {
         hideLoading();
-        alert(res, JSON.parse(res));
+        alert(res);
       // console.log(res);
     }
   });

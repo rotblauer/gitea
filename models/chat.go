@@ -1,16 +1,23 @@
 package models
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"image"
+	"image/png"
+	"os"
 	"strconv"
 
 	"errors"
 	"sort"
 
+	"code.gitea.io/gitea/modules/setting"
 	"github.com/boltdb/bolt"
 	"github.com/olahol/melody"
 	ghfmd "github.com/shurcooL/github_flavored_markdown"
+	"path/filepath"
+	"strings"
 )
 
 // ChatMessageForm is exported.
@@ -36,6 +43,7 @@ type Drawing struct {
 	NewsID     string   `json:"nid"`
 	CanvasData string   `json:"imageData"`
 	Position   Position `json:"position"`
+	Storepath  string   `json:"storePath"`
 }
 
 // Position is data for how to size and place the drawing relative to the news item
@@ -69,6 +77,9 @@ func (slice ChatMessages) Swap(i, j int) {
 //Drawings is plural
 type Drawings []Drawing
 
+// var drawingStorePath = filepath.Join(setting.AppDataPath, "data", "drawing")
+var drawingStorePath = filepath.Join(setting.AppDataPath, "public", "drawing")
+
 func indexOf(sliceStrings []string, value string) int {
 	for p, v := range sliceStrings {
 		if v == value {
@@ -95,6 +106,7 @@ func GetDrawings(ids []string) (Drawings, error) {
 				if (len(ids) == 0) || (indexOf(ids, string(drawingkey)) > -1) {
 					var drawing Drawing
 					json.Unmarshal(drawingval, &drawing)
+					drawing.CanvasData = "" // so send less data over da wires
 					drawings = append(drawings, drawing)
 				}
 			}
@@ -110,9 +122,54 @@ func GetDrawings(ids []string) (Drawings, error) {
 // PostDrawing saves a single drawing and if successful returns it
 func PostDrawing(drawing Drawing) (Drawing, error) {
 	var err error
+
+	// TODO move saving base64 to png to own function
+	// setting.AppDataPath
+	// sec := settings.Cfg.Section("attachment")
+	// var DrawingStorePath = setting.Cfg.Key("PATH").MustString(path.Join(setting.AppDataPath, "drawings"))
+	// var drawingStorePath = path.Join(setting.AppDataPath, "drawing")
+	// ^ moved to up top
+
+	// decode ImageData -> PNG file in data/drawings/
+	err = os.MkdirAll(drawingStorePath, 0777)
+	if err != nil {
+		fmt.Println("ensuring drawing store dir exists", err)
+		return drawing, err
+	}
+
+	prefix := "data:image/png;base64,"
+	s := strings.TrimPrefix(drawing.CanvasData, prefix)
+
+	imageReader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(s))
+	pngImage, _, err := image.Decode(imageReader)
+	if err != nil {
+		fmt.Println("decoding image", err)
+		return drawing, err
+	}
+
+	wo := filepath.Join(drawingStorePath, drawing.NewsID+".png")
+	fmt.Println("saving drawing to: ", wo)
+	imgFile, err := os.Create(wo)
+	if err != nil {
+		fmt.Println("creating drawing path", err)
+		return drawing, err
+	}
+	defer imgFile.Close()
+
+	err = png.Encode(imgFile, pngImage)
+	if err != nil {
+		fmt.Println("encoding drawing image", err)
+		return drawing, err
+	}
+
+	// And i think this should overwrite existing drawings in case draw-delete-draw.
+
+	// set new attribute Storepath, includes path /drawings/nid.png
+	// or don't.. can just concat from front.
+
 	drawingJSON, err := json.Marshal(drawing)
-	fmt.Println("model drawing", drawing)
-	fmt.Println("model jsoned drawingJSON string:", string(drawingJSON))
+	// fmt.Println("model drawing", drawing)
+	// fmt.Println("model jsoned drawingJSON string:", string(drawingJSON))
 	fmt.Println("model drawing.NewsID string", string(drawing.NewsID))
 	// This can go in a go routine --
 	go func() {

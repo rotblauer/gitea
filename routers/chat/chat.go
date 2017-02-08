@@ -40,12 +40,12 @@ func GetDrawings(c *context.Context, ids []string) {
 //PostDrawing saves a single drawing
 func PostDrawing(c *context.Context, drawing models.Drawing) {
 
-	log.Println("router post drawing", drawing)
+	// log.Println("router post drawing", drawing)
 	log.Println("router post drawing.NewsID", drawing.NewsID)
 
 	d, err := models.PostDrawing(drawing)
-	log.Println("priting line")
-	log.Println(d, err)
+	// log.Println("priting line")
+	// log.Println(d, err)
 	if err != nil {
 		c.JSON(500, err.Error())
 	} else {

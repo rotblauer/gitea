@@ -357,6 +357,16 @@ func runWeb(ctx *cli.Context) error {
 				return
 			}
 		})
+		// m.Get("/drawing/:nid", func(ctx *context.Context) {
+		// 	p := filepath.Join(setting.AppDataPath, "data", "drawing", ctx.Params(":nid"))
+		// 	// fr, err := os.Open(p)
+		// 	// if err != nil {
+		// 	// 	ctx.Handle(500, "Open", err)
+		// 	// 	return
+		// 	// }
+		// 	// defer fr.Close()
+		// 	ctx.ServeFile(p)
+		// })
 		m.Post("/issues/attachments", repo.UploadIssueAttachment)
 	}, ignSignIn)
 
