@@ -289,7 +289,10 @@ function getSavedDrawings(idsarray) {
     data: JSON.stringify( idsarray ),
     dataType: 'json',
     success: function (res) {
-      // console.log("got saved darwing", res);
+        console.log("queried for drawing idsarray of length:", idsarray.length );
+        console.log("first idarrayer looks like:", idsarray[0]);
+      console.log("got this many saved darwings", res.length);
+        console.log("first one looks like this:", res[0]);
       for (i in res) {
         // console.log("drawing", res[i]);
         var trash = $("#deleteDrawing-" + res[i].nid);
