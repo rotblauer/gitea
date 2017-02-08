@@ -233,8 +233,8 @@ func runWeb(ctx *cli.Context) error {
 		mm.HandleRequest(resp, req)
 	})
 	// Get chat messages json.
-	m.Get("/r/chat", reqSignIn, chat.GetChatData)                       // Get chat.txt database.
-	m.Get("/r/pen", binding.Json(models.DrawingsQ{}), chat.GetDrawings) // get drawings from chat given a json obj of availabe news createdats
+	m.Get("/r/chat", reqSignIn, chat.GetChatData)                               // Get chat.txt database.
+	m.Post("/r/drawingsof", binding.Json(models.DrawingsQ{}), chat.GetDrawings) // get drawings from chat given a json obj of availabe news createdats
 	//no reqsigning for now
 	m.Post("/r/pen", binding.Json(models.Drawing{}), chat.PostDrawing)
 	m.Patch("/r/pen", binding.Json(models.Drawing{}), chat.PatchDrawing)

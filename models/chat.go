@@ -251,6 +251,13 @@ func DeleteDrawing(did string) error {
 	})
 	if err != nil {
 		fmt.Println("The error was with opening view to bdb", err)
+	} else {
+		wo := filepath.Join(drawingStorePath, did+".png")
+		rmerr := os.Remove(wo)
+		if rmerr != nil {
+			fmt.Println("Removing drawing file err", rmerr)
+		}
+
 	}
 	return err
 }

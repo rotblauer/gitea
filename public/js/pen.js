@@ -280,13 +280,13 @@ function clearAndQuitDrawing() {
 function getSavedDrawings(idsarray) {
     showLoading();
   $.ajax({
-    type: "GET",
-    url: "/r/pen",
+    type: "POST",
+    url: "/r/drawingsof",
     beforeSend: function(request) {
       request.setRequestHeader("X-CSRFToken", Cookies.get("_csrf"));
       request.setRequestHeader("Content-Type", "application/json");
     },
-      data: JSON.stringify({ids: idsarray }),
+    data: JSON.stringify({"ids": idsarray }),
     dataType: 'json',
     success: function (res) {
         console.log("queried for drawing idsarray of length:", idsarray.length );
@@ -295,6 +295,7 @@ function getSavedDrawings(idsarray) {
         console.log("first one looks like this:", res[0]);
       for (i in res) {
         // console.log("drawing", res[i]);
+          if (idsarray.indexOf(res[i].nid) < 0) { console.log("got unneeded drawing from swerver:", res[i].nid); continue; }
         var trash = $("#deleteDrawing-" + res[i].nid);
         renderDrawing(res[i]);
         trash.show();
