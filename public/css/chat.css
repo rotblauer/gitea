@@ -1,7 +1,8 @@
 #catRoom {
     background-color: black;
     /* background-image: url("../img/stars-stripped-3x.jpeg"); */
-    background-size: contain;
+    background-size: cover;
+     /* contain; */
     /* cover; */
     background-repeat: no-repeat;
     /* background-position: 0% 90%; */
@@ -43,8 +44,8 @@ div.chat-message p {
     text-overflow: wrap;
 }
 
-div.chat-message:hover {
-    background: rgba(5, 5, 5, 0.70);
+#chat-messages-container:hover {
+    background: rgba(5, 5, 5, 0.75);
 }
 
 .is-chat-p {
@@ -108,15 +109,20 @@ div.chat-message:hover {
 }
 
 textarea#text {
-    background: rgba(0,0,0, 0.3);
-    border: 1px solid lightgreen;
-    border-radius: 2px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(144,238,144, 0);
+    /* border-radius: 2px; */
     /*border: none;*/
     /*background: white;*/
     color: lightgreen;
     width: 100%;
     margin-top: 8px;
     padding: 5px 8px 5px 5px;
+}
+
+textarea#text:focus {
+    background: rgba(0,0,0, 0.75);
+
 }
 
 #open-chatty-full {

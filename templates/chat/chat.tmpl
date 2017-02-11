@@ -20,12 +20,9 @@
 
 		<div id="catRoom" >
 
-	  <code id="nasa-talk" style="display: none; position: relative; top: 10px; left: 10px; padding-top: 7px;">
-		  <!-- NASA POD comments go here, if turned on -->
-	  </code>
 			<!-- DISCONNECTED ALERT -->
-        <div id="disconnected-alert" style="display: none;">
-        <div style="display: table; position: absolute; z-index: 100; margin-left: auto; margin-right: auto; text-align: center; width: 90%; height: 60vh; background: rgba(200, 10, 10, 0.4);" class="text-center">
+        <div id="disconnected-alert" style="position: absolute; top:0px;right:0px;left:0px;bottom:0px; display: none;">
+        <div style="display: table; position: absolute; z-index: 100; margin-left: auto; margin-right: auto; text-align: center; width: 100%; height: 100%; background: rgba(200, 10, 10, 0.4);" class="text-center">
           <h1 id="disconnected-text" style="display: table-cell; vertical-align: middle;" class="ui text blue">
             You've been disconnected, please try refreshing.
           </h1>
@@ -44,6 +41,9 @@
 		  </div>
 	  </div>
 
+	  <span id="nasa-talk" style="font-size: 0.8em; display: none; line-height: 0.8em; color: #428bca;">
+		  <!-- NASA POD comments go here, if turned on -->
+	  </span>
 
     </div>
 
@@ -53,6 +53,10 @@
 	  	$(function() {
 	  	        var url = "ws://" + window.location.host + "/chat-ws";
 	  	        var ws = new WebSocket(url);
+
+		  function establishWS() {
+		    ws = new WebSocket(url);
+		  }
 	  	        var chat = $("#chat-messages");
 	  	        var text = $("#text");
 	  	        var isTypingDisplay = $("#other-is-typing");
@@ -70,10 +74,10 @@
 				   $.get("https://api.nasa.gov/planetary/apod?api_key=" + nak, function (res) {
 					 console.log(res);
 					 $("#catRoom").css({"background-image": "url(" + res.url + ")"});
-					   $("#nasa-talk").show().html("<i class='octicon octicon-rocket'></i>")
+		  $("#nasa-talk").show().html("<small><strong>" + res.title + "</strong>: <em>" + res.explanation.substring(0,200) + "...</em></small>")
 
 									  .on("click", function () {
-						   alert(res.explanation);
+						   alert(res.title + "\n" + res.explanation + "\n" + res.url);
 						   });
 
 				   });
@@ -265,9 +269,11 @@
 
 				ws.onopen = function (evt) {
 					console.log('ws connected');
+	  	    $('#disconnected-alert').hide();
 				};
 	  	  ws.onclose = function(evt) {
 	  	    $('#disconnected-alert').show();
+		  establishWS();
 	  	  };
 	  	  ws.onmessage = function(msgEvt) {
 					console.log("got message");

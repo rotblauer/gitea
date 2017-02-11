@@ -190,7 +190,7 @@ $(function() {
     var demo = function(data) {
         fx.rates = data.rates;
         var rate = fx(1).to("EUR");
-        var ticker = "<span><strong>1.00</strong>USD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        var ticker = "<span><strong>1.000</strong>USD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         for (i in fx.rates) {
             if (i !== "") {
                 var r = fx.rates[i];
