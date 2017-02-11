@@ -20,6 +20,9 @@
 
 		<div id="catRoom" >
 
+	  <code id="nasa-talk" style="display: none; position: relative; top: 10px; left: 10px; padding-top: 7px;">
+		  <!-- NASA POD comments go here, if turned on -->
+	  </code>
 			<!-- DISCONNECTED ALERT -->
         <div id="disconnected-alert" style="display: none;">
         <div style="display: table; position: absolute; z-index: 100; margin-left: auto; margin-right: auto; text-align: center; width: 90%; height: 60vh; background: rgba(200, 10, 10, 0.4);" class="text-center">
@@ -30,42 +33,16 @@
         </div>
 
       <div id="chat-messages-container">
-          <div id="chat-messages" class="ui grid container"></div>
+		  <div id="chat-messages" class="ui grid container"></div>
       </div>
-                <div class="input-holder " >
-                  <div class="form-group">
-                    <span id="other-is-typing" style="display: none; float: left; z-index: 50; color: white; background-color: dodgerblue;" class="label label-info">Somebody else is typing...</span>
-      							<span id="count-remaining-characters" style="display: none; float: right; z-index: 50; color: white; background-color: darkred;" class="label label-info">5000/5000</span>
-                    <textarea class="form-control" placeholder="$ echo" rows="3" id="text" type="text"></textarea>
+      <div class="input-holder " >
+		  <div class="form-group">
+			  <span id="other-is-typing" style="display: none; float: left; z-index: 50; color: white; background-color: dodgerblue;" class="label label-info">Somebody else is typing...</span>
+			  <span id="count-remaining-characters" style="display: none; float: right; z-index: 50; color: white; background-color: darkred;" class="label label-info">5000/5000</span>
+			  <textarea class="form-control" placeholder="$ echo" rows="3" id="text" type="text"></textarea>
 
-                  </div>
-                </div>
-        <!-- <a id="open-chatty-full" class="ui right text blue" target="_blank" href="http://www.chat.areteh.co:5000"><span class="octicon octicon-device-desktop"></span></a> -->
-
-					<!-- NOTICES (INPUT ADVICE) -->
-          <!-- <p id="hold-text-input-advice" style="padding-left: 1rem; padding-right: 1rem; background: lightgreen; font-family: monospace;"> -->
-          <!-- <small id="toggle-text-input-advice">?</small> -->
-          <!-- <small id="text-input-advice" style="display:none;"> -->
-          <!-- <br> -->
-          <!-- shift-return to begin newline <br><br> -->
-          <!--   ~~<del>strikethrough</del>~~<br> -->
-          <!--   <em>_italic_</em><br> -->
-          <!--   <strong>__bold__</strong><br> -->
-          <!--   <code>`code`</code><br> -->
-          <!--   [linkalias](href)<br> -->
-          <!--   ```&lt;language&gt;<br> -->
-          <!--   codefence <br> -->
-          <!--   ```<br> -->
-          <!-- </small> -->
-          <!-- </p> -->
-          <!-- <script> -->
-          <!--   $("#hold-text-input-advice").click(function () { -->
-          <!--     $("#text-input-advice").toggle(); -->
-          <!--   }); -->
-          <!-- </script> -->
-
-					  <!-- FORM GROUP INPUT -->
-
+		  </div>
+	  </div>
 
 
     </div>
@@ -82,9 +59,26 @@
 	  	        var data = [];
 	  	        var ipData = {};
 	  	        var maxMessageLength = 5000; // :christmas_treeeeeeeeee:. damn hackers keep pushing the limits of what's possible.
-	  	        // function doEmojify() {
-	  	        // 	emojify.run(chat);
-	  	        // }
+
+				var nak = "";
+				function getNAK() {
+						 nak = localStorage.getItem("nasa_api_key");
+						 return nak;
+				}
+
+				if (getNAK()) {
+				   $.get("https://api.nasa.gov/planetary/apod?api_key=" + nak, function (res) {
+					 console.log(res);
+					 $("#catRoom").css({"background-image": "url(" + res.url + ")"});
+					   $("#nasa-talk").show().html("<i class='octicon octicon-rocket'></i>")
+
+									  .on("click", function () {
+						   alert(res.explanation);
+						   });
+
+				   });
+				}
+
 
 	  	        var entityMap = {
 	  	          "&": "&amp;",
@@ -263,6 +257,7 @@
 
 				// Set last read time to now. On opening and closing chat window.
 				$('#get-chatty').on('click', function() {
+					  $("#currency-ticker").toggle();
 						setLastTimeRead(Date.now());
 					  setUnreadNotifier(''); // clear notifier
 				});
