@@ -100,7 +100,7 @@
 					{{else if (or (or (eq .GetOpType 12) (eq .GetOpType 13)) (or (eq .GetOpType 14) (eq .GetOpType 15)))}}
 						<span class="text issue title has-emoji">{{.GetIssueTitle}}</span>
 					{{end}}
-					<p class="text italic light grey">
+					<p class="text light grey">
 						{{TimeSince .GetCreate $.i18n.Lang}}
 					</p>
 				</div>

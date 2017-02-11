@@ -47,6 +47,11 @@
     color: rgba(250, 250, 250, 0.45);
 }
 
+/* div.header-wrapper { */
+/*     background-color: transparent !important; */
+/*     /\* rgba(255,255,255,0.1) !important; *\/ */
+/* } */
+
 #christmas-lights-container-box {
     width: 100%;
     /*background: white;*/
@@ -87,6 +92,14 @@
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
+}
+
+.ui.divider:not(.vertical):not(.horizontal) {
+    border-top: 1px solid rgba(34, 36, 38, .05) !important;
+}
+
+i.text.grey.mega-octicon.octicon-repo {
+    color: #428bca !important;
 }
 
 i.text.grey.mega-octicon.octicon-comment-discussion {
