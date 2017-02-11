@@ -11,6 +11,42 @@
     background-color: green !important;
 }
 
+.following.bar.dark-stripey {
+    /* background-color: white; */
+    /* border-bottom: 1px solid #DDDDDD; */
+    /* box-shadow: 0 0px 0px rgba(0, 0, 0, 0.04); */
+    /* background-color: rgb(20, 20, 20); */
+    background: repeating-linear-gradient(135deg, #111, #111 15px, #112 15px, #112 30px);
+    /* background: white; */
+    /* background: radial-gradient(circle, white 10%, transparent 10%), */
+    /* radial-gradient(circle, pink 10%, white 10%) 25px 25px; */
+    /* background-size:50px 50px; */
+    /* background-image: url("../img/g299.jpg"); */
+    /* background-size:     cover; */
+    /* background-repeat:no-repeat; */
+    /* /\* background-position: 0% 90%; *\/ */
+    /* background-position: center center; */
+    /* border-top: 1px solid white; */
+    border-bottom: 1px solid white;
+}
+
+.following.bar.dark-stripey .item {
+    color: white;
+}
+
+.following.bar.dark-stripey .item.active {
+    color: white;
+    background: rgba(250, 250, 250, 0.3) !important;
+}
+
+.following.bar.dark-stripey .item:hover {
+    background: rgba(200, 200, 200, 0.4);
+}
+
+.following.bar .top.menu a.item:hover {
+    color: rgba(250, 250, 250, 0.45);
+}
+
 #christmas-lights-container-box {
     width: 100%;
     /*background: white;*/
@@ -115,4 +151,10 @@ td.repo-commit-message span p:first-child {
     100% {
         transform: translate(-100%, 0);
     }
+}
+
+#currency-ticker {
+    background-color: #111;
+    /* color: #eee; */
+    color: #1e70bf;
 }
