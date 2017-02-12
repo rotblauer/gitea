@@ -291,16 +291,20 @@ function getSavedDrawings(idsarray) {
     success: function (res) {
         console.log("queried for drawing idsarray of length:", idsarray.length );
         console.log("first idarrayer looks like:", idsarray[0]);
-      console.log("got this many saved darwings", res.length);
-        console.log("first one looks like this:", res[0]);
-      for (i in res) {
-        // console.log("drawing", res[i]);
-          if (idsarray.indexOf(res[i].nid) < 0) { console.log("got unneeded drawing from swerver:", res[i].nid); continue; }
-        var trash = $("#deleteDrawing-" + res[i].nid);
-        renderDrawing(res[i]);
-        trash.show();
-        trash.click(deleteDrawing);
-      }
+        if (Array.isArray(res)) {
+            console.log("got this many saved darwings", res.length);
+            console.log("first one looks like this:", res[0]);
+            for (i in res) {
+                // console.log("drawing", res[i]);
+                if (idsarray.indexOf(res[i].nid) < 0) { console.log("got unneeded drawing from swerver:", res[i].nid); continue; }
+                var trash = $("#deleteDrawing-" + res[i].nid);
+                renderDrawing(res[i]);
+                trash.show();
+                trash.click(deleteDrawing);
+            }
+        } else {
+            console.log("got successful response. res not array. res:", res);
+        }
       $('.feed-pen').css({'pointer-events': "none"});
         hideLoading();
     },
