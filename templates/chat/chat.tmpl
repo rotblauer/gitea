@@ -197,7 +197,11 @@
 	  	        }
 	  	        function scrollChat() {
 	  	            var div = $('#chat-messages-container');
+					// not pretty way to keep :cat2: and :bomb: from being halway-ified when they're posted
+					// it's cuz their fatter than usuual
+					setTimeout(function () {
 	  	            div.scrollTop(div.prop('scrollHeight') + 50);
+					}, 100);
 	  	        }
 	  	        function getChatJSON() {
 	  	            $.ajax({
