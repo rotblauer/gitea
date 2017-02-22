@@ -58,3 +58,5 @@ coverage.out
 *-ignore*
 /indexers
 *.mp3
+*.wav
+*.m4a

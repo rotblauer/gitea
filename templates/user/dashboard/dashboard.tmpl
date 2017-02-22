@@ -46,23 +46,41 @@
 					function getContentChoice() {
 					   return localStorage.getItem("sidebarpref");
 					}
-					function stowToph() {
+
+						function stowToph() {
 					$("#tophstuff").hide();
 					$("#repostuff").show();
+						$("#radio").hide();
 					$("#chooseToph").css({ "color":"blue", "text-decoration":"underline"});
 					$("#stowToph").css({ "color":"black", "text-decoration":"none" });
+					$("#tunage").css({ "color":"blue", "text-decoration":"underline" });
 					localStorage.setItem("sidebarpref", "notoph");
 					console.log("hiding toph");
 					}
-					function showToph() {
+
+						function showToph() {
 					$("#tophstuff").show();
 					$("#repostuff").hide();
+						$("#radio").hide();
 					localStorage.setItem("sidebarpref", "toph");
 					console.log("showing toph");
 					$("#chooseToph").css({ "color":"black", "text-decoration":"none" });
+					$("#tunage").css({ "color":"blue", "text-decoration":"underline" });
 					$("#stowToph").css({ "color":"blue", "text-decoration":"underline"});
 					}
-					var c = getContentChoice();
+
+						function showMusic() {
+					$("#tophstuff").hide();
+					$("#repostuff").hide();
+						$("#radio").show();
+					localStorage.setItem("sidebarpref", "music");
+					console.log("showing music");
+					$("#chooseToph").css({ "color":"blue", "text-decoration":"underline" });
+					$("#stowToph").css({ "color":"blue", "text-decoration":"underline"});
+					$("#tunage").css({ "color":"black", "text-decoration":"none" });
+					}
+
+						var c = getContentChoice();
 					console.log(c);
 					switch(c) {
 					case "toph":
@@ -71,19 +89,51 @@
 					case "notoph":
 					   stowToph();
 					break;
+				    case "music":
+				       showMusic();
+				    break;
 					default:
 					showToph();
 					}
 					$("#chooseToph").click(showToph);
 					$("#stowToph").click(stowToph);
+						$("#tunage").click(showMusic);
 					});
 				</script>
 
 				<!-- the latest and greatest tttweets -->
 				<small id="chooseToph" >toph</small>
 				<small id="stowToph">repos</small>
+				<small id="tunage">pirate radio</small>
 
-				<div id="tophstuff">
+            <style>
+             .playlist {
+               overflow: scroll;
+               height: 100vh;
+               }
+             .song-list {
+
+               word-wrap: break-word;
+               }
+
+             .playing {
+               color: blue;
+               }
+            </style>
+            <div id="radio">
+                <em>Pirate radio.</em>
+                <input id="songs-filterer" name="song-filter" type="text" value="" placeholder=""/>
+
+                <!-- Playlist -->
+                <div id="playlist">
+                    <div id="songs-list"></div>
+                </div>
+
+            </div>
+
+
+    <div id="tophstuff" style="display: none;">
+
 				<a class="twitter-timeline" href="https://twitter.com/tophtucker" data-tweet-limit="1">Tweets by tophtucker</a>
 				<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 				<!-- xkcd down below -->
