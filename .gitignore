@@ -56,3 +56,4 @@ coverage.out
 # repo's git hooks. It will be rynced to the server.
 /gogs
 *-ignore*
+/indexers
