@@ -125,6 +125,7 @@ $(function () {
     $.getJSON("/r/music", function(files) {
         var playables = [];
         for (var i = 0; i < files.length; i++) {
+            if (files[i].indexOf(".mp3") < 0) { continue; } // filter out the album covers
             playables.push({
                 file: files[i].substring(6),
                 howl: null
