@@ -21,6 +21,7 @@ var ws; // The websocket that is mostly for chatting cats. But this file is high
 var Player = function(playlist) {
     this.playlist = playlist;
     this.index = 0;
+    this.seeker = 0;
     this.nextSongLoad = {};
 
     // clear display out (was getting called 2x and i dunno why)
@@ -45,11 +46,15 @@ Player.prototype = {
      * Play a song in the playlist.
      * @param  {Number} index Index of the song in the playlist (leave empty to play the first or current).
      */
-    play: function(index) {
+    play: function(index, seek) {
         var self = this;
         var sound;
 
         index = typeof index === 'number' ? index : self.index;
+        seek = typeof seek === 'number' ? seek : 0;
+        this.seeker = seek;
+
+
         var data = self.playlist[index];
 
         var dataSrc = self.nextSongLoad.index === index ? [self.nextSongLoad.data] : [data.file];
@@ -72,12 +77,19 @@ Player.prototype = {
 
                     // load next song by index
                     self.loadSong(index+1);
+                },
+                onplay: function () {
+                    setInterval(function () {
+                        self.seeker = sound.seek();
+                        self.holdPosition(self.index, self.seeker);
+                    }, 3000);
                 }
             });
         }
 
         // Begin playing the sound.
         sound.play();
+        sound.seek(this.seeker);
 
         // Show the pause button.
         if (sound.state() === 'loaded') {
@@ -168,6 +180,32 @@ Player.prototype = {
             };
         });
         preload.loadFile(data.file);
+    },
+    holdPosition: function(index, seek) {
+        console.log("is", index, seek);
+        var self = this;
+        var i = index,
+            s = seek;
+        var d = {
+            index: i,
+            seek: s
+        };
+        var ds = JSON.stringify(d);
+        // work around for why it keeps iterating a lot
+        if (s !== 0) {
+            localStorage.setItem("radio_goggles", ds);
+        }
+    },
+    playFromHeldPosition: function () {
+        var self = this;
+        var ds = localStorage.getItem("radio_goggles");
+        if (ds !== "") {
+            var d = JSON.parse(ds);
+            self.play(d.index, d.seek);
+
+        } else {
+            return;
+        }
     }
 
 
@@ -177,6 +215,7 @@ var player;
 
 $(function () {
 
+    // these could be cached in localStorage too TODO
     $.getJSON("/r/music", function(files) {
         var playables = [];
         for (var i = 0; i < files.length; i++) {
@@ -187,7 +226,10 @@ $(function () {
             });
         }
         player = new Player(playables);
+        player.playFromHeldPosition();
     });
+
+
 
     var songsSearcher = $("input#songs-filterer");
     songsSearcher.keyup(function (e) {
