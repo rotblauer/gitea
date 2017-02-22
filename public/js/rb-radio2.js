@@ -25,8 +25,6 @@ var Player = function(playlist) {
         div.html(song.file);
         div.on("click", function () {
             player.skipTo(playlist.indexOf(song));
-            $(".list-song").removeClass("playing");
-            div.addClass("playing");
         });
         $("#songs-list").append(div);
     });
@@ -60,6 +58,14 @@ Player.prototype = {
 
         // Begin playing the sound.
         sound.play();
+
+        $(".list-song").each(function (i, el) {
+            if ($(el).text() !== sound.data.file) {
+                $(el).removeClass("playing");
+            } else {
+                $(el).addClass("playing");
+            }
+        });
 
         // // Update the track display.
         // track.innerHTML = (index + 1) + '. ' + data.title;
