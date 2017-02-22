@@ -182,7 +182,7 @@ Player.prototype = {
         preload.loadFile(data.file);
     },
     holdPosition: function(index, seek) {
-        console.log("is", index, seek);
+        // console.log("is", index, seek);
         var self = this;
         var i = index,
             s = seek;
