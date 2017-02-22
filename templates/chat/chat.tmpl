@@ -52,14 +52,11 @@
 
 	  	$(function() {
 	  	        var url = "ws://" + window.location.host + "/chat-ws";
-	  	        var ws = new WebSocket(url);
+	  	        ws = new WebSocket(url);
 
 		  function establishWS() {
 		    ws = new WebSocket(url);
 		  }
-			  function getWS() {
-return ws;
-			  }
 	  	        var chat = $("#chat-messages");
 	  	        var text = $("#text");
 	  	        var isTypingDisplay = $("#other-is-typing");

@@ -1,3 +1,6 @@
+var ws; // The websocket that is mostly for chatting cats. But this file is higher up.
+
+
 /*!
  *  Howler.js Audio Player Demo
  *  howlerjs.com
@@ -25,8 +28,8 @@ var Player = function(playlist) {
         div.html(song.file.substring(7));
         div.on("click", function () {
             $("#song-loading").show();
-            if (typeof(getWS()) !== "undefined") {
-                getWS().send("~~~"+playlist.indexOf(song));
+            if (typeof(ws) !== "undefined") {
+                ws.send("~~~"+playlist.indexOf(song));
             }
             player.skipTo(playlist.indexOf(song));
         });
