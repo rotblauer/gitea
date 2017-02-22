@@ -24,14 +24,12 @@ var Player = function(playlist) {
     // Setup the playlist display.
     playlist.forEach(function(song) {
         var div = $('<div></div>');
-        div.addClass('list-song');
+        div.addClass('list-song ui row');
         div.html(song.file.substring(7));
         div.on("click", function () {
-            $("#song-loading").show();
-            if (typeof(ws) !== "undefined") {
-                ws.send("~~~"+playlist.indexOf(song));
+            if (player.index !== playlist.indexOf(song)) {
+                player.skipTo(playlist.indexOf(song));
             }
-            player.skipTo(playlist.indexOf(song));
         });
         $("#songs-list").append(div);
     });
@@ -74,6 +72,8 @@ Player.prototype = {
         } else {
             $("#song-loading").show();
         }
+        $("#radio-readout").show();
+        $("#current-song").html(data.file.substring(7));
 
         $(".list-song").each(function (i, el) {
             if ($(el).text() !== data.file.substring(7)) {
@@ -121,6 +121,10 @@ Player.prototype = {
     skipTo: function(index) {
         var self = this;
 
+        if (typeof(ws) !== "undefined") {
+            ws.send("~~~"+index);
+        }
+
         // Stop the current track.
         if (self.playlist[self.index].howl) {
             self.playlist[self.index].howl.stop();
@@ -129,7 +133,8 @@ Player.prototype = {
         // Play the new track.
         self.play(index);
     }
-};
+
+}
 
 var player;
 

@@ -1,0 +1,36 @@
+
+{{ define "chat/radio.tmpl" }}
+
+<style>
+             #playlist {
+               overflow: scroll;
+               height: 100%;
+               }
+             #songs-list {
+				 color: red;
+    max-height: 60vh;
+    padding: 20px;
+               }
+				.list-song {
+font-size: 0.8em;
+border-left: 2px solid gray;
+					}
+	div.list-song.ui.row {
+		padding: 0rem 0rem 0rem 1rem !important;
+		}
+             .playing {
+               color: blue;
+               }
+            </style>
+
+			<div id="radio-room" style="border: 1px solid red; padding: 20px;">
+
+                <em>Pirate radio.</em>
+                <input id="songs-filterer" name="song-filter" type="text" value="" placeholder=""/>
+
+                <!-- Playlist -->
+                <div id="playlist" >
+                    <div id="songs-list" class="ui grid container"></div>
+                </div>
+			</div>
+{{ end }}

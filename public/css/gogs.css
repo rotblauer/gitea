@@ -109,7 +109,7 @@ code.wrap {
 
 .following.bar .icon,
 .following.bar .octicon {
-    margin-right: 5px !important;
+    /* margin-right: 5px !important; */
 }
 
 .following.bar .head.link.item {

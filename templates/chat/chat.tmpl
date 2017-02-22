@@ -331,7 +331,16 @@
 	  	        hideOtherIsTyping();
 	  	      } else if (msgEvt.data.indexOf("~~~") === 0) {
 				  if (typeof(player) !== "undefined") {
-					player.skipTo(+msgEvt.data.replace("~~~",""));
+
+					  var datSong = +msgEvt.data.replace("~~~","");
+					  console.log("got prompt to change radio song");
+					  console.log("incoming song index", datSong);
+					  console.log("playing song index", player.index);
+
+					  // hopefully this prevents bouncing too
+					  if (player.index !== datSong) {
+					     player.skipTo(datSong);
+					  }
 				  }
 			  }
 	  	  };

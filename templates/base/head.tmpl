@@ -129,9 +129,19 @@
                             </div>*/}} {{if .IsSigned}}
                             <div class="right menu">
 
+								<style>
+									.following.bar.octicon{ margin-right: 0px !important };
+								</style>
                                 <span id="drawings-loading-icon" class="item">
 								    <i class="octicon octicon-pencil spinnering"  ></i>
 								</span>
+
+
+								<!-- radio	 -->
+                                <span id="get-radio" style="background-color: white; color: red;" class="item">
+									<i class="octicon octicon-radio-tower"></i>
+                                </span>
+
 
 
                                 <!-- chatty	 -->
@@ -162,6 +172,9 @@
                                         }, 100);
 
                                     });
+									$("#get-radio").click(function () {
+										$('#radio').slideToggle(300);
+									})
                                 </script>
 
 
@@ -265,11 +278,22 @@
         <!-- 	</iframe> -->
         <!-- </div> -->
 
+		<div id="radio-readout" class="ui container" style="color: red; font-size: 0.9rem; display: none;">
+			<span id="current-song"></span>
+			<span id="song-loading" style="color: orange; display: none;">Loading...</span>
+		</div>
 
         <div id="chatty" class="ui container " style="display: none;">
             {{ template "chat/chat.tmpl" . }}
         </div>
-        {{end}} {{end}} {{/*
+
+            <div id="radio" class="ui container" style="display: none;">
+				{{ template "chat/radio.tmpl" . }}
+			</div>
+		{{end}}
+
+
+		{{end}} {{/*
     </div>
 </body>
 
