@@ -57,3 +57,4 @@ coverage.out
 /gogs
 *-ignore*
 /indexers
+*.mp3

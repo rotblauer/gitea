@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"net"
 	"net/http"
@@ -13,6 +14,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 
 	"code.gitea.io/gitea/models"
 	"code.gitea.io/gitea/modules/auth"
@@ -241,6 +243,52 @@ func runWeb(ctx *cli.Context) error {
 	m.Delete("/r/pen/:id", chat.DeleteDrawing)
 
 	// ***** END: Chatty Kathy *****
+
+	// Start the radio.
+
+	m.Get("/r/music", func(resp http.ResponseWriter, req *http.Request) {
+
+		// set up jsonifiable fileinfo struct
+		type FileInfo struct {
+			Name    string
+			Size    int64
+			Mode    os.FileMode
+			ModTime time.Time
+			IsDir   bool
+		}
+
+		dir, err := os.Open("./public/music/")
+		if err != nil {
+			fmt.Println(err)
+		}
+		entries, err := dir.Readdir(0)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		list := []FileInfo{}
+
+		for _, entry := range entries {
+			f := FileInfo{
+				Name:    entry.Name(),
+				Size:    entry.Size(),
+				Mode:    entry.Mode(),
+				ModTime: entry.ModTime(),
+				IsDir:   entry.IsDir(),
+			}
+			list = append(list, f)
+		}
+
+		output, err := json.Marshal(list)
+		if err != nil {
+			fmt.Println(err)
+		}
+		// log.Println(string(output))
+
+		resp.Write(output)
+	})
+
+	// End the radio.
 
 	// ***** START: User *****
 	m.Group("/user", func() {
