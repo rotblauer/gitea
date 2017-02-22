@@ -57,6 +57,9 @@
 		  function establishWS() {
 		    ws = new WebSocket(url);
 		  }
+			  function getWS() {
+return ws;
+			  }
 	  	        var chat = $("#chat-messages");
 	  	        var text = $("#text");
 	  	        var isTypingDisplay = $("#other-is-typing");
@@ -288,7 +291,7 @@
    				/* console.log("WSonmessage: ", msgEvt);*/
 
 	  	    // If the message is not about another person typing.
-	  	      if (msgEvt.data !== "***" && msgEvt.data !== "!***") {
+	  	      if (msgEvt.data !== "***" && msgEvt.data !== "!***" && msgEvt.data.indexOf('~~~') !== 0) {
 	  	        var formattedMsg = JSON.parse(msgEvt.data);
 	  	        hideOtherIsTyping();
 	  	        data.push(formattedMsg);
@@ -329,7 +332,11 @@
 	  	      // Another person is not typing anymore.
 	  	      } else if (msgEvt.data === "!***") {
 	  	        hideOtherIsTyping();
-	  	      }
+	  	      } else if (msgEvt.data.indexOf("~~~") === 0) {
+				  if (typeof(player) !== "undefined") {
+					player.skipTo(+msgEvt.data.replace("~~~",""));
+				  }
+			  }
 	  	  };
 
 	  	  $('.form-group').on('input', '#text', function() {

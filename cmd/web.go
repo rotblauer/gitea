@@ -212,6 +212,11 @@ func runWeb(ctx *cli.Context) error {
 		} else if string(msg) == "!***" {
 			mm.BroadcastOthers([]byte("!***"), s)
 
+			// changed the radio
+			// will be of the form ~~~<index>
+		} else if strings.HasPrefix(string(msg), "~~~") {
+			mm.BroadcastOthers(msg, s)
+
 			// sent message
 		} else {
 			ps1, err := models.SaveChatMsg(s, msg)

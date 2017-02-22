@@ -25,6 +25,9 @@ var Player = function(playlist) {
         div.html(song.file.substring(7));
         div.on("click", function () {
             $("#song-loading").show();
+            if (typeof(getWS()) !== "undefined") {
+                getWS().send("~~~"+playlist.indexOf(song));
+            }
             player.skipTo(playlist.indexOf(song));
         });
         $("#songs-list").append(div);
