@@ -50,7 +50,7 @@ Player.prototype = {
             sound = data.howl;
         } else {
             sound = data.howl = new Howl({
-                src: ['http://goggable.areteh.co:3000/music/' + data.file],
+                src: ['/music/' + data.file],
                 html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
                 onend: function() {
                     self.skipTo(index + 1);
