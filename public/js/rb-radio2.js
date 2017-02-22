@@ -24,6 +24,7 @@ var Player = function(playlist) {
         div.addClass('list-song');
         div.html(song.file);
         div.on("click", function () {
+            $("#song-loading").show();
             player.skipTo(playlist.indexOf(song));
         });
         $("#songs-list").append(div);
@@ -58,6 +59,8 @@ Player.prototype = {
 
         // Begin playing the sound.
         sound.play();
+        $("#song-loading").hide();
+
 
         $(".list-song").each(function (i, el) {
             if ($(el).text() !== data.file) {
