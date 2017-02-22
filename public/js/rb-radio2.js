@@ -157,7 +157,7 @@ Player.prototype = {
         }
 
         // Play the new track.
-        self.play(index);
+        self.play(index,0);
     },
 
     loadSong: function(index) {
