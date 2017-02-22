@@ -53,14 +53,21 @@ Player.prototype = {
                 html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
                 onend: function() {
                     self.skipTo(index + 1);
+                },
+                onload: function () {
+                    $("#song-loading").hide();
                 }
             });
         }
 
         // Begin playing the sound.
         sound.play();
-        $("#song-loading").hide();
 
+        // Show the pause button.
+        if (sound.state() === 'loaded') {
+        } else {
+            $("#song-loading").show();
+        }
 
         $(".list-song").each(function (i, el) {
             if ($(el).text() !== data.file.substring(7)) {
