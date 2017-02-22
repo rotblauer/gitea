@@ -60,7 +60,7 @@ Player.prototype = {
         sound.play();
 
         $(".list-song").each(function (i, el) {
-            if ($(el).text() !== sound.data.file) {
+            if ($(el).text() !== data.file) {
                 $(el).removeClass("playing");
             } else {
                 $(el).addClass("playing");
