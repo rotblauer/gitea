@@ -13,8 +13,8 @@ import (
 	"net/http/fcgi"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
-	"time"
 
 	"code.gitea.io/gitea/models"
 	"code.gitea.io/gitea/modules/auth"
@@ -250,36 +250,23 @@ func runWeb(ctx *cli.Context) error {
 
 		// set up jsonifiable fileinfo struct
 		type FileInfo struct {
-			Name    string
-			Size    int64
-			Mode    os.FileMode
-			ModTime time.Time
-			IsDir   bool
+			Name string
+			// Size    int64
+			// Mode    os.FileMode
+			// ModTime time.Time
+			// IsDir   bool
 		}
 
-		dir, err := os.Open("./public/music/")
-		if err != nil {
-			fmt.Println(err)
-		}
-		entries, err := dir.Readdir(0)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		list := []FileInfo{}
-
-		for _, entry := range entries {
-			f := FileInfo{
-				Name:    entry.Name(),
-				Size:    entry.Size(),
-				Mode:    entry.Mode(),
-				ModTime: entry.ModTime(),
-				IsDir:   entry.IsDir(),
+		searchDir := "./public/music/"
+		fileList := []string{}
+		err := filepath.Walk(searchDir, func(path string, f os.FileInfo, err error) error {
+			if !f.IsDir() {
+				fileList = append(fileList, path)
 			}
-			list = append(list, f)
-		}
+			return nil
+		})
 
-		output, err := json.Marshal(list)
+		output, err := json.Marshal(fileList)
 		if err != nil {
 			fmt.Println(err)
 		}

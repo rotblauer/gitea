@@ -22,7 +22,7 @@ var Player = function(playlist) {
     playlist.forEach(function(song) {
         var div = $('<div></div>');
         div.addClass('list-song');
-        div.html(song.file);
+        div.html(song.file.substring(7));
         div.on("click", function () {
             $("#song-loading").show();
             player.skipTo(playlist.indexOf(song));
@@ -49,7 +49,7 @@ Player.prototype = {
             sound = data.howl;
         } else {
             sound = data.howl = new Howl({
-                src: ['/music/' + data.file],
+                src: [data.file],
                 html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
                 onend: function() {
                     self.skipTo(index + 1);
@@ -63,7 +63,7 @@ Player.prototype = {
 
 
         $(".list-song").each(function (i, el) {
-            if ($(el).text() !== data.file) {
+            if ($(el).text() !== data.file.substring(7)) {
                 $(el).removeClass("playing");
             } else {
                 $(el).addClass("playing");
@@ -126,7 +126,7 @@ $(function () {
         var playables = [];
         for (var i = 0; i < files.length; i++) {
             playables.push({
-                file: files[i].Name,
+                file: files[i].substring(6),
                 howl: null
             });
         }
