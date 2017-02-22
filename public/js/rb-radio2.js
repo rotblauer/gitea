@@ -1,6 +1,8 @@
 var ws; // The websocket that is mostly for chatting cats. But this file is higher up.
 
 
+
+
 /*!
  *  Howler.js Audio Player Demo
  *  howlerjs.com
@@ -19,6 +21,9 @@ var ws; // The websocket that is mostly for chatting cats. But this file is high
 var Player = function(playlist) {
     this.playlist = playlist;
     this.index = 0;
+    this.nextSongLoad = {};
+
+    // clear display out (was getting called 2x and i dunno why)
     $("#songs-list").html('');
 
     // Setup the playlist display.
@@ -47,19 +52,26 @@ Player.prototype = {
         index = typeof index === 'number' ? index : self.index;
         var data = self.playlist[index];
 
+        var dataSrc = self.nextSongLoad.index === index ? [self.nextSongLoad.data] : [data.file];
+
         // If we already loaded this track, use the current one.
         // Otherwise, setup and load a new Howl.
         if (data.howl) {
             sound = data.howl;
         } else {
+            console.log("Playing from data src:", dataSrc);
             sound = data.howl = new Howl({
-                src: [data.file],
+                src: dataSrc, //[data.file],
                 html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
+                format: [ "mp3" ],
                 onend: function() {
                     self.skipTo(index + 1);
                 },
                 onload: function () {
                     $("#song-loading").hide();
+
+                    // load next song by index
+                    self.loadSong(index+1);
                 }
             });
         }
@@ -69,7 +81,9 @@ Player.prototype = {
 
         // Show the pause button.
         if (sound.state() === 'loaded') {
+
         } else {
+            console.log("Loading song", index);
             $("#song-loading").show();
         }
         $("#radio-readout").show();
@@ -132,7 +146,30 @@ Player.prototype = {
 
         // Play the new track.
         self.play(index);
+    },
+
+    loadSong: function(index) {
+        var self = this;
+
+
+        index = typeof index === 'number' ? index : self.index;
+        var data = self.playlist[index];
+
+        console.log("Preloading ", data.file);
+
+        var preload = new createjs.LoadQueue();
+        preload.addEventListener("fileload", function (event) {
+
+            console.log("Finished preloading.", event);
+            // event.result <- song
+            self.nextSongLoad = {
+                index: index,
+                data: event.result.src
+            };
+        });
+        preload.loadFile(data.file);
     }
+
 
 }
 
