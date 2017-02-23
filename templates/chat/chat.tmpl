@@ -344,7 +344,14 @@
 					  // can check for localstorage timing versus dj timing too. later wins?
                       var ds = localStorage.getItem("radio_goggles");
 					  ds = JSON.parse(ds);
+					  /* console.log("tmpl ds", ds);*/
+
 					  /* console.log("json parsed localstorage from chattmpl" , ds);*/
+					  if (ds === null) {
+						  player.skipTo(datSong.index, datSong.seek);
+						  return;
+					  };
+
 					  var djTime = new Date(datSong.time);
 					  var localTime = new Date(ds.time);
 
