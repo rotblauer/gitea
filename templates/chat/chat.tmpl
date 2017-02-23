@@ -288,7 +288,7 @@
    				/* console.log("WSonmessage: ", msgEvt);*/
 
 	  	    // If the message is not about another person typing.
-	  	      if (msgEvt.data !== "***" && msgEvt.data !== "!***" && msgEvt.data.indexOf('~~~') !== 0 && msgEvent.data.indexOf("!~~~") !== 0) {
+	  	      if (msgEvt.data !== "***" && msgEvt.data !== "!***" && msgEvt.data.indexOf('~~~') !== 0 && msgEvt.data.indexOf("!~~~") !== 0) {
 	  	        var formattedMsg = JSON.parse(msgEvt.data);
 	  	        hideOtherIsTyping();
 	  	        data.push(formattedMsg);
