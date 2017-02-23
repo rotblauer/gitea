@@ -7,26 +7,38 @@
                height: 100%;
                }
              #songs-list {
-				 color: red;
     max-height: 60vh;
     padding: 20px;
                }
 				.list-song {
 font-size: 0.8em;
-border-left: 2px solid gray;
 					}
 	div.list-song.ui.row {
 		padding: 0rem 0rem 0rem 1rem !important;
+		background-color: rgba(255, 255, 255, 0.1);
 		}
-             .playing {
-               color: blue;
+             div.list-song.ui.playing {
+               background-color: darkblue !important;
                }
+	#radio-room {
+		color: white;
+		background-color: rgba(50, 5, 8, 0.94);
+		padding: 20px;
+		}
+	input#songs-filterer {
+		background-color: black;
+		color: red;
+		}
             </style>
 
-			<div id="radio-room" style="border: 1px solid red; padding: 20px;">
+			<div id="radio-room" style="">
 
-                <em>Pirate radio.</em>
+                <!-- <em style="color: red;">Pirate radio.</em> -->
+				<div class="ui form" style="max-width: 60%; margin: auto;">
+				<div class="ui fluid input">
                 <input id="songs-filterer" name="song-filter" type="text" value="" placeholder=""/>
+				</div>
+				</div>
 
                 <!-- Playlist -->
                 <div id="playlist" >
