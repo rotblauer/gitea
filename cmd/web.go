@@ -234,7 +234,8 @@ func runWeb(ctx *cli.Context) error {
 		if e != nil {
 			fmt.Println(e)
 		}
-		s.Write(b)
+		// "!~~~" for onconnections
+		s.Write([]byte("!" + string(b)))
 	})
 
 	m.Get("/chat-ws", reqSignIn, func(resp http.ResponseWriter, req *http.Request) {

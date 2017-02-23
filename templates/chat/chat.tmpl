@@ -329,24 +329,19 @@
 	  	      // Another person is not typing anymore.
 	  	      } else if (msgEvt.data === "!***") {
 	  	        hideOtherIsTyping();
-	  	      } else if (msgEvt.data.indexOf("~~~") === 0) {
-				  if (typeof(player) !== "undefined") {
+			  } else if (msgEvt.data.indexOf("!~~~") === 0) {
+				  // onConnect message about radio station from freya
+				  if (typeof(player) === "undefined") { return; }
 
-					  /* console.log("MSeventdata", msgEvt.data);*/
+				  // compare times of local versus server and take whichever is later. the battle for late nite listening...
+					  var datSongS = msgEvt.data.replace("!~~~","");
+					  var datSong = JSON.parse(datSongS);
 
-					  var datSongS = msgEvt.data.replace("~~~","");
-					  var datSong = JSON.parse(datSongS)
-
-					  /* console.log("got prompt to change radio song");*/
-					  /* console.log("incoming datSong", datSong);*/
-					  /* console.log("currently playing song index", player.index);*/
-
-					  // can check for localstorage timing versus dj timing too. later wins?
                       var ds = localStorage.getItem("radio_goggles");
 					  ds = JSON.parse(ds);
-					  /* console.log("tmpl ds", ds);*/
 
-					  /* console.log("json parsed localstorage from chattmpl" , ds);*/
+
+				  // if nothing stored locally, use the radio station
 					  if (ds === null) {
 						  player.skipTo(datSong.index, datSong.seek);
 						  return;
@@ -355,30 +350,29 @@
 					  var djTime = new Date(datSong.time);
 					  var localTime = new Date(ds.time);
 
-					  /* console.log("djTime, Localtime", djTime, localTime);*/
-					  /* console.log("djTime is bigger than loaltim?", djTime > localTime);*/
-					  /* console.log("djTime is samlerl than loaltim?", djTime < localTime);*/
-					  /* console.log("djTime is same as loaltim?", djTime === localTime);*/
+				  if (djTime.getTime() > localTime.getTime()) {
+						  player.skipTo(datSong.index, datSong.seek);
+						  return;
+				  } else {
+                      // should automatically (be playing) from held position
+					  return;
+				  }
 
-					  if ((typeof(player) !== "undefined") && (player.index === datSong.index)) {
-                         return;
-					  }
 
-					  // try an avoid stuttering starts on playing new songs
-					  if (datSong.seek < 3.3) { return; }
+	  	      } else if (msgEvt.data.indexOf("~~~") === 0) {
+				  // so this is the case where we're gettin an update about another operator changing the dial on teh fly
 
-					  // if radio song is different than local AND local time is behind radio time
-					  // (catch up with the Times!)
-					  if ( ( ds.index !== datSong.index ) && ( localTime.getTime() < ( djTime.getTime() - 1*60*1000 ) )) {
-	       				  console.log("skipping play to on receiving notes from dj 1");
-					     player.skipTo(datSong.index, datSong.seek);
+				  if (typeof(player) === "undefined") { return };
 
-				      // if radio changed *recently* and song is different
-					  }
-					  /* else if (( player.index !== datSong.index ) && ( djTime.getTime() + 5*1000 > localTime.getTime() )) {*/
-	       			  /* console.log("skipping play to on receiving notes from dj");*/
-					  /* player.skipTo(datSong.index, datSong.seek);*/
-				      /* }*/
+                  var datSongS = msgEvt.data.replace("!~~~","");
+			 	  var datSong = JSON.parse(datSongS);
+
+				  // if the song is different than what we're playing, skip to that one
+				  if (datSong.index !== player.index) {
+					  console.log("skipping to track " + datSong.index + " because of another operator");
+player.skipTo(datSong.index, datSong.seek);
+				  } else {
+return;
 				  }
 			  }
 	  	  };
