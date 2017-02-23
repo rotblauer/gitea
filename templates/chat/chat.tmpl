@@ -364,10 +364,12 @@
                          return;
 					  }
 
+					  // try an avoid stuttering starts on playing new songs
+					  if (datSong.seek < 3.3) { return; }
 
 					  // if radio song is different than local AND local time is behind radio time
 					  // (catch up with the Times!)
-					  if (( ds.index !== datSong.index ) && ( localTime.getTime() < ( djTime.getTime() - 1*60*1000 ) )) {
+					  if ( ( ds.index !== datSong.index ) && ( localTime.getTime() < ( djTime.getTime() - 1*60*1000 ) )) {
 	       				  console.log("skipping play to on receiving notes from dj 1");
 					     player.skipTo(datSong.index, datSong.seek);
 
