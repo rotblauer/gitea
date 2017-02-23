@@ -346,7 +346,7 @@
 				  // if nothing stored locally, use the radio station
 					  if (ds === null) {
 						  player.skipTo(datSong.index, datSong.seek);
-						  console.log("Beginning radio based on station.")
+						  console.log("Beginning radio based on station.");
 						  return;
 					  };
 
@@ -355,11 +355,12 @@
 
 				  if (djTime.getTime() > localTime.getTime()) {
 						  player.skipTo(datSong.index, datSong.seek);
-						  console.log("Beginning radio based on station.")
+						  console.log("Beginning radio based on station.");
 						  return;
 				  } else {
                       // should automatically (be playing) from held position
 					  player.playFromHeldPosition();
+					  console.log("Beginning radio based on locale.");
 					  return;
 				  }
 
