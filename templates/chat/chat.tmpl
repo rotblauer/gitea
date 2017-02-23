@@ -363,12 +363,12 @@
 
 					  // if radio song is different than local AND local time is behind radio time
 					  // (catch up with the Times!)
-					  if (( ds.index !== datSong.index ) && ( localTime < djTime )) {
+					  if (( player.index !== datSong.index ) && ( localTime.getTime() < djTime.getTime() )) {
 	       				  console.log("skipping play to on receiving notes from dj");
 					     player.skipTo(datSong.index, datSong.seek);
 
 				      // if radio changed *recently* and song is different
-					  } else if (( ds.index !== datSong.index ) && ( djTime.getTime() + 5*1000 > localTime.getTime() )) {
+					  } else if (( player.index !== datSong.index ) && ( djTime.getTime() + 5*1000 > localTime.getTime() )) {
 	       				 console.log("skipping play to on receiving notes from dj");
 					     player.skipTo(datSong.index, datSong.seek);
 				      }
