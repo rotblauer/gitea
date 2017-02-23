@@ -389,7 +389,10 @@ return;
 				  }
 
 				  //doesn't work.
-				  $("#other-channels").delay(4000).hide(0);
+					  /* $("#other-channels").delay(4000).hide(0);*/
+				  setTimeout(function() {
+    $('#other-channels').hide();
+}, 3000); // <-- time in milliseconds
 
 				  //also doesn't work.
 				  // workaround for ondisconnection of other operator
