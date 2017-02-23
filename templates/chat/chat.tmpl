@@ -360,11 +360,15 @@
 					  /* console.log("djTime is samlerl than loaltim?", djTime < localTime);*/
 					  /* console.log("djTime is same as loaltim?", djTime === localTime);*/
 
+					  if ((typeof(player) !== "undefined") && (player.index === datSong.index)) {
+                         return;
+					  }
+
 
 					  // if radio song is different than local AND local time is behind radio time
 					  // (catch up with the Times!)
-					  if (( player.index !== datSong.index ) && ( localTime.getTime() < djTime.getTime() )) {
-	       				  console.log("skipping play to on receiving notes from dj");
+					  if (( ds.index !== datSong.index ) && ( localTime.getTime() < ( djTime.getTime() - 1*60*1000 ) )) {
+	       				  console.log("skipping play to on receiving notes from dj 1");
 					     player.skipTo(datSong.index, datSong.seek);
 
 				      // if radio changed *recently* and song is different
