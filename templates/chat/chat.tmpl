@@ -63,6 +63,7 @@
 	  	        var data = [];
 	  	        var ipData = {};
 	  	        var maxMessageLength = 5000; // :christmas_treeeeeeeeee:. damn hackers keep pushing the limits of what's possible.
+			  var lastRadioMessage = {};
 
 				var nak = "";
 				function getNAK() {
@@ -369,6 +370,7 @@
 
                   var datSongS = msgEvt.data.replace("~~~","");
 			 	  var datSong = JSON.parse(datSongS);
+				  lastRadioMessage = datSong;
 
 				  // if the song is different than what we're playing, skip to that one
 				  if (datSong.index !== player.index) {
@@ -384,8 +386,8 @@ return;
 
 				  // workaround for ondisconnection of other operator
 					setTimeout(function () {
-						if (new Date().getTime() - new Date(datSong.time).getTime() > 5000) {
-							$("#other-channels").fadeOut();
+						if (new Date().getTime() - new Date(lastRadioMessage.time).getTime() > 5000) {
+							$("#other-channels").hide();
 						}
 					}, 4000);
 
