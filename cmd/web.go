@@ -237,6 +237,9 @@ func runWeb(ctx *cli.Context) error {
 		// "!~~~" for onconnections
 		s.Write([]byte("!" + string(b)))
 	})
+	mm.HandleDisconnect(func(s *melody.Session) {
+		mm.BroadcastOthers([]byte(":::"), s)
+	})
 
 	m.Get("/chat-ws", reqSignIn, func(resp http.ResponseWriter, req *http.Request) {
 		// resp and req injected by Macaron

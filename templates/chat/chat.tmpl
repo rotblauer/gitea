@@ -290,7 +290,11 @@
    				/* console.log("WSonmessage: ", msgEvt);*/
 
 	  	    // If the message is not about another person typing.
-	  	      if (msgEvt.data !== "***" && msgEvt.data !== "!***" && msgEvt.data.indexOf('~~~') !== 0 && msgEvt.data.indexOf("!~~~") !== 0) {
+	  				if (msgEvt.data !== "***" &&
+						msgEvt.data !== "!***" &&
+						msgEvt.data.indexOf('~~~') !== 0 &&
+						msgEvt.data.indexOf("!~~~") !== 0 &&
+						msgEvt.data.indexOf(":::") !== 0) {
 	  	        var formattedMsg = JSON.parse(msgEvt.data);
 	  	        hideOtherIsTyping();
 	  	        data.push(formattedMsg);
@@ -385,23 +389,12 @@
 					  return;
 				  } else {
 					  $("#other-channels").html("Synced.");
-return;
+                      return;
 				  }
 
-				  //doesn't work.
-					  /* $("#other-channels").delay(4000).hide(0);*/
-				  setTimeout(function() {
-    $('#other-channels').hide();
-}, 3000); // <-- time in milliseconds
-
-				  //also doesn't work.
-				  // workaround for ondisconnection of other operator
-				  /* setTimeout(function () {*/
-				  /* if (new Date().getTime() - new Date(lastRadioMessage.time).getTime() > 5000) {*/
-				  /* $("#other-channels").hide();*/
-				  /* }*/
-				  /* }, 4000);*/
-
+				  //on disconnect of an operator
+			  } else if (msgEvt.data.indexOf(":::") === 0) {
+				  $("#other-channels").hide();
 			  }
 	  	  };
 
