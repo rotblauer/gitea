@@ -364,6 +364,8 @@
 
 				  if (typeof(player) === "undefined") { return };
 
+				  $("#other-channels").show();
+
                   var datSongS = msgEvt.data.replace("~~~","");
 			 	  var datSong = JSON.parse(datSongS);
 
@@ -378,6 +380,14 @@
 					  $("#other-channels").html("Synced.");
 return;
 				  }
+
+				  // workaround for ondisconnection of other operator
+					setTimeout(function () {
+						if (new Date().getTime() - new Date(datSong.time).getTime() > 5000) {
+							$("#other-channels").fadeOut();
+						}
+					}, 4000);
+
 			  }
 	  	  };
 
