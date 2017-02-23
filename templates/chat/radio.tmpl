@@ -3,6 +3,7 @@
 
 <style>
              div#playlist {
+				 position: relative;
                overflow: scroll;
                height: 100%;
 				 border: 2px solid lightgray;
@@ -33,14 +34,21 @@ font-size: 0.8em;
 		border: none;
 		border-bottom: 1px solid red;
 		}
+	#songs-count {
+color: red;
+	}
             </style>
 
 			<div id="radio-room" style="">
 
+				<div class="ui right floated">
+					<span id="songs-count"></span>
+				</div>
                 <!-- <em style="color: red;">Pirate radio.</em> -->
-				<div class="ui form" style="max-width: 60%; margin: auto; padding-bottom: 10px;">
-				<div class="ui fluid input">
+				<div class="ui form" style="max-width: 60%; margin-right: auto; padding-bottom: 10px;">
+				<div class="ui fluid action input">
                 <input id="songs-filterer" name="song-filter" type="text" value="" placeholder="Pirate radio search"/>
+				<button id="find-playing" class="ui blue button">show playing</button>
 				</div>
 				</div>
 
@@ -49,4 +57,16 @@ font-size: 0.8em;
                     <div id="songs-list" class="ui grid container"></div>
                 </div>
 			</div>
+			<script>
+				$("#find-playing").on("click", function () {
+					console.log("finding playing'_");
+					var playing = $(".playing").first();
+					$("#playlist").animate({
+						scrollTop: $("#playlist").scrollTop() + playing.position().top - $("#playlist").height()/2 + playing.height()/2
+						/* scrollTop: playing.offset().top > $("#playlist").offset().top ?*/
+						/* (playing.offset().top - $("#playlist").offset().top) :*/
+						/* (playing.offset().bottom)*/
+					}, 1000);
+				});
+			</script>
 {{ end }}

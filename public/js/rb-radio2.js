@@ -39,6 +39,8 @@ var Player = function(playlist) {
         });
         $("#songs-list").append(div);
     });
+
+    $("#songs-count").html(playlist.length + " songs");
 };
 
 Player.prototype = {
@@ -245,13 +247,22 @@ $(function() {
         var keyword = $this.val();
 
         if (keyword.length > 1) {
+
+            var count = 0;
+
             $(".list-song").each(function(i, el) {
                 if ($(this).text().toLowerCase().indexOf(keyword.toLowerCase()) < 0) {
                     $(this).hide();
+                } else {
+                    $(this).show();
+                    count++;
                 }
             });
+            $("#songs-count").html(count + " / " + player.playlist.length + " songs");
+
         } else {
             $(".list-song").show();
+            $("#songs-count").html(player.playlist.length + " songs");
         }
     });
 });
