@@ -384,12 +384,15 @@
 return;
 				  }
 
+				  $("#other-channels").delay(3000).hide();
+
+
 				  // workaround for ondisconnection of other operator
-					setTimeout(function () {
-						if (new Date().getTime() - new Date(lastRadioMessage.time).getTime() > 5000) {
-							$("#other-channels").hide();
-						}
-					}, 4000);
+				  /* setTimeout(function () {*/
+				  /* if (new Date().getTime() - new Date(lastRadioMessage.time).getTime() > 5000) {*/
+				  /* $("#other-channels").hide();*/
+				  /* }*/
+				  /* }, 4000);*/
 
 			  }
 	  	  };
