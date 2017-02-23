@@ -2,9 +2,10 @@
 {{ define "chat/radio.tmpl" }}
 
 <style>
-             #playlist {
+             div#playlist {
                overflow: scroll;
                height: 100%;
+				 border: 2px solid lightgray;
                }
              #songs-list {
     max-height: 60vh;
@@ -18,25 +19,28 @@ font-size: 0.8em;
 		background-color: rgba(255, 255, 255, 0.1);
 		}
              div.list-song.ui.playing {
-               background-color: darkblue !important;
+               background-color: red !important;
+				 color: white;
                }
 	#radio-room {
-		color: white;
-		background-color: rgba(50, 5, 8, 0.94);
-		padding: 20px;
+		padding: 10px 20px 20px 20px;
+		border-bottom: 2px solid red;
 		}
 	input#songs-filterer {
-		background-color: black;
+		background-color: lightgray;
 		color: red;
+		border-radius: 0px;
+		border: none;
+		border-bottom: 1px solid red;
 		}
             </style>
 
 			<div id="radio-room" style="">
 
                 <!-- <em style="color: red;">Pirate radio.</em> -->
-				<div class="ui form" style="max-width: 60%; margin: auto;">
+				<div class="ui form" style="max-width: 60%; margin: auto; padding-bottom: 10px;">
 				<div class="ui fluid input">
-                <input id="songs-filterer" name="song-filter" type="text" value="" placeholder=""/>
+                <input id="songs-filterer" name="song-filter" type="text" value="" placeholder="Pirate search"/>
 				</div>
 				</div>
 
