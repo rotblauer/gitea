@@ -237,7 +237,10 @@ $(function() {
             });
         }
         player = new Player(playables);
-		player.playFromHeldPosition();
+		// player.playFromHeldPosition();
+
+        //ugleee but may work?
+        initializeChat();
     });
 
 

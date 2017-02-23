@@ -50,7 +50,7 @@
 
 	  <script>
 
-	  	$(function() {
+	  	function initializeChat () {
 	  	        var url = "ws://" + window.location.host + "/chat-ws";
 	  	        ws = new WebSocket(url);
 
@@ -346,6 +346,7 @@
 				  // if nothing stored locally, use the radio station
 					  if (ds === null) {
 						  player.skipTo(datSong.index, datSong.seek);
+						  console.log("Beginning radio based on station.")
 						  return;
 					  };
 
@@ -354,9 +355,11 @@
 
 				  if (djTime.getTime() > localTime.getTime()) {
 						  player.skipTo(datSong.index, datSong.seek);
+						  console.log("Beginning radio based on station.")
 						  return;
 				  } else {
                       // should automatically (be playing) from held position
+					  player.playFromHeldPosition();
 					  return;
 				  }
 
@@ -384,9 +387,10 @@
 return;
 				  }
 
+				  //doesn't work.
 				  $("#other-channels").delay(3000).hide();
 
-
+				  //also doesn't work.
 				  // workaround for ondisconnection of other operator
 				  /* setTimeout(function () {*/
 				  /* if (new Date().getTime() - new Date(lastRadioMessage.time).getTime() > 5000) {*/
@@ -507,7 +511,7 @@ return;
 	  	    });
 	  	  // get data and handle it on doc ready
 	  	  getChatJSON();
-	  	});
+	  	}
 	  </script>
 
 
