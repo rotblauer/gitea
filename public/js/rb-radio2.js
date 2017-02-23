@@ -237,7 +237,7 @@ $(function() {
             });
         }
         player = new Player(playables);
-		/* player.playFromHeldPosition();*/
+		player.playFromHeldPosition();
     });
 
 
