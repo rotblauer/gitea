@@ -201,8 +201,8 @@ func runWeb(ctx *cli.Context) error {
 	// Incoming is a json stringified message obj or '[!]***' string for typing status
 	mm.HandleMessage(func(s *melody.Session, msg []byte) {
 
-		fmt.Println("Handling WS message:")
-		fmt.Println(string(msg))
+		// fmt.Println("Handling WS message:")
+		// fmt.Println(string(msg))
 
 		// is typing
 		if string(msg) == "***" {
@@ -215,6 +215,9 @@ func runWeb(ctx *cli.Context) error {
 			// changed the radio
 			// will be of the form ~~~<index>
 		} else if strings.HasPrefix(string(msg), "~~~") {
+			if e := models.SaveDJ(msg); e != nil {
+				fmt.Println(e)
+			}
 			mm.BroadcastOthers(msg, s)
 
 			// sent message
@@ -225,14 +228,13 @@ func runWeb(ctx *cli.Context) error {
 			}
 			mm.Broadcast(ps1)
 		}
-
-		// // Now check for @SMS.
-		// go func() {
-		// 	_, err := catchat.DelegateSendSMS(msg)
-		// 	if err != nil {
-		// 		log.Fatalln(err)
-		// }
-		// }()
+	})
+	mm.HandleConnect(func(s *melody.Session) {
+		b, e := models.GetDJ()
+		if e != nil {
+			fmt.Println(e)
+		}
+		s.Write(b)
 	})
 
 	m.Get("/chat-ws", reqSignIn, func(resp http.ResponseWriter, req *http.Request) {

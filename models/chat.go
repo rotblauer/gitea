@@ -1,22 +1,21 @@
 package models
 
 import (
+	"code.gitea.io/gitea/modules/setting"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
-	"image"
-	"image/png"
-	"os"
-	"strconv"
-
 	"errors"
-	"sort"
-
-	"code.gitea.io/gitea/modules/setting"
+	"fmt"
 	"github.com/boltdb/bolt"
 	"github.com/olahol/melody"
 	ghfmd "github.com/shurcooL/github_flavored_markdown"
+	"image"
+	"image/png"
+	"io/ioutil"
+	"os"
 	"path/filepath"
+	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -84,6 +83,29 @@ type Drawings []Drawing
 
 // var drawingStorePath = filepath.Join(setting.AppDataPath, "data", "drawing")
 var drawingStorePath = filepath.Join(setting.AppDataPath, "public", "drawing")
+var radioDJStorePath = filepath.Join(setting.AppDataPath, "data", "radio")
+
+func init() {
+	derr := os.MkdirAll(drawingStorePath, 0777)
+	if derr != nil {
+		fmt.Println("Error ensuring drawing store path. ", derr)
+	}
+
+	rerr := os.MkdirAll(radioDJStorePath, 0777)
+	if rerr != nil {
+		fmt.Println("Error ensuring radio store path.", rerr)
+	}
+}
+
+// SaveDJ store index, seek, and caller to a plain old text file
+func SaveDJ(incoming []byte) error {
+	return ioutil.WriteFile(filepath.Join(radioDJStorePath, "funk.txt"), incoming, 0664)
+}
+
+// GetDJ reads the save file and assembles a string for the websocket onconnect.
+func GetDJ() ([]byte, error) {
+	return ioutil.ReadFile(filepath.Join(radioDJStorePath, "funk.txt"))
+}
 
 func indexOf(sliceStrings []string, value string) int {
 	for p, v := range sliceStrings {
@@ -137,11 +159,11 @@ func PostDrawing(drawing Drawing) (Drawing, error) {
 	// ^ moved to up top
 
 	// decode ImageData -> PNG file in data/drawings/
-	err = os.MkdirAll(drawingStorePath, 0777)
-	if err != nil {
-		fmt.Println("ensuring drawing store dir exists", err)
-		return drawing, err
-	}
+	// err = os.MkdirAll(drawingStorePath, 0777)
+	// if err != nil {
+	// 	fmt.Println("ensuring drawing store dir exists", err)
+	// 	return drawing, err
+	// }
 
 	prefix := "data:image/png;base64,"
 	s := strings.TrimPrefix(drawing.CanvasData, prefix)

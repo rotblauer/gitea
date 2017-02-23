@@ -284,7 +284,7 @@
 		  establishWS();
 	  	  };
 	  	  ws.onmessage = function(msgEvt) {
-					console.log("got message");
+					console.log("got message", msgEvt.data);
    				/* console.log("WSonmessage: ", msgEvt);*/
 
 	  	    // If the message is not about another person typing.
@@ -332,15 +332,39 @@
 	  	      } else if (msgEvt.data.indexOf("~~~") === 0) {
 				  if (typeof(player) !== "undefined") {
 
-					  var datSong = +msgEvt.data.replace("~~~","");
-					  console.log("got prompt to change radio song");
-					  console.log("incoming song index", datSong);
-					  console.log("playing song index", player.index);
+					  /* console.log("MSeventdata", msgEvt.data);*/
 
-					  // hopefully this prevents bouncing too
-					  if (player.index !== datSong) {
-					     player.skipTo(datSong);
-					  }
+					  var datSongS = msgEvt.data.replace("~~~","");
+					  var datSong = JSON.parse(datSongS)
+
+					  /* console.log("got prompt to change radio song");*/
+					  /* console.log("incoming datSong", datSong);*/
+					  /* console.log("currently playing song index", player.index);*/
+
+					  // can check for localstorage timing versus dj timing too. later wins?
+                      var ds = localStorage.getItem("radio_goggles");
+					  ds = JSON.parse(ds);
+					  /* console.log("json parsed localstorage from chattmpl" , ds);*/
+					  var djTime = new Date(datSong.time);
+					  var localTime = new Date(ds.time);
+
+					  /* console.log("djTime, Localtime", djTime, localTime);*/
+					  /* console.log("djTime is bigger than loaltim?", djTime > localTime);*/
+					  /* console.log("djTime is samlerl than loaltim?", djTime < localTime);*/
+					  /* console.log("djTime is same as loaltim?", djTime === localTime);*/
+
+
+					  // if radio song is different than local AND local time is behind radio time
+					  // (catch up with the Times!)
+					  if (( ds.index !== datSong.index ) && ( localTime < djTime )) {
+	       				  console.log("skipping play to on receiving notes from dj");
+					     player.skipTo(datSong.index, datSong.seek);
+
+				      // if radio changed *recently* and song is different
+					  } else if (( ds.index !== datSong.index ) && ( djTime.getTime() + 5*1000 > localTime.getTime() )) {
+	       				 console.log("skipping play to on receiving notes from dj");
+					     player.skipTo(datSong.index, datSong.seek);
+				      }
 				  }
 			  }
 	  	  };

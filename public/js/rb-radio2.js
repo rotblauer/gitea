@@ -32,7 +32,7 @@ var Player = function(playlist) {
         var div = $('<div></div>');
         div.addClass('list-song ui row');
         div.html(song.file.substring(7));
-        div.on("click", function () {
+        div.on("click", function() {
             if (player.index !== playlist.indexOf(song)) {
                 player.skipTo(playlist.indexOf(song));
             }
@@ -68,20 +68,24 @@ Player.prototype = {
             sound = data.howl = new Howl({
                 src: dataSrc, //[data.file],
                 html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
-                format: [ "mp3" ],
+                format: ["mp3"],
                 onend: function() {
                     self.skipTo(index + 1);
                 },
-                onload: function () {
+                onload: function() {
                     $("#song-loading").hide();
 
                     // load next song by index
-                    self.loadSong(index+1);
+                    self.loadSong(index + 1);
                 },
-                onplay: function () {
-                    setInterval(function () {
+                onplay: function() {
+                    setInterval(function() {
                         self.seeker = sound.seek();
+
+                        // save locally
                         self.holdPosition(self.index, self.seeker);
+
+
                     }, 3000);
                 }
             });
@@ -101,7 +105,7 @@ Player.prototype = {
         $("#radio-readout").show();
         $("#current-song").html(data.file.substring(7));
 
-        $(".list-song").each(function (i, el) {
+        $(".list-song").each(function(i, el) {
             if ($(el).text() !== data.file.substring(7)) {
                 $(el).removeClass("playing");
             } else {
@@ -137,19 +141,17 @@ Player.prototype = {
             }
         }
 
-        self.skipTo(index);
+        self.skipTo(index, 0);
     },
 
     /**
      * Skip to a specific track based on its playlist index.
      * @param  {Number} index Index in the playlist.
      */
-    skipTo: function(index) {
+    skipTo: function(index, seek) {
         var self = this;
+        seek = typeof seek === "number" ? seek : 0;
 
-        if (typeof(ws) !== "undefined") {
-            ws.send("~~~"+index);
-        }
 
         // Stop the current track.
         if (self.playlist[self.index].howl) {
@@ -157,7 +159,7 @@ Player.prototype = {
         }
 
         // Play the new track.
-        self.play(index,0);
+        self.play(index, seek);
     },
 
     loadSong: function(index) {
@@ -170,7 +172,7 @@ Player.prototype = {
         console.log("Preloading ", data.file);
 
         var preload = new createjs.LoadQueue();
-        preload.addEventListener("fileload", function (event) {
+        preload.addEventListener("fileload", function(event) {
 
             console.log("Finished preloading.", event);
             // event.result <- song
@@ -188,15 +190,19 @@ Player.prototype = {
             s = seek;
         var d = {
             index: i,
-            seek: s
+            seek: s,
+            time: new Date().getTime()
         };
         var ds = JSON.stringify(d);
         // work around for why it keeps iterating a lot
         if (s !== 0) {
             localStorage.setItem("radio_goggles", ds);
+            if (typeof(ws) !== "undefined") {
+                ws.send("~~~" + ds);
+            }
         }
     },
-    playFromHeldPosition: function () {
+    playFromHeldPosition: function() {
         var self = this;
         var ds = localStorage.getItem("radio_goggles");
         if (ds !== "") {
@@ -213,13 +219,15 @@ Player.prototype = {
 
 var player;
 
-$(function () {
+$(function() {
 
     // these could be cached in localStorage too TODO
     $.getJSON("/r/music", function(files) {
         var playables = [];
         for (var i = 0; i < files.length; i++) {
-            if (files[i].indexOf(".mp3") < 0) { continue; } // filter out the album covers
+            if (files[i].indexOf(".mp3") < 0) {
+                continue;
+            } // filter out the album covers
             playables.push({
                 file: files[i].substring(6),
                 howl: null
@@ -232,12 +240,12 @@ $(function () {
 
 
     var songsSearcher = $("input#songs-filterer");
-    songsSearcher.keyup(function (e) {
+    songsSearcher.keyup(function(e) {
         var $this = $(this);
         var keyword = $this.val();
 
         if (keyword.length > 1) {
-            $(".list-song").each(function (i, el) {
+            $(".list-song").each(function(i, el) {
                 if ($(this).text().toLowerCase().indexOf(keyword.toLowerCase()) < 0) {
                     $(this).hide();
                 }
