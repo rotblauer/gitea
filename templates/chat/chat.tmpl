@@ -369,9 +369,13 @@
 
 				  // if the song is different than what we're playing, skip to that one
 				  if (datSong.index !== player.index) {
-					  console.log("skipping to track " + datSong.index + " because of another operator");
-player.skipTo(datSong.index, datSong.seek);
+					  $("#other-channels").html(player.playlist[datSong.index].file.substring(7));
+					  $("#other-channels").on("click", function () {
+						  player.skipTo(datSong.index, datSong.seek);
+					  });
+					  return;
 				  } else {
+					  $("#other-channels").html("Synced.");
 return;
 				  }
 			  }

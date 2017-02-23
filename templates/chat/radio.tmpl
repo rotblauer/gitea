@@ -37,15 +37,24 @@ font-size: 0.8em;
 	#songs-count {
 color: red;
 	}
+	#other-channels {
+background-color: dodgerblue;
+		color: white;
+		border-radius: 3px;
+		padding: 2px;
+	}
             </style>
 
 			<div id="radio-room" style="">
 
 				<div class="ui right floated">
 					<span id="songs-count"></span>
+					<br/>
+					<!-- this could be ul somedaay TODO -->
+					<span id="other-channels"></span>
 				</div>
                 <!-- <em style="color: red;">Pirate radio.</em> -->
-				<div class="ui form" style="max-width: 60%; margin-right: auto; padding-bottom: 10px;">
+				<div class="ui form" style="max-width: 40%; margin-right: auto; padding-bottom: 10px;">
 				<div class="ui fluid action input">
                 <input id="songs-filterer" name="song-filter" type="text" value="" placeholder="Pirate radio search"/>
 				<button id="find-playing" class="ui blue button">show playing</button>
