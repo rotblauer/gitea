@@ -184,7 +184,6 @@ Player.prototype = {
 
         // clear it out
         self.nextSongLoad = null;
-        $(".preloaded").removeClass("preloaded");
 
         index = typeof index === 'number' ? index : self.index;
         var data = self.playlist[index];
@@ -202,7 +201,13 @@ Player.prototype = {
                 data: event.result.src
             };
 
-            $(".list-song:nth-of-type(" + index+1 + ")").addClass("preloaded");
+            $(".list-song").each(function(i, el) {
+                if (i === index) {
+                    $(el).addClass("preloaded");
+                } else {
+                    $(el).removeClass("preloaded");
+                }
+            });
 
         });
         preload.loadFile(data.file);
