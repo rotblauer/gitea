@@ -59,7 +59,7 @@ Player.prototype = {
 
         var data = self.playlist[index];
 
-        var dataSrc = self.nextSongLoad.index === index ? [self.nextSongLoad.data] : [data.file];
+        var dataSrc = self.nextSongLoad.index === index && self.nextSongLoad.data ? [self.nextSongLoad.data] : [data.file];
 
         // If we already loaded this track, use the current one.
         // Otherwise, setup and load a new Howl.
