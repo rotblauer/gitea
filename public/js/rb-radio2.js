@@ -24,6 +24,7 @@ var Player = function(playlist) {
     this.seeker = 0;
     this.nextSongLoad = null;
     this.dataStream = null;
+    this.preloader = {};
 
     // clear display out (was getting called 2x and i dunno why)
     $("#songs-list").html('');
@@ -224,8 +225,8 @@ Player.prototype = {
             return;
         }
 
-        var preload = new createjs.LoadQueue();
-        preload.addEventListener("fileload", function(event) {
+        self.preloader[index] = new createjs.LoadQueue();
+        self.preloader[index].addEventListener("fileload", function(event) {
 
             console.log("Finished preloading.", event);
 
@@ -234,6 +235,9 @@ Player.prototype = {
                 index: index,
                 data: event.result.src
             };
+
+            // unset after that handoff?
+            delete self.preloader[index];
 
             $(".list-song").each(function(i, el) {
                 if (i === index) {
@@ -244,7 +248,7 @@ Player.prototype = {
             });
 
         });
-        preload.loadFile(data.file);
+        self.preloader[index].loadFile(data.file);
     },
     holdPosition: function(index, seek) {
         // console.log("is", index, seek);
