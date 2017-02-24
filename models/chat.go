@@ -81,9 +81,19 @@ func (slice ChatMessages) Swap(i, j int) {
 //Drawings is plural
 type Drawings []Drawing
 
+// GopherInfo stores which gopher and in fo the money
+type GopherInfo struct {
+	ID int `json:"id"`
+	// Radio string `json:"radio"`
+}
+
 // var drawingStorePath = filepath.Join(setting.AppDataPath, "data", "drawing")
 var drawingStorePath = filepath.Join(setting.AppDataPath, "public", "drawing")
 var radioDJStorePath = filepath.Join(setting.AppDataPath, "data", "radio")
+
+// Gophers stores GopherInfos by websocket session
+var Gophers map[*melody.Session]*GopherInfo
+var gopherCounter = 0
 
 func init() {
 	derr := os.MkdirAll(drawingStorePath, 0777)
@@ -95,6 +105,15 @@ func init() {
 	if rerr != nil {
 		fmt.Println("Error ensuring radio store path.", rerr)
 	}
+
+	Gophers = make(map[*melody.Session]*GopherInfo)
+}
+
+// AddNewGopher regissters incoming gohpers
+func AddNewGopher(s *melody.Session) *GopherInfo {
+	Gophers[s] = &GopherInfo{gopherCounter}
+	gopherCounter++
+	return Gophers[s]
 }
 
 // SaveDJ store index, seek, and caller to a plain old text file

@@ -61,6 +61,7 @@
 	  	        var text = $("#text");
 	  	        var isTypingDisplay = $("#other-is-typing");
 	  	        var data = [];
+			  var otherConnectedOperators = [-1];
 	  	        var ipData = {};
 	  	        var maxMessageLength = 5000; // :christmas_treeeeeeeeee:. damn hackers keep pushing the limits of what's possible.
 			  var lastRadioMessage = {};
@@ -290,11 +291,12 @@
    				/* console.log("WSonmessage: ", msgEvt);*/
 
 	  	    // If the message is not about another person typing.
-	  				if (msgEvt.data !== "***" &&
-						msgEvt.data !== "!***" &&
-						msgEvt.data.indexOf('~~~') !== 0 &&
-						msgEvt.data.indexOf("!~~~") !== 0 &&
-						msgEvt.data.indexOf(":::") !== 0) {
+	  				if (msgEvt.data !== "***" && // typing
+						msgEvt.data !== "!***" && // not typing
+						msgEvt.data.indexOf('~~~') !== 0 && // radio update
+						msgEvt.data.indexOf("!~~~") !== 0 && // init radio
+						msgEvt.data.indexOf(":::") !== 0 && // onconnect
+						msgEvt.data.indexOf("!:::") !== 0) { // ondisconnect
 	  	        var formattedMsg = JSON.parse(msgEvt.data);
 	  	        hideOtherIsTyping();
 	  	        data.push(formattedMsg);
@@ -339,6 +341,13 @@
 				  // onConnect message about radio station from freya
 				  if (typeof(player) === "undefined") { return; }
 
+				  var p = localStorage.getItem("hates_gogs_radio");
+				  if (p === "true") {
+					  $("#song-play-button").show();
+					  $("#song-pause-button").hide();
+					  return;
+				  }
+
 				  // compare times of local versus server and take whichever is later. the battle for late nite listening...
 					  var datSongS = msgEvt.data.replace("!~~~","");
 					  var datSong = JSON.parse(datSongS);
@@ -382,7 +391,9 @@
 
 				  // if the song is different than what we're playing, skip to that one
 				  if (datSong.index !== player.index) {
-					  $("#other-channels").html(player.playlist[datSong.index].file.substring(7));
+					  $("#other-channels").html(
+                          "<i class='octicon octicon-rss'></i> " +
+						  player.playlist[datSong.index].file.substring(7));
 					  $("#other-channels").on("click", function () {
 						  player.skipTo(datSong.index, datSong.seek);
 					  });
@@ -392,12 +403,46 @@
                       return;
 				  }
 
-				  //on disconnect of an operator
-			  } else if (msgEvt.data.indexOf(":::") === 0) {
+				  // on connect of an operator
+     			} else if (msgEvt.data.indexOf(":::") === 0) {
+					var d = msgEvt.data.replace(":::", "");
+					d = JSON.parse(d);
+					otherConnectedOperators.push(d.id);
+
+					// update a vizual for that array
+				  updateOperatorsDisplay(otherConnectedOperators);
+
+					//on disconnect of an operator
+			  } else if (msgEvt.data.indexOf("!:::") === 0) {
 				  console.log("An operator disconnected.");
+
+				  var d = msgEvt.data.replace("!:::", "");
+				  d = JSON.parse(d);
+
+				  var i = otherConnectedOperators.indexOf(d.id);
+				  otherConnectedOperators.splice(i, 1);
+
+				  updateOperatorsDisplay(otherConnectedOperators);
+
+
 				  $("#other-channels").hide();
 			  }
 	  	  };
+
+			  function updateOperatorsDisplay(operators) {
+console.log("operators", operators);
+				  var cat = $(".item.brand img").first();
+				  var catClass = cat.attr("class");
+				  var catSrc = cat.attr("src");
+				  $(".item.brand").html("");
+				  for (var i = 0; i < operators.length; i++) {
+					  var c = $("<img />");
+					  c.attr("class", catClass);
+					  c.attr("src", catSrc);
+					  $(".item.brand").first().append(c);
+				  }
+			  }
+			  updateOperatorsDisplay(otherConnectedOperators);
 
 	  	  $('.form-group').on('input', '#text', function() {
 	  	    // console.log("I inputted! Value: " + $("#text").val());

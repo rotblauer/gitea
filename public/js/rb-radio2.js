@@ -81,6 +81,13 @@ Player.prototype = {
                     self.loadSong(index + 1);
                 },
                 onplay: function() {
+
+                    $("#song-play-button").hide();
+                    $("#song-pause-button").show();
+
+                    // Start upating the progress of the track.
+                    requestAnimationFrame(self.step.bind(self));
+
                     setInterval(function() {
                         self.seeker = sound.seek();
 
@@ -99,10 +106,11 @@ Player.prototype = {
 
         // Show the pause button.
         if (sound.state() === 'loaded') {
-
         } else {
             console.log("Loading song", index);
             $("#song-loading").show();
+            $("#song-play-button").hide();
+            $("#song-pause-button").hide();
         }
         $("#radio-readout").show();
         $("#current-song").html(data.file.substring(7));
@@ -117,6 +125,7 @@ Player.prototype = {
 
         // // Update the track display.
         // track.innerHTML = (index + 1) + '. ' + data.title;
+        localStorage.setItem("hates_gogs_radio", "false");
 
         // Keep track of the index we are currently playing.
         self.index = index;
@@ -154,6 +163,8 @@ Player.prototype = {
         var self = this;
         seek = typeof seek === "number" ? seek : 0;
 
+        // Reset progress.
+        document.getElementById("song-progress").style.width = '0%';
 
         // Stop the current track.
         if (self.playlist[self.index].howl) {
@@ -214,9 +225,41 @@ Player.prototype = {
         } else {
             return;
         }
+    },
+    /**
+     * The step called within requestAnimationFrame to update the playback position.
+     */
+    step: function() {
+        var self = this;
+
+        // Get the Howl we want to manipulate.
+        var sound = self.playlist[self.index].howl;
+
+        // Determine our current seek position.
+        var seek = sound.seek() || 0;
+        // timer.innerHTML = self.formatTime(Math.round(seek));
+        document.getElementById("song-progress").style.width = (((seek / sound.duration()) * 100) || 0) + '%';
+
+        // If the sound is still playing, continue stepping.
+        if (sound.playing()) {
+            requestAnimationFrame(self.step.bind(self));
+        }
+    },
+    pause: function() {
+        var self = this;
+
+        // Get the Howl we want to manipulate.
+        var sound = self.playlist[self.index].howl;
+
+        // Puase the sound.
+        sound.pause();
+
+        localStorage.setItem("hates_gogs_radio", "true");
+
+        // Show the play button.
+        $("#song-play-button").show();
+        $("#song-pause-button").hide();
     }
-
-
 }
 
 var player;
@@ -243,6 +286,12 @@ $(function() {
         initializeChat();
     });
 
+    $("#song-play-button").on("click", function () {
+        player.playFromHeldPosition();
+    });
+    $("#song-pause-button").on("click", function () {
+        player.pause();
+    });
 
 
     var songsSearcher = $("input#songs-filterer");

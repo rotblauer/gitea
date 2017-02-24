@@ -230,15 +230,43 @@ func runWeb(ctx *cli.Context) error {
 		}
 	})
 	mm.HandleConnect(func(s *melody.Session) {
+
 		b, e := models.GetDJ()
 		if e != nil {
 			fmt.Println(e)
 		}
-		// "!~~~" for onconnections
+		// "!~~~" for radio station onconnections
 		s.Write([]byte("!" + string(b)))
+
+		//tell the new gopher about all the other gophers already in fo da money
+		for _, info := range models.Gophers {
+			b, em := json.Marshal(info)
+			if em != nil {
+				fmt.Println(em)
+			}
+			s.Write([]byte(":::" + string(b)))
+		}
+
+		//register the new gopher
+		newGopher := models.AddNewGopher(s)
+		ng, ne := json.Marshal(newGopher)
+		if ne != nil {
+			fmt.Println(ne)
+		}
+
+		//and tell everyone else about the new gopher in town
+		mm.BroadcastOthers([]byte(":::"+string(ng)), s)
 	})
 	mm.HandleDisconnect(func(s *melody.Session) {
-		mm.BroadcastOthers([]byte(":::"), s)
+		b, e := json.Marshal(models.Gophers[s])
+		if e != nil {
+			fmt.Println(e)
+		}
+		// tell everyone else the gopher is gone
+		mm.BroadcastOthers([]byte("!:::"+string(b)), s)
+
+		// remove the gopher from the gopher registry
+		delete(models.Gophers, s)
 	})
 
 	m.Get("/chat-ws", reqSignIn, func(resp http.ResponseWriter, req *http.Request) {
