@@ -56,11 +56,6 @@ Player.prototype = {
         seek = typeof seek === 'number' ? seek : 0;
         this.seeker = seek;
 
-        var curSong = self.playlist[self.index].howl;
-        if (curSong) {
-            curSong.unload();
-        }
-
         var data = self.playlist[index];
 
         var dataSrc = self.nextSongLoad.index === index && self.nextSongLoad.data ? [self.nextSongLoad.data] : [data.file];
