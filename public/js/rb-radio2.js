@@ -56,9 +56,10 @@ Player.prototype = {
 
         // Stop the current track.
         // Stops ANY track in its tracks.
+        // Keeps cache thingey size from not 1G.
         for (var x = 0; x < self.playlist.length; x++) {
             if (self.playlist[x].howl) {
-                self.playlist[x].howl.stop();
+                self.playlist[x].howl.unload();
             }
         }
 
@@ -209,6 +210,11 @@ Player.prototype = {
 
         console.log("Preloading ", data.file);
 
+        // It's already loaded!
+        if (self.playlist[index].howl) {
+            return;
+        }
+
         var preload = new createjs.LoadQueue();
         preload.addEventListener("fileload", function(event) {
 
@@ -223,8 +229,6 @@ Player.prototype = {
             $(".list-song").each(function(i, el) {
                 if (i === index) {
                     $(el).addClass("preloaded");
-                } else {
-                    $(el).removeClass("preloaded");
                 }
             });
 
