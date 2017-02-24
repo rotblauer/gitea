@@ -271,7 +271,7 @@ $(function() {
     $.getJSON("/r/music", function(files) {
         var playables = [];
         for (var i = 0; i < files.length; i++) {
-            if (/\.mp3|\.m4a$/i.test(files[i])) {
+            if (!( /\.mp3|\.m4a$/i.test(files[i]) )) {
                 continue;
             } // filter out the album covers
             playables.push({
