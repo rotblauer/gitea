@@ -240,7 +240,7 @@ Player.prototype = {
             delete self.preloader[index];
 
             $(".list-song").each(function(i, el) {
-                if (i === index) {
+                if (i === index || self.playlist[i].howl) {
                     $(el).addClass("preloaded");
                 } else {
                     $(el).removeClass("preloaded");
