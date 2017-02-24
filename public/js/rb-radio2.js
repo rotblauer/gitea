@@ -183,9 +183,6 @@ Player.prototype = {
     loadSong: function(index) {
         var self = this;
 
-        // clear it out
-        self.nextSongLoad = null;
-
         index = typeof index === 'number' ? index : self.index;
         var data = self.playlist[index];
 
@@ -194,6 +191,8 @@ Player.prototype = {
         var preload = new createjs.LoadQueue();
         preload.addEventListener("fileload", function(event) {
 
+            // clear it out
+            self.nextSongLoad = null;
 
             console.log("Finished preloading.", event);
             // event.result <- song
