@@ -23,6 +23,7 @@ var Player = function(playlist) {
     this.index = 0;
     this.seeker = 0;
     this.nextSongLoad = null;
+    this.dataStream = null;
 
     // clear display out (was getting called 2x and i dunno why)
     $("#songs-list").html('');
@@ -51,6 +52,7 @@ Player.prototype = {
     play: function(index, seek) {
         var self = this;
         var sound;
+        var dataSrc;
 
         // Stop the current track.
         if (self.playlist[self.index].howl) {
@@ -63,11 +65,24 @@ Player.prototype = {
 
         var data = self.playlist[index];
 
-        var dataSrc = self.nextSongLoad && ( self.nextSongLoad.index === index ) && (self.nextSongLoad.index === self.index+1) && self.nextSongLoad.data ? [self.nextSongLoad.data] : [data.file];
+        // var dataSrc = self.nextSongLoad && ( self.nextSongLoad.index === index ) && (self.nextSongLoad.index === self.index+1) && self.nextSongLoad.data ? [self.nextSongLoad.data] : [data.file];
+
+        if (self.nextSongLoad &&
+            self.nextSongLoad.index === index &&
+            self.nextSongLoad.data) {
+
+            // this is a handoff to hopefully not overwrite the preloaded blob data?
+            self.dataStream = [self.nextSongLoad.data];
+
+            dataSrc = self.dataStream;
+        } else {
+            dataSrc = [data.file];
+        }
 
         // If we already loaded this track, use the current one.
         // Otherwise, setup and load a new Howl.
-        if (data.howl) {
+        // TESTING TO NEVER DO IT
+        if (data.howl && false) {
             sound = data.howl;
         } else {
             console.log("Playing from data src:", dataSrc);
@@ -76,7 +91,7 @@ Player.prototype = {
                 html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
                 format: ["mp3", "m4a", "aac"],
                 onend: function() {
-                    self.skipTo(index + 1);
+                    self.skipTo(self.index + 1);
                 },
                 onload: function() {
                     $("#song-loading").hide();
@@ -191,10 +206,8 @@ Player.prototype = {
         var preload = new createjs.LoadQueue();
         preload.addEventListener("fileload", function(event) {
 
-            // clear it out
-            self.nextSongLoad = null;
-
             console.log("Finished preloading.", event);
+
             // event.result <- song
             self.nextSongLoad = {
                 index: index,
