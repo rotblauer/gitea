@@ -198,6 +198,9 @@ Player.prototype = {
     loadSong: function(index) {
         var self = this;
 
+        // clear it out in case the currenlty playing song finished and we skipTo the next song before the preloader finishes
+        self.nextSongLoad = null;
+
         index = typeof index === 'number' ? index : self.index;
         var data = self.playlist[index];
 
