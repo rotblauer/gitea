@@ -55,8 +55,11 @@ Player.prototype = {
         var dataSrc;
 
         // Stop the current track.
-        if (self.playlist[self.index].howl) {
-            self.playlist[self.index].howl.stop();
+        // Stops ANY track in its tracks.
+        for (var x = 0; x < self.playlist.length; x++) {
+            if (self.playlist[x].howl) {
+                self.playlist[x].howl.stop();
+            }
         }
 
         index = typeof index === 'number' ? index : self.index;
