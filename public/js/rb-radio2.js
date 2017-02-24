@@ -52,6 +52,11 @@ Player.prototype = {
         var self = this;
         var sound;
 
+        // Stop the current track.
+        if (self.playlist[self.index].howl) {
+            self.playlist[self.index].howl.stop();
+        }
+
         index = typeof index === 'number' ? index : self.index;
         seek = typeof seek === 'number' ? seek : 0;
         this.seeker = seek;
