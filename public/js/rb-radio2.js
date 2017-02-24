@@ -202,7 +202,7 @@ Player.prototype = {
                 data: event.result.src
             };
 
-            $(".list-song")[index].addClass("preloaded");
+            $(".list-song:nth-of-type(" + index+1 + ")").addClass("preloaded");
 
         });
         preload.loadFile(data.file);
