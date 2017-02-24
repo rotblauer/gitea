@@ -117,7 +117,8 @@ Player.prototype = {
             $("#song-pause-button").hide();
         }
         $("#radio-readout").show();
-        $("#current-song").html(data.file.substring(7).split("/")[-1]);
+        var disp = data.file.substring(7).split("/");
+        $("#current-song").html(disp[disp.length-1]);
 
         $(".list-song").each(function(i, el) {
             if ($(el).text() !== data.file.substring(7)) {
