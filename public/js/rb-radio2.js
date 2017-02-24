@@ -54,22 +54,26 @@ Player.prototype = {
         var sound;
         var dataSrc;
 
-        // Stop the current track.
-        // Stops ANY track in its tracks.
-        // Keeps cache thingey size from not 1G.
-        for (var x = 0; x < self.playlist.length; x++) {
-            if (x !== index &&
-                x !== self.index &&
-                x !== index+1 &&
-                self.playlist[x].howl &&
-                ( self.playlist[x].howl.state() === "loaded" || self.playlist[x].howl.state() === "loading" )) {
-                self.playlist[x].howl.unload();
-            }
-        }
+        // // Stop the current track.
+        // // Stops ANY track in its tracks.
+        // // Keeps cache thingey size from not 1G.
+        // for (var x = 0; x < self.playlist.length; x++) {
+        //     if (x !== index &&
+        //         x !== self.index &&
+        //         x !== index+1 &&
+        //         self.playlist[x].howl &&
+        //         ( self.playlist[x].howl.state() === "loaded" || self.playlist[x].howl.state() === "loading" )) {
+        //         self.playlist[x].howl.unload();
+        //     }
+        // }
 
         index = typeof index === 'number' ? index : self.index;
         seek = typeof seek === 'number' ? seek : 0;
         this.seeker = seek;
+
+        if (self.playlist[self.index].howl) {
+            self.playlist[self.index].howl.stop();
+        }
 
         var data = self.playlist[index];
 
@@ -216,6 +220,7 @@ Player.prototype = {
 
         // It's already loaded!
         if (self.playlist[index].howl) {
+            console.log("Already loaded. Returning.");
             return;
         }
 
@@ -233,6 +238,8 @@ Player.prototype = {
             $(".list-song").each(function(i, el) {
                 if (i === index) {
                     $(el).addClass("preloaded");
+                } else {
+                    $(el).removeClass("preloaded");
                 }
             });
 
