@@ -95,14 +95,11 @@ Player.prototype = {
                 },
                 onload: function() {
                     $("#song-loading").hide();
-
-                    // Keep track of the index we are currently playing.
-                    self.index = index;
+                },
+                onplay: function() {
 
                     // load next song by index
                     self.loadSong(self.index + 1);
-                },
-                onplay: function() {
 
                     $("#song-play-button").hide();
                     $("#song-pause-button").show();
@@ -150,6 +147,8 @@ Player.prototype = {
         // track.innerHTML = (index + 1) + '. ' + data.title;
         localStorage.setItem("hates_gogs_radio", "false");
 
+        // Keep track of the index we are currently playing.
+        self.index = index;
     },
 
     /**
