@@ -22,7 +22,7 @@ var Player = function(playlist) {
     this.playlist = playlist;
     this.index = 0;
     this.seeker = 0;
-    this.nextSongLoad = {};
+    this.nextSongLoad = null;
 
     // clear display out (was getting called 2x and i dunno why)
     $("#songs-list").html('');
@@ -63,7 +63,7 @@ Player.prototype = {
 
         var data = self.playlist[index];
 
-        var dataSrc = ( self.nextSongLoad.index === index ) && (self.nextSongLoad.index === self.index+1) && self.nextSongLoad.data ? [self.nextSongLoad.data] : [data.file];
+        var dataSrc = self.nextSongLoad && ( self.nextSongLoad.index === index ) && (self.nextSongLoad.index === self.index+1) && self.nextSongLoad.data ? [self.nextSongLoad.data] : [data.file];
 
         // If we already loaded this track, use the current one.
         // Otherwise, setup and load a new Howl.
@@ -182,6 +182,8 @@ Player.prototype = {
     loadSong: function(index) {
         var self = this;
 
+        // clear it out
+        self.nextSongLoad = null;
 
         index = typeof index === 'number' ? index : self.index;
         var data = self.playlist[index];
