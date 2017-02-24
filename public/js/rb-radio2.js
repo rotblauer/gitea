@@ -223,7 +223,7 @@ Player.prototype = {
         console.log("ds", ds);
         if (ds !== null) {
             var d = JSON.parse(ds);
-            self.play(d.index, d.seek);
+            self.skipTo(d.index, d.seek);
         } else {
             return;
         }
