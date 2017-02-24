@@ -70,7 +70,7 @@ Player.prototype = {
             sound = data.howl = new Howl({
                 src: dataSrc, //[data.file],
                 html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
-                format: ["mp3"],
+                format: ["mp3", "m4a", "aac"],
                 onend: function() {
                     self.skipTo(index + 1);
                 },
@@ -271,7 +271,7 @@ $(function() {
     $.getJSON("/r/music", function(files) {
         var playables = [];
         for (var i = 0; i < files.length; i++) {
-            if (files[i].indexOf(".mp3") < 0) {
+            if (files[i].match(/\.mp3|\.m4a$/i)) {
                 continue;
             } // filter out the album covers
             playables.push({
