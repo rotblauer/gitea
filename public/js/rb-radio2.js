@@ -58,7 +58,7 @@ Player.prototype = {
 
         var data = self.playlist[index];
 
-        var dataSrc = self.nextSongLoad.index === index && self.nextSongLoad.data ? [self.nextSongLoad.data] : [data.file];
+        var dataSrc = ( self.nextSongLoad.index === index ) && self.nextSongLoad.data ? [self.nextSongLoad.data] : [data.file];
 
         // If we already loaded this track, use the current one.
         // Otherwise, setup and load a new Howl.
@@ -106,7 +106,7 @@ Player.prototype = {
         // Show the pause button.
         if (sound.state() === 'loaded') {
         } else {
-            console.log("Loading song", index);
+            console.log("Loading song", index, self.playlist[index]);
             $("#song-loading").show();
             $("#song-play-button").hide();
             $("#song-pause-button").hide();
@@ -247,14 +247,13 @@ Player.prototype = {
             requestAnimationFrame(self.step.bind(self));
         }
     },
-    pause: function() {
+    stop: function() {
         var self = this;
 
-        // Get the Howl we want to manipulate.
-        var sound = self.playlist[self.index].howl;
-
-        // Puase the sound.
-        sound.pause();
+        // Stop the current track.
+        if (self.playlist[self.index].howl) {
+            self.playlist[self.index].howl.stop();
+        }
 
         localStorage.setItem("hates_gogs_radio", "true");
 
@@ -292,7 +291,7 @@ $(function() {
         player.playFromHeldPosition();
     });
     $("#song-pause-button").on("click", function () {
-        player.pause();
+        player.stop();
     });
 
 
