@@ -64,7 +64,6 @@
 			  var otherConnectedOperators = [-1];
 	  	        var ipData = {};
 	  	        var maxMessageLength = 5000; // :christmas_treeeeeeeeee:. damn hackers keep pushing the limits of what's possible.
-			  var lastRadioMessage = {};
 
 				var nak = "";
 				function getNAK() {
@@ -341,19 +340,26 @@
 				  // onConnect message about radio station from freya
 				  if (typeof(player) === "undefined") { return; }
 
-				  var p = localStorage.getItem("hates_gogs_radio");
-				  if (p === "true") {
-					  $("#song-play-button").show();
-					  $("#song-pause-button").hide();
-					  return;
-				  }
-
 				  // compare times of local versus server and take whichever is later. the battle for late nite listening...
 					  var datSongS = msgEvt.data.replace("!~~~","");
 					  var datSong = JSON.parse(datSongS);
 
                       var ds = localStorage.getItem("radio_goggles");
 					  ds = JSON.parse(ds);
+
+				  var p = localStorage.getItem("hates_gogs_radio");
+				  if (p === "true") {
+					  $("#song-play-button").show();
+					  $("#song-pause-button").hide();
+
+					  // and your locale gets set to station
+					  // haters can't be choosers
+
+					  ds = datSong;
+                      localStorage.setItem("radio_goggles", JSON.stringify(datSong));
+					  return;
+				  }
+
 
 
 				  // if nothing stored locally, use the radio station
@@ -387,7 +393,22 @@
 
                   var datSongS = msgEvt.data.replace("~~~","");
 			 	  var datSong = JSON.parse(datSongS);
-				  lastRadioMessage = datSong;
+
+				  var p = localStorage.getItem("hates_gogs_radio");
+				  if (p === "true") {
+
+					  // and your locale gets set to station
+					  // haters can't be choosers
+                      localStorage.setItem("radio_goggles", JSON.stringify(datSong));
+					  $("#other-channels").html(
+                          "<i class='octicon octicon-rss'></i> " +
+						  player.playlist[datSong.index].file.substring(7));
+					  $("#other-channels").on("click", function () {
+						  player.skipTo(datSong.index, datSong.seek);
+					  });
+					  return;
+				  }
+
 
 				  // if the song is different than what we're playing, skip to that one
 				  if (datSong.index !== player.index) {

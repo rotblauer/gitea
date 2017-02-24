@@ -209,8 +209,11 @@ Player.prototype = {
         var ds = JSON.stringify(d);
         // work around for why it keeps iterating a lot
         if (s !== 0) {
+
+            var sound = self.playlist[self.index].howl;
+
             localStorage.setItem("radio_goggles", ds);
-            if (typeof(ws) !== "undefined") {
+            if (typeof(ws) !== "undefined" && sound.playing()) {
                 ws.send("~~~" + ds);
             }
         }
