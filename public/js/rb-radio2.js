@@ -82,7 +82,7 @@ Player.prototype = {
         // If we already loaded this track, use the current one.
         // Otherwise, setup and load a new Howl.
         // TESTING TO NEVER DO IT
-        if (data.howl && false) {
+        if (data.howl) {
             sound = data.howl;
         } else {
             console.log("Playing from data src:", dataSrc);
