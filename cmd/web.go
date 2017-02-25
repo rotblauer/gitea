@@ -213,12 +213,13 @@ func runWeb(ctx *cli.Context) error {
 			mm.BroadcastOthers([]byte("!***"), s)
 
 			// changed the radio
-			// will be of the form ~~~<index>
+			// will be of the form ~~~{gopherInfo}
 		} else if strings.HasPrefix(string(msg), "~~~") {
-			if e := models.SaveDJ(msg); e != nil {
+			j, e := models.SaveDJ(msg, s)
+			if e != nil {
 				fmt.Println(e)
 			}
-			mm.BroadcastOthers(msg, s)
+			mm.BroadcastOthers([]byte("~~~"+string(j)), s)
 
 			// sent message
 		} else {
@@ -236,7 +237,7 @@ func runWeb(ctx *cli.Context) error {
 			fmt.Println(e)
 		}
 		// "!~~~" for radio station onconnections
-		s.Write([]byte("!" + string(b)))
+		s.Write([]byte("!~~~" + string(b)))
 
 		//tell the new gopher about all the other gophers already in fo da money
 		for _, info := range models.Gophers {

@@ -61,7 +61,7 @@
 	  	        var text = $("#text");
 	  	        var isTypingDisplay = $("#other-is-typing");
 	  	        var data = [];
-			  var otherConnectedOperators = [-1];
+			  var otherConnectedOperators = [];
 	  	        var ipData = {};
 	  	        var maxMessageLength = 5000; // :christmas_treeeeeeeeee:. damn hackers keep pushing the limits of what's possible.
 
@@ -289,14 +289,11 @@
 					console.log("got message", msgEvt.data);
    				/* console.log("WSonmessage: ", msgEvt);*/
 
-	  	    // If the message is not about another person typing.
-	  				if (msgEvt.data !== "***" && // typing
-						msgEvt.data !== "!***" && // not typing
-						msgEvt.data.indexOf('~~~') !== 0 && // radio update
-						msgEvt.data.indexOf("!~~~") !== 0 && // init radio
-						msgEvt.data.indexOf(":::") !== 0 && // onconnect
-						msgEvt.data.indexOf("!:::") !== 0) { // ondisconnect
-	  	        var formattedMsg = JSON.parse(msgEvt.data);
+			  var metaRegex = /^~~~|^\!~~~|^\*\*\*|^\!\*\*\*|^:::|^\!:::/;
+	  	    // If the message is not a meta message
+	  				if (!metaRegex.test(msgEvt.data)) {
+
+	  					var formattedMsg = JSON.parse(msgEvt.data);
 	  	        hideOtherIsTyping();
 	  	        data.push(formattedMsg);
 
@@ -331,18 +328,19 @@
 
 	  	      // If another person is typing.
 	  	      } else if (msgEvt.data === "***") {
-	  	        // other is typing
 	  	        showOtherIsTyping();
+
 	  	      // Another person is not typing anymore.
 	  	      } else if (msgEvt.data === "!***") {
 	  	        hideOtherIsTyping();
-			  } else if (msgEvt.data.indexOf("!~~~") === 0) {
+
 				  // onConnect message about radio station from freya
+			  } else if (msgEvt.data.indexOf("!~~~") === 0) {
 				  if (typeof(player) === "undefined") { return; }
 
 				  // compare times of local versus server and take whichever is later. the battle for late nite listening...
 					  var datSongS = msgEvt.data.replace("!~~~","");
-					  var datSong = JSON.parse(datSongS);
+					  var datSong = JSON.parse(datSongS).radio;
 
                       var ds = localStorage.getItem("radio_goggles");
 					  ds = JSON.parse(ds);
@@ -392,43 +390,31 @@
 				  $("#other-channels").show();
 
                   var datSongS = msgEvt.data.replace("~~~","");
-			 	  var datSong = JSON.parse(datSongS);
+				  var datGopher = JSON.parse(datSongS);
+			 	  var datSong = datGopher.radio;
 
 				  var p = localStorage.getItem("hates_gogs_radio");
+
+				  updateOperatorsStatus(datGopher, otherConnectedOperators);
+					  updateRadioStationsDisplay(otherConnectedOperators);
+
 				  if (p === "true") {
 
 					  // and your locale gets set to station
 					  // haters can't be choosers
                       localStorage.setItem("radio_goggles", JSON.stringify(datSong));
-					  $("#other-channels").html(
-                          "<i class='octicon octicon-rss'></i> " +
-						  player.playlist[datSong.index].file.substring(7));
-					  $("#other-channels").on("click", function () {
-						  player.skipTo(datSong.index, datSong.seek);
-					  });
+
 					  return;
 				  }
 
 
-				  // if the song is different than what we're playing, skip to that one
-				  if (datSong.index !== player.index) {
-					  $("#other-channels").html(
-                          "<i class='octicon octicon-rss'></i> " +
-						  player.playlist[datSong.index].file.substring(7));
-					  $("#other-channels").on("click", function () {
-						  player.skipTo(datSong.index, datSong.seek);
-					  });
-					  return;
-				  } else {
-					  $("#other-channels").html("Synced.");
-                      return;
-				  }
 
 				  // on connect of an operator
      			} else if (msgEvt.data.indexOf(":::") === 0) {
 					var d = msgEvt.data.replace(":::", "");
 					d = JSON.parse(d);
-					otherConnectedOperators.push(d.id);
+					/* otherConnectedOperators.push({ d.id: d.radio });*/
+					otherConnectedOperators.push(d);
 
 					// update a vizual for that array
 				  updateOperatorsDisplay(otherConnectedOperators);
@@ -439,16 +425,57 @@
 
 				  var d = msgEvt.data.replace("!:::", "");
 				  d = JSON.parse(d);
-
-				  var i = otherConnectedOperators.indexOf(d.id);
-				  otherConnectedOperators.splice(i, 1);
+				  otherConnectedOperators.splice(otherConnectedOperators.indexOf(d),1);
 
 				  updateOperatorsDisplay(otherConnectedOperators);
+				  updateRadioStationsDisplay(otherConnectedOperators);
 
-
-				  $("#other-channels").hide();
+				  // $("#other-channels").hide();
 			  }
 	  	  };
+
+			  function updateOperatorsStatus(gopherInfo, operators) {
+
+				  for (var i = 0; i < operators.length; i++) {
+					  if (operators[i].id === gopherInfo.id) {
+						operators[i] = gopherInfo;
+					  }
+				  }
+
+			  }
+
+			  function updateRadioStationsDisplay(operators) {
+				  for (var i = 0; i < operators.length; i++) {
+					  $("#rss-radio-" + operators[i].id).off("click");
+				  }
+
+				  // clear out... could be better
+				  $("#other-channels").html("");
+
+				  for (var i = 0; i < operators.length; i++) {
+					  var op = operators[i];
+					  var p = $("<p></p>");
+					  var pStream = $("<span></span>");
+					  pStream.attr("id", "rss-radio-" + op.id);
+					  pStream.attr("index", op.radio.index);
+					  pStream.attr("seek", op.radio.seek);
+					  var song;
+					  if (op.radio.index === player.index) {
+						  song = "Synced";
+					  } else {
+						  song = op.radio.file.substring(7);
+					  }
+					  pStream.html("<i class='octicon octicon-rss'></i> " + op.id + ": " + song);
+					  $("#other-channels").append(p);
+					  p.append(pStream);
+					  $("#rss-radio-" + op.id).on("click", function () {
+						  var i = +$(this).attr("index");
+						  var s = +$(this).attr("seek");
+						  player.skipTo(i, s);
+					  });
+
+				  }
+			  }
 
 			  function updateOperatorsDisplay(operators) {
 console.log("operators", operators);
@@ -456,7 +483,7 @@ console.log("operators", operators);
 				  var catClass = cat.attr("class");
 				  var catSrc = cat.attr("src");
 				  $(".item.brand").html("");
-				  for (var i = 0; i < operators.length; i++) {
+				  for (var x = 0; x < operators.length + 1; x++) {
 					  var c = $("<img />");
 					  c.attr("class", catClass);
 					  c.attr("src", catSrc);

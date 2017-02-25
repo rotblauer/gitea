@@ -258,7 +258,8 @@ Player.prototype = {
         var d = {
             index: i,
             seek: s,
-            time: new Date().getTime()
+            time: new Date().getTime(),
+            file: self.playlist[i].file
         };
         var ds = JSON.stringify(d);
         // work around for why it keeps iterating a lot

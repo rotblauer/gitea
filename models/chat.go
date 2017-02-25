@@ -83,8 +83,17 @@ type Drawings []Drawing
 
 // GopherInfo stores which gopher and in fo the money
 type GopherInfo struct {
-	ID int `json:"id"`
-	// Radio string `json:"radio"`
+	ID    int         `json:"id"`
+	Name  string      `json:"name"`
+	Radio GopherRadio `json:"radio"`
+}
+
+// GopherRadio structures the radio data
+type GopherRadio struct {
+	Index int     `json:"index"`
+	Seek  float64 `json:"seek"`
+	Time  float64 `json:"time"`
+	File  string  `json:"file"`
 }
 
 // var drawingStorePath = filepath.Join(setting.AppDataPath, "data", "drawing")
@@ -111,14 +120,41 @@ func init() {
 
 // AddNewGopher regissters incoming gohpers
 func AddNewGopher(s *melody.Session) *GopherInfo {
-	Gophers[s] = &GopherInfo{gopherCounter}
+	var emptyRadio = GopherRadio{}
+	Gophers[s] = &GopherInfo{gopherCounter, "", emptyRadio}
 	gopherCounter++
 	return Gophers[s]
 }
 
 // SaveDJ store index, seek, and caller to a plain old text file
-func SaveDJ(incoming []byte) error {
-	return ioutil.WriteFile(filepath.Join(radioDJStorePath, "funk.txt"), incoming, 0664)
+// Returns Gopher Session info (including current radio) or error
+func SaveDJ(incoming []byte, s *melody.Session) ([]byte, error) {
+	incomingS := string(incoming)
+	in := strings.Replace(incomingS, "~~~", "", 1)
+
+	var goRadio GopherRadio
+	var e error
+	e = json.Unmarshal([]byte(in), &goRadio)
+	if e != nil {
+		fmt.Println("Error unmarshalling radio info.", e)
+		return nil, e
+	}
+
+	Gophers[s].Radio = goRadio
+
+	gopherMarshal, e := json.Marshal(Gophers[s])
+	if e != nil {
+		fmt.Println("Error marshaling Gopher[s] info.", e)
+		return nil, e
+	}
+
+	e = ioutil.WriteFile(filepath.Join(radioDJStorePath, "funk.txt"), gopherMarshal, 0664)
+	if e != nil {
+		fmt.Println("Error saving radio.", e)
+	}
+
+	return gopherMarshal, e
+
 }
 
 // GetDJ reads the save file and assembles a string for the websocket onconnect.
