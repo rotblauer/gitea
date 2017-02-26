@@ -116,20 +116,30 @@
                                 <img class="ui mini image" src="{{AppSubUrl}}/img/emoji/cat2.png">
                             </a>
 
+							<style>
+								a.item.gitea-default-left-nav {
+									font-size: 0.8em;
+									}
+							</style>
+
 
                             {{if .IsSigned}}
-                            <a class="item{{if .PageIsDashboard}} active{{end}}" href="{{AppSubUrl}}/">{{.i18n.Tr "dashboard"}}</a>
-                            <a class="item{{if .PageIsIssues}} active{{end}}" href="{{AppSubUrl}}/issues">{{.i18n.Tr "issues"}}</a>
-                            <a class="item{{if .PageIsPulls}} active{{end}}" href="{{AppSubUrl}}/pulls">{{.i18n.Tr "pull_requests"}}</a> {{else}}
-                            <a class="item{{if .PageIsHome}} active{{end}}" href="{{AppSubUrl}}/">{{.i18n.Tr "home"}}</a> {{end}}
+                            <a class="item{{if .PageIsDashboard}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/">{{.i18n.Tr "dashboard"}}</a>
+                            <a class="item{{if .PageIsIssues}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/issues">{{.i18n.Tr "issues"}}</a>
+                            <a class="item{{if .PageIsPulls}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/pulls">{{.i18n.Tr "pull_requests"}}</a> {{else}}
+                            <a class="item{{if .PageIsHome}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/">{{.i18n.Tr "home"}}</a> {{end}}
 
-                            <a class="item{{if .PageIsExplore}} active{{end}}" href="{{AppSubUrl}}/explore/repos">{{.i18n.Tr "explore"}}</a> {{/*
-                            <div class="item">
-                                <div class="ui icon input">
-                                    <input class="searchbox" type="text" placeholder="{{.i18n.Tr " search_project "}}">
-                                    <i class="search icon"></i>
-                                </div>
-                            </div>*/}} {{if .IsSigned}}
+                            <a class="item{{if .PageIsExplore}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/explore/repos">{{.i18n.Tr "explore"}}</a>
+
+
+                            <!-- <div class="item"> -->
+                            <!-- <div class="ui icon input"> -->
+                            <!-- <input class="searchbox" type="text" placeholder="{{.i18n.Tr " search_project "}}"> -->
+                            <!-- <i class="search icon"></i> -->
+                            <!-- </div> -->
+					        <!-- </div> -->
+
+							{{if .IsSigned}}
                             <div class="right menu">
 
 								<style>
@@ -147,6 +157,12 @@
 										color: orange;
 										}
 								</style>
+
+								<span id="disconnected-alert" style="color: darkred; background-color: red; display: none;" class="item" onclick="location.reload();">
+								WebSocket Disconnected
+								</span>
+
+
                                 <span id="drawings-loading-icon" class="item">
 								    <i class="octicon octicon-pencil spinnering"  ></i>
 								</span>
@@ -156,6 +172,8 @@
                                 <!-- <span id="get-radio" style="background-color: white; color: red;" class="item"> -->
 								<!-- <i class="octicon octicon-radio-tower"></i> -->
                                 <!-- </span> -->
+				<button id="song-play-button" class="ui green button item" style="display: none;"><i class="octicon octicon-mute"></i></button>
+				<button id="song-pause-button" class="ui red button item" style="display: none;"><i class="octicon octicon-unmute"></i></button>
 
 								<span class="item" id="get-radio">
 									<span id="current-song"></span>

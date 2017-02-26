@@ -71,10 +71,10 @@ background-color: red;
                 <!-- <em style="color: red;">Pirate radio.</em> -->
 				<div class="ui form" style="max-width: 40%; margin-right: auto; padding-bottom: 10px;">
 				<div class="ui fluid action input">
-                <input id="songs-filterer" name="song-filter" type="text" value="" placeholder="Pirate radio search"/>
+                <input id="songs-filterer" name="song-filter" type="text" value="" placeholder="Johnny Cash"/>
 				<button id="find-playing" class="ui blue button">show playing</button>
-				<button id="song-play-button" class="ui green button" style="display: none;"><i class="octicon octicon-unmute"></i></button>
-				<button id="song-pause-button" class="ui red button" ><i class="octicon octicon-mute"></i></button>
+				<!-- <button id="song-play-button" class="ui green button" style="display: none;"><i class="octicon octicon-unmute"></i></button> -->
+				<!-- <button id="song-pause-button" class="ui red button" ><i class="octicon octicon-mute"></i></button> -->
 				</div>
 				</div>
 
@@ -92,7 +92,7 @@ background-color: red;
 						/* scrollTop: playing.offset().top > $("#playlist").offset().top ?*/
 						/* (playing.offset().top - $("#playlist").offset().top) :*/
 						/* (playing.offset().bottom)*/
-					}, 1000);
+					}, 500);
 				});
 			</script>
 {{ end }}

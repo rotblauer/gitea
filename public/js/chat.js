@@ -225,7 +225,7 @@ function initializeChat() {
         var c = 0;
         for (var i = 0; i < data.length; i++) {
             var msg = data[i];
-            if ((parseInt(msg['unix']) > timeUnixMilliseconds) && (msg['userId'] !== $("#signed-user-id").text())) {
+            if ((parseInt(msg['unix']) > timeUnixMilliseconds) && (msg['userId'] !== userid)) {
                 c++;
             }
         }
@@ -521,7 +521,7 @@ function initializeChat() {
             url: "//textbelt.com/text",
             data: {
                 "number": parseInt(phoneNum),
-                "message": message + "(<3 " + $("#signed-user-name").text() + "@rbgit)"
+                "message": message + "(<3 " + username + "@rbgit)"
             },
             error: function(e) {
                 alert("Error ajax posting sms to " + recipient + "\nCheck the console logs.");
@@ -548,8 +548,8 @@ function initializeChat() {
             countryIsoCode: ipData.country_code,
             tz: ipData.time_zone,
             // sign it
-            userName: $("#signed-user-name").text(),
-            userId: $("#signed-user-id").text()
+            userName: username,
+            userId: userid
         };
     }
 
