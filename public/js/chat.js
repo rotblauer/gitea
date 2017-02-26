@@ -343,6 +343,9 @@ function initializeChat() {
                 var disp = datSong.file.substring(7).split("/");
                 $("#current-song").html(disp[disp.length-1]);
 
+                // preload song even for haters
+                player.loadSong(datSong.index);
+
                 return;
             }
 
