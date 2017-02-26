@@ -24,6 +24,19 @@ var Player = function(playlist) {
     this.seeker = 0;
     this.preloader = {};
 
+	var options = {
+		shouldSort: true,
+		threshold: 0.4,
+		location: 0,
+		distance: 1000,
+		maxPatternLength: 32,
+		minMatchCharLength: 1,
+		keys: [
+			"file"
+		]
+	};
+	this.fuse = new Fuse(this.playlist, options); // "list" is the item array
+
     // clear display out (was getting called 2x and i dunno why)
     $("#songs-list").html('');
 
@@ -177,6 +190,10 @@ Player.prototype = {
 
         // Play the new track.
         self.play(index, seek);
+    },
+
+    search: function(stringy) {
+        return this.fuse.search(stringy);
     },
 
     loadSong: function(index) {
@@ -345,25 +362,30 @@ $(function() {
     songsSearcher.keyup(function(e) {
         var $this = $(this);
         var keyword = $this.val();
+        var results;
 
         if (keyword.length > 1) {
+            results = player.search(keyword);
+        } else {
+            results = player.playlist;
+        }
 
-            var count = 0;
-
-            $(".list-song").each(function(i, el) {
-                if ($(this).text().toLowerCase().indexOf(keyword.toLowerCase()) < 0) {
-                    $(this).hide();
-                } else {
-                    $(this).show();
-                    count++;
+        $("#songs-list").html("");
+        results.forEach(function(song) {
+            var div = $('<div></div>');
+            div.addClass('list-song ui row');
+            div.html(song.file.substring(7));
+            div.on("click", function() {
+                if (player.index !== player.playlist.indexOf(song)) {
+                    player.skipTo(player.playlist.indexOf(song));
                 }
             });
-            $("#songs-count").html(count + " / " + player.playlist.length + " songs");
+            $("#songs-list").append(div);
+        });
+        $("#playlist").scrollTop(0);
 
-        } else {
-            $(".list-song").show();
-            $("#songs-count").html(player.playlist.length + " songs");
-        }
+        $("#songs-count").html(results.length + " / " + player.playlist.length + " songs");
+
     });
 });
 
