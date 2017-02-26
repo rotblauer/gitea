@@ -22,8 +22,6 @@ var Player = function(playlist) {
     this.playlist = playlist;
     this.index = 0;
     this.seeker = 0;
-    this.nextSongLoad = null;
-    this.dataStream = null;
     this.preloader = {};
 
     // clear display out (was getting called 2x and i dunno why)
@@ -53,54 +51,25 @@ Player.prototype = {
     play: function(index, seek) {
         var self = this;
         var sound;
-        var dataSrc;
-
-        // // Stop the current track.
-        // // Stops ANY track in its tracks.
-        // // Keeps cache thingey size from not 1G.
-        // for (var x = 0; x < self.playlist.length; x++) {
-        //     if (x !== index &&
-        //         x !== self.index &&
-        //         x !== index+1 &&
-        //         self.playlist[x].howl &&
-        //         ( self.playlist[x].howl.state() === "loaded" || self.playlist[x].howl.state() === "loading" )) {
-        //         self.playlist[x].howl.unload();
-        //     }
-        // }
 
         index = typeof index === 'number' ? index : self.index;
         seek = typeof seek === 'number' ? seek : 0;
         this.seeker = seek;
 
+        // called before self.index reassigned to this to-play song
         if (self.playlist[self.index].howl) {
             self.playlist[self.index].howl.stop();
         }
 
         var data = self.playlist[index];
 
-        // var dataSrc = self.nextSongLoad && ( self.nextSongLoad.index === index ) && (self.nextSongLoad.index === self.index+1) && self.nextSongLoad.data ? [self.nextSongLoad.data] : [data.file];
-
-        if (self.nextSongLoad &&
-            self.nextSongLoad.index === index &&
-            self.nextSongLoad.data) {
-
-            // this is a handoff to hopefully not overwrite the preloaded blob data?
-            self.dataStream = [self.nextSongLoad.data];
-
-            dataSrc = self.dataStream;
-        } else {
-            dataSrc = [data.file];
-        }
-
         // If we already loaded this track, use the current one.
         // Otherwise, setup and load a new Howl.
-        // TESTING TO NEVER DO IT
         if (data.howl) {
             sound = data.howl;
         } else {
-            console.log("Playing from data src:", dataSrc);
             sound = data.howl = new Howl({
-                src: dataSrc, //[data.file],
+                src: [data.file],
                 html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
                 format: ["mp3", "m4a", "aac"],
                 onend: function() {
@@ -108,9 +77,11 @@ Player.prototype = {
                 },
                 onload: function() {
                     $("#song-loading").hide();
+                    console.log("ONLOAD: Playing from data src:", this.src);
                 },
                 onplay: function() {
 
+                    console.log("ONPLAY: Playing from data src:", this.src);
                     // load next song by index
                     self.loadSong(self.index + 1);
 
@@ -133,8 +104,7 @@ Player.prototype = {
         }
 
         // Begin playing the sound.
-        sound.play();
-        sound.seek(this.seeker);
+        sound.seek(this.seeker).play();
 
         // Show the pause button.
         if (sound.state() === 'loaded') {
@@ -144,6 +114,7 @@ Player.prototype = {
             $("#song-play-button").hide();
             $("#song-pause-button").hide();
         }
+
         $("#radio-readout").show();
         var disp = data.file.substring(7).split("/");
         $("#current-song").html(disp[disp.length-1]);
@@ -211,16 +182,13 @@ Player.prototype = {
     loadSong: function(index) {
         var self = this;
 
-        // clear it out in case the currenlty playing song finished and we skipTo the next song before the preloader finishes
-        self.nextSongLoad = null;
-
         index = typeof index === 'number' ? index : self.index;
         var data = self.playlist[index];
 
         console.log("Preloading ", data.file);
 
         // It's already loaded!
-        if (self.playlist[index].howl) {
+        if (data.howl) {
             console.log("Already loaded. Returning.");
             return;
         }
@@ -230,13 +198,36 @@ Player.prototype = {
 
             console.log("Finished preloading.", event);
 
-            // event.result <- song
-            self.nextSongLoad = {
-                index: index,
-                data: event.result.src
-            };
+            data.howl = new Howl({
+                src: [ event.result.src ],
+                html5: true,
+                format: ["mp3", "m4a", "aac"],
+                onend: function() {
+                    self.skipTo(self.index + 1);
+                },
+                onload: function() {
+                    $("#song-loading").hide();
+                },
+                onplay: function() {
 
-            // unset after that handoff?
+                    // load next song by index
+                    self.loadSong(self.index + 1);
+
+                    $("#song-play-button").hide();
+                    $("#song-pause-button").show();
+
+                    // Start upating the progress of the track.
+                    requestAnimationFrame(self.step.bind(self));
+
+                    setInterval(function() {
+                        self.seeker = data.howl.seek();
+                        // save locally
+                        self.holdPosition(self.index, self.seeker);
+                    }, 3000);
+                }
+            });
+
+            // unset self after handoff?
             delete self.preloader[index];
 
             $(".list-song").each(function(i, el) {
@@ -246,7 +237,6 @@ Player.prototype = {
                     $(el).removeClass("preloaded");
                 }
             });
-
         });
         self.preloader[index].loadFile(data.file);
     },
