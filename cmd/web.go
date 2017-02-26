@@ -221,6 +221,12 @@ func runWeb(ctx *cli.Context) error {
 			}
 			mm.BroadcastOthers([]byte("~~~"+string(j)), s)
 
+			// gopher identifier
+		} else if strings.HasPrefix(string(msg), "iam:::") {
+			updatedGopher := models.UpdateGopherName(msg, s)
+			// return "set:::" +Gopher={id:1, name:ia, radio:{radiodata}}json
+			mm.BroadcastOthers(updatedGopher, s)
+
 			// sent message
 		} else {
 			ps1, err := models.SaveChatMsg(s, msg)

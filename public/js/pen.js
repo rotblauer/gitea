@@ -32,7 +32,7 @@ function getDrawingPositionByNewsItem(nid) {
       "height": $("#userfeeds").height() + 80,
       "position": "absolute",
       "display": "float",
-      "z-index":1000
+      "z-index":999
     };
     return position;
 }
@@ -44,7 +44,7 @@ function buildDrawing(e) {
       currentDrawingData["authorId"] = $(e.currentTarget).data("authorid");
       currentDrawingData["authorName"] = $(e.currentTarget).data("authorname");
         currentDrawingData["position"] = getDrawingPositionByNewsItem(nid);
-      currentDrawingData["position"]["zindex"] = 1000;
+      currentDrawingData["position"]["zindex"] = 999;
 
         //setup holster
         var drawingContainer = $(penTemplate);
@@ -57,7 +57,7 @@ function buildDrawing(e) {
         currentDrawingData["canvasJQ"].attr("id", "canvas-" + nid);
         currentDrawingData["canvasJQ"].attr("height", currentDrawingData.position.height);
         currentDrawingData["canvasJQ"].attr("width", currentDrawingData.position.width);
-        currentDrawingData["canvasJQ"].css({"z-index":1000});
+        currentDrawingData["canvasJQ"].css({"z-index":999});
 
         //stickem in
         $("#news-" + nid).append(drawingContainer);
@@ -91,7 +91,7 @@ function renderDrawing(drawingInfo) {
     drawingPNG.attr("id", "canvas-" + drawingInfo.nid);
     drawingPNG.attr("height", drawingInfo.position.height);
     drawingPNG.attr("width", drawingInfo.position.width);
-    drawingPNG.css({"z-index": 1000});
+    drawingPNG.css({"z-index": 999});
     // drawingPNG.attr("src", drawingInfo.imageData);
     drawingPNG.attr("src", "/drawing/"+drawingInfo.nid+".png");
 
@@ -100,7 +100,7 @@ function renderDrawing(drawingInfo) {
   // drawingCanvas.attr("id", "canvas-"+drawingInfo.nid);
   // drawingCanvas.attr("height", drawingInfo.position.height);
   // drawingCanvas.attr("width", drawingInfo.position.width);
-  // drawingCanvas.css({"z-index": 1000});
+  // drawingCanvas.css({"z-index": 999});
 
   //double check news item exists?
   if ($("#news-" + drawingInfo.nid).length) {

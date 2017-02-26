@@ -75,7 +75,14 @@
     <meta name="theme-color" content="{{ThemeColorMetaTag}}">
 </head>
 
-<body>
+<body >
+
+	<style>
+		.full.height {
+				margin: 55px 0 -92px 0 !important;
+			}
+		footer { height: 60px !important; }
+	</style>
     <div class="full height">
         <noscript>Please enable JavaScript in your browser!</noscript> {{if not .PageIsInstall}}
 
@@ -100,12 +107,12 @@
         </div>
 
 
-        <div id="currency-ticker" class="ui marquee" >
+
+
+        <div class="following bar dark-stripey" style="position: fixed; top:0;">
+
+        <div id="currency-ticker" class="ui marquee" style="position: fixed; bottom: 0;">
         </div>
-
-
-        <div class="following bar dark-stripey" >
-
             <!-- hidden usually... -->
             <div id="christmas-lights-container-box"></div>
 
@@ -159,7 +166,7 @@
 										}
 								</style>
 
-								<span id="disconnected-alert" style="color: darkred; background-color: red; display: none;" class="item" onclick="location.reload();">
+								<span id="disconnected-alert" style="cursor: pointer; color: darkred; background-color: red; display: none;" class="item" onclick="location.reload();">
 								WebSocket Disconnected
 								</span>
 
@@ -176,7 +183,7 @@
 				<button id="song-play-button" class="ui green button item" style="display: none;"><i class="octicon octicon-mute"></i></button>
 				<button id="song-pause-button" class="ui red button item" style="display: none;"><i class="octicon octicon-unmute"></i></button>
 
-								<span class="item" id="get-radio">
+								<span class="item" id="get-radio" style="cursor: pointer;">
 									<span id="current-song"></span>
 									<span style="margin-left: 5px;">
 									<i id="song-loading" class="octicon octicon-ellipsis"></i>
@@ -185,7 +192,7 @@
 
 
                                 <!-- chatty	 -->
-                                <span id="get-chatty" style="background-color: black; color: lightgreen;" class="item">
+                                <span id="get-chatty" style="background-color: black; color: lightgreen; cursor: pointer;" class="item">
 												<i class="octicon octicon-squirrel"></i>
 												<span id="chat-unread-count"></span>
                                 </span>
@@ -320,11 +327,11 @@
         <!-- 	</iframe> -->
         <!-- </div> -->
 
-        <div id="chatty" class="ui container " style="display: none;">
+        <div id="chatty" class="ui container " style="display: none; position: fixed; top: 55px; left: 0; right: 0; z-index: 1000; margin-left: auto; margin-right: auto; ">
             {{ template "chat/chat.tmpl" . }}
         </div>
 
-            <div id="radio" class="ui container" style="display: none;">
+            <div id="radio" class="ui container" style="display: none; position: fixed; top: 55px; left: 0; right: 0; z-index: 1000; margin-left: auto; margin-right: auto;">
 				{{ template "chat/radio.tmpl" . }}
 			</div>
 		{{end}}

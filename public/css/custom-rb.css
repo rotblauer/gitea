@@ -15,8 +15,8 @@
     /* background-color: white; */
     /* border-bottom: 1px solid #DDDDDD; */
     /* box-shadow: 0 0px 0px rgba(0, 0, 0, 0.04); */
-    /* background-color: rgb(20, 20, 20); */
-    background: repeating-linear-gradient(135deg, #111, #111 15px, #112 15px, #112 30px);
+    background-color: rgba(20, 20, 20, 0.89);
+    /* background: repeating-linear-gradient(135deg, #111, #111 15px, #112 15px, #112 30px); */
     /* background: white; */
     /* background: radial-gradient(circle, white 10%, transparent 10%), */
     /* radial-gradient(circle, pink 10%, white 10%) 25px 25px; */
@@ -167,7 +167,7 @@ td.repo-commit-message span p:first-child {
 }
 
 #currency-ticker {
-    background-color: #111;
+    background-color: rgba(181, 181, 181, 0.59);
     /* color: #eee; */
     color: #1e70bf;
 }

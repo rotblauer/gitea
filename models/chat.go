@@ -126,6 +126,21 @@ func AddNewGopher(s *melody.Session) *GopherInfo {
 	return Gophers[s]
 }
 
+// UpdateGopherName changes the gopher's name for the session.
+// chat.js sends this on ws.connect
+func UpdateGopherName(msg []byte, s *melody.Session) []byte {
+	msgString := string(msg)
+	name := strings.Replace(msgString, "iam:::", "", 1)
+	Gophers[s].Name = name
+	b, eb := json.Marshal(Gophers[s])
+	if eb != nil {
+		fmt.Println(eb)
+	}
+
+	prefix := "set:::"
+	return []byte(prefix + string(b))
+}
+
 // SaveDJ store index, seek, and caller to a plain old text file
 // Returns Gopher Session info (including current radio) or error
 func SaveDJ(incoming []byte, s *melody.Session) ([]byte, error) {

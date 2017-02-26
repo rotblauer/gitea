@@ -18,6 +18,20 @@
     overflow: scroll;
 }
 
+sup.operator-name-icon {
+    background-color: dodgerblue;
+    color: white;
+    /* padding: 7px 4px 8px 4px; */
+    padding: 8px 4px;
+    text-align: center;
+    border-radius: 10px;
+    z-index: 1505;
+    position: relative;
+    top: 15px;
+    right: 10px;
+    font-size: 0.7em;
+}
+
 #chat-messages {
     /* display: table; */
     color: lightgreen;

@@ -19,7 +19,7 @@ function initializeChat() {
     var nak = "";
 
     var username = $("#signed-user-name").text().trim();
-    var userid = $("#signed-user-id").text().trim();
+    var userid = +$("#signed-user-id").text().trim();
 
     console.log("signeduserid", username);
     console.log("signedusername", userid);
@@ -250,15 +250,16 @@ function initializeChat() {
 
     // Set last read time to now. On opening and closing chat window.
     $('#get-chatty').on('click', function() {
-        $("#currency-ticker").toggle();
         setLastTimeRead(Date.now());
         setUnreadNotifier(''); // clear notifier
+        $("#currency-ticker span").toggle();
     });
     /* console.log('countMessagesLaterThan', countMessagesLaterThan());*/
 
     ws.onopen = function(evt) {
         console.log('ws connected');
         $('#disconnected-alert').hide();
+        ws.send("iam:::" + username);
 
     };
     ws.onclose = function(evt) {
@@ -269,7 +270,7 @@ function initializeChat() {
         console.log("got message", msgEvt.data);
         /* console.log("WSonmessage: ", msgEvt);*/
 
-        var metaRegex = /^~~~|^\!~~~|^\*\*\*|^\!\*\*\*|^:::|^\!:::/;
+        var metaRegex = /^~~~|^\!~~~|^\*\*\*|^\!\*\*\*|^:::|^\!:::|^set:::/;
         // If the message is not a meta message
         if (!metaRegex.test(msgEvt.data)) {
 
@@ -343,7 +344,7 @@ function initializeChat() {
                 var disp = datSong.file.substring(7).split("/");
                 $("#current-song").html(disp[disp.length-1]);
 
-                // preload song even for haters
+                        // preload song even for haters
                 player.loadSong(datSong.index);
 
                 return;
@@ -416,6 +417,14 @@ function initializeChat() {
             // update a vizual for that array
             updateOperatorsDisplay(otherConnectedOperators);
 
+            // receive name update
+        } else if (msgEvt.data.indexOf("set:::") === 0) {
+            var is = msgEvt.data.replace("set:::","");
+            console.log("json will parse", is);
+            var j = JSON.parse(is);
+            updateOperatorsStatus(j, otherConnectedOperators);
+            updateOperatorsDisplay(otherConnectedOperators);
+
             //on disconnect of an operator
         } else if (msgEvt.data.indexOf("!:::") === 0) {
             console.log("An operator disconnected.");
@@ -425,6 +434,7 @@ function initializeChat() {
             otherConnectedOperators.splice(otherConnectedOperators.indexOf(d), 1);
 
             updateOperatorsDisplay(otherConnectedOperators);
+
             updateRadioStationsDisplay(otherConnectedOperators);
 
             // $("#other-channels").hide();
@@ -452,6 +462,7 @@ function initializeChat() {
         for (var i = 0; i < operators.length; i++) {
             var op = operators[i];
             var p = $("<p></p>");
+            p.css({cursor: "pointer"});
             var pStream = $("<span></span>");
             pStream.attr("id", "rss-radio-" + op.id);
             pStream.attr("index", op.radio.index);
@@ -462,7 +473,7 @@ function initializeChat() {
             } else {
                 song = op.radio.file.substring(7);
             }
-            pStream.html("<i class='octicon octicon-rss'></i> " + op.id + ": " + song);
+            pStream.html("<i class='octicon octicon-rss'></i> " + op.name + " @ " + song);
             $("#other-channels").append(p);
             p.append(pStream);
             $("#rss-radio-" + op.id).on("click", function() {
@@ -485,6 +496,18 @@ function initializeChat() {
             c.attr("class", catClass);
             c.attr("src", catSrc);
             $(".item.brand").first().append(c);
+            $(".item.brand").first().append();
+            // not me
+            if (x !== 0) {
+                var name = operators[x-1].name;
+            } else {
+                var name = username;
+            }
+            var nameIcon = $("<sup></sup>");
+            nameIcon.addClass("operator-name-icon");
+            nameIcon.text(name);
+            $(".item.brand").first().append(nameIcon);
+
         }
     }
     updateOperatorsDisplay(otherConnectedOperators);
