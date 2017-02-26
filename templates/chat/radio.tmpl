@@ -43,13 +43,13 @@ font-size: 0.8em;
 color: red;
 	}
 	#other-channels {
-		position: fixed;
-    top: 140px;
-    right: 10px;
-    z-index: 1000;
+		/* position: fixed; */
+		/* top: 140px; */
+		/* right: 10px; */
+		/* z-index: 1000; */
+		margin-bottom: 5px;
     }
 	#other-channels p span {
-		font-size: 0.85em;
 background-color: dodgerblue;
 		color: white;
 		border-radius: 3px;
@@ -64,7 +64,6 @@ background-color: red;
 			<div id="radio-room" style="">
 
 				<div class="ui right floated" style="text-align: right;">
-			        <div id="other-channels" style="display: none;"></div>
 					<br/>
 					<span id="songs-count"></span>
 				</div>
@@ -76,6 +75,10 @@ background-color: red;
 				<!-- <button id="song-play-button" class="ui green button" style="display: none;"><i class="octicon octicon-unmute"></i></button> -->
 				<!-- <button id="song-pause-button" class="ui red button" ><i class="octicon octicon-mute"></i></button> -->
 				</div>
+				</div>
+
+				<div class="ui row">
+			        <div id="other-channels" style="display: none;"></div>
 				</div>
 
                 <!-- Playlist -->
