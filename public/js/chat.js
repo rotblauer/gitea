@@ -337,6 +337,12 @@ function initializeChat() {
 
                 ds = datSong;
                 localStorage.setItem("radio_goggles", JSON.stringify(datSong));
+
+                // update the song display
+                $("#song-loading").hide();
+                var disp = data.file.substring(7).split("/");
+                $("#current-song").html(disp[disp.length-1]);
+
                 return;
             }
 
@@ -387,6 +393,10 @@ function initializeChat() {
                 // and your locale gets set to station
                 // haters can't be choosers
                 localStorage.setItem("radio_goggles", JSON.stringify(datSong));
+
+                // and update readout
+                var disp = data.file.substring(7).split("/");
+                $("#current-song").html(disp[disp.length-1]);
 
                 return;
             }
