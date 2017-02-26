@@ -340,7 +340,7 @@ function initializeChat() {
 
                 // update the song display
                 $("#song-loading").hide();
-                var disp = data.file.substring(7).split("/");
+                var disp = datSong.file.substring(7).split("/");
                 $("#current-song").html(disp[disp.length-1]);
 
                 return;
@@ -395,7 +395,7 @@ function initializeChat() {
                 localStorage.setItem("radio_goggles", JSON.stringify(datSong));
 
                 // and update readout
-                var disp = data.file.substring(7).split("/");
+                var disp = datSong.file.substring(7).split("/");
                 $("#current-song").html(disp[disp.length-1]);
 
                 return;
