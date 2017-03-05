@@ -38,7 +38,12 @@ var Player = function(playlist) {
 	this.fuse = new Fuse(this.playlist, options); // "list" is the item array
 
     // clear display out (was getting called 2x and i dunno why)
-    $("#songs-list").html('');
+    var $songsList = $('#songs-list');
+    var $songsListParent = $songsList.parent();
+
+    $songsList.detach();
+
+    $songsList.html('');
 
     // Setup the playlist display.
     playlist.forEach(function(song) {
@@ -50,8 +55,11 @@ var Player = function(playlist) {
                 player.skipTo(playlist.indexOf(song));
             }
         });
-        $("#songs-list").append(div);
+        $songsList.append(div);
     });
+
+    $songsListParent.append($songsList);
+
 
     $("#songs-count").html(playlist.length + " songs");
 };
