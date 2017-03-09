@@ -86,17 +86,6 @@
     <div class="full height">
         <noscript>Please enable JavaScript in your browser!</noscript> {{if not .PageIsInstall}}
 
-        <script>
-            $(function() {
-
-                if ({{ .SignedUser.Name }} === 'jl' || {{ .SignedUser.Name }} === 'ia') {
-                    //:prost:
-                    document.cookie = "lang=de-DE";
-                }
-
-            });
-        </script>
-
         <div id="drawing-controls">
             <button id="clearAndQuit">q <i class="octicon octicon-trashcan"></i></button>
             <button id="colorp-black" class="coloredPencils">a</button>
@@ -105,8 +94,6 @@
             <button id="colorp-yellow" class="coloredPencils">f</button>
             <button id="saveDrawing">w <i class="octicon octicon-checklist"></i></button>
         </div>
-
-
 
 
         <div class="following bar dark-stripey" style="position: fixed; top:0;">
