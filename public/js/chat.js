@@ -30,10 +30,9 @@ function initializeChat() {
         return nak;
     }
 
-    function setNAK() {
-        localStorage.setItem("nasa_api_key", "cQiuf0Kpx4hLwOzQIirpStEda690ZmBrwYShcZaT");
-    }
-    setNAK();
+    // function setNAK() {
+    //     localStorage.setItem("nasa_api_key", "");
+    // }
 
     if (getNAK()) {
         $.get("https://api.nasa.gov/planetary/apod?api_key=" + nak, function(res) {
