@@ -89,7 +89,7 @@
         <script>
             $(function() {
 
-                if ({{ .SignedUser.Name }} === 'jl' || 'ia') {
+                if ({{ .SignedUser.Name }} === 'jl' || {{ .SignedUser.Name }} === 'ia') {
                     //:prost:
                     document.cookie = "lang=de-DE";
                 }
