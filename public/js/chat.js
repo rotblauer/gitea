@@ -426,7 +426,7 @@ function initializeChat() {
 
             notify({
                 text: "Cat in.",
-                body: d.name + " is here.",
+                body: j.name + " is here.",
                 tag: Date.now()
             });
 
