@@ -416,13 +416,6 @@ function initializeChat() {
             // update a vizual for that array
             updateOperatorsDisplay(otherConnectedOperators);
 
-            notify({
-                text: "Cat in.",
-                body: d.name + " is here.",
-                tag: Date.now()
-            });
-
-
             // receive name update
         } else if (msgEvt.data.indexOf("set:::") === 0) {
             var is = msgEvt.data.replace("set:::","");
@@ -430,6 +423,13 @@ function initializeChat() {
             var j = JSON.parse(is);
             updateOperatorsStatus(j, otherConnectedOperators);
             updateOperatorsDisplay(otherConnectedOperators);
+
+            notify({
+                text: "Cat in.",
+                body: d.name + " is here.",
+                tag: Date.now()
+            });
+
 
             //on disconnect of an operator
         } else if (msgEvt.data.indexOf("!:::") === 0) {
