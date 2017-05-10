@@ -121,10 +121,11 @@
 							{{if false }}
 							<a class="item{{if .PageIsDashboard}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/">dash</a>
 							<a class="item{{if .PageIsIssues}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/issues">iss</a>
-							<a class="item{{if .PageIsPulls}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/pulls">pr</a> {{else}}
+							<a class="item{{if .PageIsPulls}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/pulls">pr</a> {{else if false}}
 							<a class="item{{if .PageIsHome}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/">{{.i18n.Tr "home"}}</a> {{end}}
-
+							{{ if false }}
 							<a class="item{{if .PageIsExplore}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/explore/repos">{{.i18n.Tr "explore"}}</a>
+							{{ end }}
 
 
 							<!-- <div class="item"> -->
