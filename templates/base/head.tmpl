@@ -2,77 +2,77 @@
 <html>
 
 <head data-suburl="{{AppSubUrl}}">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="author" content="{{if .Repository}}{{.Owner.Name}}{{else}}Gogs - Go Git Service{{end}}" />
-    <meta name="description" content="{{if .Repository}}{{.Repository.Name}}{{if .Repository.Description}} - {{.Repository.Description}}{{end}}{{else}}Gogs (Go Git Service) is a painless self-hosted Git service written in Go{{end}}" />
-    <meta name="keywords" content="go, git, self-hosted, gogs">
-    <meta name="referrer" content="no-referrer" />
-    <meta name="_csrf" content="{{.CsrfToken}}" />
-    <meta name="_suburl" content="{{AppSubUrl}}" /> {{if .GoGetImport}}
-    <meta name="go-import" content="{{.GoGetImport}} git {{.CloneLink.HTTPS}}">
-    <meta name="go-source" content="{{.GoGetImport}} _ {{.GoDocDirectory}} {{.GoDocFile}}"> {{end}}
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="author" content="{{if .Repository}}{{.Owner.Name}}{{else}}Gogs - Go Git Service{{end}}" />
+	<meta name="description" content="{{if .Repository}}{{.Repository.Name}}{{if .Repository.Description}} - {{.Repository.Description}}{{end}}{{else}}Gogs (Go Git Service) is a painless self-hosted Git service written in Go{{end}}" />
+	<meta name="keywords" content="go, git, self-hosted, gogs">
+	<meta name="referrer" content="no-referrer" />
+	<meta name="_csrf" content="{{.CsrfToken}}" />
+	<meta name="_suburl" content="{{AppSubUrl}}" /> {{if .GoGetImport}}
+	<meta name="go-import" content="{{.GoGetImport}} git {{.CloneLink.HTTPS}}">
+	<meta name="go-source" content="{{.GoGetImport}} _ {{.GoDocDirectory}} {{.GoDocFile}}"> {{end}}
 
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="http://goggable.areteh.co" />
-    <meta name="twitter:title" content="Git with Goggles" />
-    <meta name="twitter:description" content="Git is great, beer is good." />
-    <meta name="twitter:image" content="http://goggable.areteh.co/img/emoji/cat2.png" />
-
-
-    <link rel="shortcut icon" href="{{AppSubUrl}}/img/favicon.png" />
-    <!-- safari pin -->
-    <link rel="mask-icon" href="{{AppSubUrl}}/img/rb_pin.svg" color="#0b5394">
-
-    <script src="{{AppSubUrl}}/js/jquery-1.11.3.min.js"></script>
-    <script src="{{AppSubUrl}}/js/libs/jquery.are-you-sure.js"></script>
-    <link rel="stylesheet" href="{{AppSubUrl}}/assets/font-awesome-4.6.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{{AppSubUrl}}/assets/octicons-4.3.0/octicons.min.css"> {{if .RequireSimpleMDE}}
-    <link rel="stylesheet" href="{{AppSubUrl}}/plugins/simplemde-1.10.1/simplemde.min.css">
-    <script src="{{AppSubUrl}}/plugins/simplemde-1.10.1/simplemde.min.js"></script>
-    <script src="{{AppSubUrl}}/plugins/codemirror-5.17.0/addon/mode/loadmode.js"></script>
-    <script src="{{AppSubUrl}}/plugins/codemirror-5.17.0/mode/meta.js"></script>
-    <script>
-        CodeMirror.modeURL = "{{AppSubUrl}}/plugins/codemirror-5.17.0/mode/%N/%N.js";
-    </script>
-    {{end}}
-
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{AppSubUrl}}/css/semantic-2.2.1.min.css">
-    <link rel="stylesheet" href="{{AppSubUrl}}/css/gogs.css?v={{MD5 AppVer}}">
-    <!-- rb-customers -->
-    <link rel="stylesheet" href="{{AppSubUrl}}/css/custom-rb.css">
-
-    <!-- JavaScript -->
-    <script src="{{AppSubUrl}}/js/semantic-2.2.1.min.js"></script>
-    <script src="{{AppSubUrl}}/js/gogs.js?v={{MD5 AppVer}}"></script>
-    <!-- <script src="{{AppSubUrl}}/js/reddit.min.js"> -->
-    <script src="{{AppSubUrl}}/js/money.js"></script>
-    <script src="{{AppSubUrl}}/js/fabric.min.js"></script>
-    <script src="{{AppSubUrl}}/js/howler.min.js"></script>
-    <script src="{{AppSubUrl}}/js/keymaster.js"></script>
-    <script src="{{AppSubUrl}}/js/preloadjs-0.6.2.min.js"></script>
-    <script src="{{AppSubUrl}}/js/fuse.min.js"></script>
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:site" content="http://goggable.areteh.co" />
+	<meta name="twitter:title" content="Git with Goggles" />
+	<meta name="twitter:description" content="Git is great, beer is good." />
+	<meta name="twitter:image" content="http://goggable.areteh.co/img/emoji/cat2.png" />
 
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script> -->
-    <script src="{{AppSubUrl}}/js/marked.js"></script>
+	<link rel="shortcut icon" href="{{AppSubUrl}}/img/favicon.png" />
+	<!-- safari pin -->
+	<link rel="mask-icon" href="{{AppSubUrl}}/img/rb_pin.svg" color="#0b5394">
 
-    <!-- <script src="https://cdn.jsdelivr.net/markdown-it/8.2.2/markdown-it.min.js"></script> -->
+	<script src="{{AppSubUrl}}/js/jquery-1.11.3.min.js"></script>
+	<script src="{{AppSubUrl}}/js/libs/jquery.are-you-sure.js"></script>
+	<link rel="stylesheet" href="{{AppSubUrl}}/assets/font-awesome-4.6.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="{{AppSubUrl}}/assets/octicons-4.3.0/octicons.min.css"> {{if .RequireSimpleMDE}}
+	<link rel="stylesheet" href="{{AppSubUrl}}/plugins/simplemde-1.10.1/simplemde.min.css">
+	<script src="{{AppSubUrl}}/plugins/simplemde-1.10.1/simplemde.min.js"></script>
+	<script src="{{AppSubUrl}}/plugins/codemirror-5.17.0/addon/mode/loadmode.js"></script>
+	<script src="{{AppSubUrl}}/plugins/codemirror-5.17.0/mode/meta.js"></script>
+	<script>
+		CodeMirror.modeURL = "{{AppSubUrl}}/plugins/codemirror-5.17.0/mode/%N/%N.js";
+	</script>
+	{{end}}
 
-    <!-- <script src="{{AppSubUrl}}/js/snowstorm.js"></script> -->
-    <script src="{{AppSubUrl}}/js/js.cookie.js"></script>
-    <link href="{{AppSubUrl}}/css/pen.css" rel="stylesheet" />
-    <script src="{{AppSubUrl}}/js/pen.js"></script>
+	<!-- Stylesheet -->
+	<link rel="stylesheet" href="{{AppSubUrl}}/css/semantic-2.2.1.min.css">
+	<link rel="stylesheet" href="{{AppSubUrl}}/css/gogs.css?v={{MD5 AppVer}}">
+	<!-- rb-customers -->
+	<link rel="stylesheet" href="{{AppSubUrl}}/css/custom-rb.css">
 
-    <!-- our custom scripters -->
-    <script src="{{AppSubUrl}}/js/custom-rb/jquery-extensions.js"></script>
-    <script src="{{AppSubUrl}}/js/custom-rb/custom.js"></script>
-    <script src="{{AppSubUrl}}/js/rb-radio2.js"></script>
+	<!-- JavaScript -->
+	<script src="{{AppSubUrl}}/js/semantic-2.2.1.min.js"></script>
+	<script src="{{AppSubUrl}}/js/gogs.js?v={{MD5 AppVer}}"></script>
+	<!-- <script src="{{AppSubUrl}}/js/reddit.min.js"> -->
+	<script src="{{AppSubUrl}}/js/money.js"></script>
+	<script src="{{AppSubUrl}}/js/fabric.min.js"></script>
+	<script src="{{AppSubUrl}}/js/howler.min.js"></script>
+	<script src="{{AppSubUrl}}/js/keymaster.js"></script>
+	<script src="{{AppSubUrl}}/js/preloadjs-0.6.2.min.js"></script>
+	<script src="{{AppSubUrl}}/js/fuse.min.js"></script>
 
-    <title>{{if .Title}}{{.Title}} - {{end}}{{AppName}}</title>
 
-    <meta name="theme-color" content="{{ThemeColorMetaTag}}">
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script> -->
+	<script src="{{AppSubUrl}}/js/marked.js"></script>
+
+	<!-- <script src="https://cdn.jsdelivr.net/markdown-it/8.2.2/markdown-it.min.js"></script> -->
+
+	<!-- <script src="{{AppSubUrl}}/js/snowstorm.js"></script> -->
+	<script src="{{AppSubUrl}}/js/js.cookie.js"></script>
+	<link href="{{AppSubUrl}}/css/pen.css" rel="stylesheet" />
+	<script src="{{AppSubUrl}}/js/pen.js"></script>
+
+	<!-- our custom scripters -->
+	<script src="{{AppSubUrl}}/js/custom-rb/jquery-extensions.js"></script>
+	<script src="{{AppSubUrl}}/js/custom-rb/custom.js"></script>
+	<script src="{{AppSubUrl}}/js/rb-radio2.js"></script>
+
+	<title>{{if .Title}}{{.Title}} - {{end}}{{AppName}}</title>
+
+	<meta name="theme-color" content="{{ThemeColorMetaTag}}">
 </head>
 
 <body >
@@ -83,33 +83,33 @@
 			}
 		footer { height: 60px !important; }
 	</style>
-    <div class="full height">
-        <noscript>Please enable JavaScript in your browser!</noscript> {{if not .PageIsInstall}}
+	<div class="full height">
+		<noscript>Please enable JavaScript in your browser!</noscript> {{if not .PageIsInstall}}
 
-        <div id="drawing-controls">
-            <button id="clearAndQuit">q <i class="octicon octicon-trashcan"></i></button>
-            <button id="colorp-black" class="coloredPencils">a</button>
-            <button id="colorp-red" class="coloredPencils">s</button>
-            <button id="colorp-blue" class="coloredPencils">d</button>
-            <button id="colorp-yellow" class="coloredPencils">f</button>
-            <button id="saveDrawing">w <i class="octicon octicon-checklist"></i></button>
-        </div>
+		<div id="drawing-controls">
+			<button id="clearAndQuit">q <i class="octicon octicon-trashcan"></i></button>
+			<button id="colorp-black" class="coloredPencils">a</button>
+			<button id="colorp-red" class="coloredPencils">s</button>
+			<button id="colorp-blue" class="coloredPencils">d</button>
+			<button id="colorp-yellow" class="coloredPencils">f</button>
+			<button id="saveDrawing">w <i class="octicon octicon-checklist"></i></button>
+		</div>
 
 
-        <div class="following bar dark-stripey" style="position: fixed; top:0;">
+		<div class="following bar dark-stripey" style="position: fixed; top:0;">
 
-        <div id="currency-ticker" class="ui marquee" style="position: fixed; bottom: 0;">
-        </div>
-            <!-- hidden usually... -->
-            <div id="christmas-lights-container-box"></div>
+		<div id="currency-ticker" class="ui marquee" style="position: fixed; bottom: 0;">
+		</div>
+			<!-- hidden usually... -->
+			<div id="christmas-lights-container-box"></div>
 
-            <div class="ui container" >
-                <div class="ui grid">
-                    <div class="column">
-                        <div class="ui top secondary menu">
-                            <a class="item brand" href="{{AppSubUrl}}/">
-                                <img class="ui mini image" src="{{AppSubUrl}}/img/emoji/cat2.png">
-                            </a>
+			<div class="ui container" >
+				<div class="ui grid">
+					<div class="column">
+						<div class="ui top secondary menu">
+							<a class="item brand" href="{{AppSubUrl}}/">
+								<img class="ui mini image" src="{{AppSubUrl}}/img/emoji/cat2.png">
+							</a>
 
 							<style>
 								a.item.gitea-default-left-nav {
@@ -118,24 +118,24 @@
 							</style>
 
 
-                            {{if .IsSigned}}
-                            <a class="item{{if .PageIsDashboard}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/">{{.i18n.Tr "dashboard"}}</a>
-                            <a class="item{{if .PageIsIssues}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/issues">{{.i18n.Tr "issues"}}</a>
-                            <a class="item{{if .PageIsPulls}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/pulls">{{.i18n.Tr "pull_requests"}}</a> {{else}}
-                            <a class="item{{if .PageIsHome}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/">{{.i18n.Tr "home"}}</a> {{end}}
+							{{if false }}
+							<a class="item{{if .PageIsDashboard}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/">dash</a>
+							<a class="item{{if .PageIsIssues}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/issues">iss</a>
+							<a class="item{{if .PageIsPulls}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/pulls">pr</a> {{else}}
+							<a class="item{{if .PageIsHome}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/">{{.i18n.Tr "home"}}</a> {{end}}
 
-                            <a class="item{{if .PageIsExplore}} active{{end}} gitea-default-left-nav" href="{{AppSubUrl}}/explore/repos">{{.i18n.Tr "explore"}}</a>
+							<a class="item{{if .PageIsExplore}} active{{end}} gitea-default-left-nav" style="font-size: 0.4em;" href="{{AppSubUrl}}/explore/repos">{{.i18n.Tr "explore"}}</a>
 
 
-                            <!-- <div class="item"> -->
-                            <!-- <div class="ui icon input"> -->
-                            <!-- <input class="searchbox" type="text" placeholder="{{.i18n.Tr " search_project "}}"> -->
-                            <!-- <i class="search icon"></i> -->
-                            <!-- </div> -->
-					        <!-- </div> -->
+							<!-- <div class="item"> -->
+							<!-- <div class="ui icon input"> -->
+							<!-- <input class="searchbox" type="text" placeholder="{{.i18n.Tr " search_project "}}"> -->
+							<!-- <i class="search icon"></i> -->
+							<!-- </div> -->
+							<!-- </div> -->
 
 							{{if .IsSigned}}
-                            <div class="right menu">
+							<div class="right menu">
 
 								<style>
 									.following.bar.octicon{ margin-right: 0px !important };
@@ -158,15 +158,15 @@
 								</span>
 
 
-                                <span id="drawings-loading-icon" class="item">
-								    <i class="octicon octicon-pencil spinnering"  ></i>
+								<span id="drawings-loading-icon" class="item">
+									<i class="octicon octicon-pencil spinnering"  ></i>
 								</span>
 
 
 								<!-- radio	 -->
-                                <!-- <span id="get-radio" style="background-color: white; color: red;" class="item"> -->
+								<!-- <span id="get-radio" style="background-color: white; color: red;" class="item"> -->
 								<!-- <i class="octicon octicon-radio-tower"></i> -->
-                                <!-- </span> -->
+								<!-- </span> -->
 				<button id="song-play-button" class="ui green button item" style="display: none;"><i class="octicon octicon-mute"></i></button>
 				<button id="song-pause-button" class="ui red button item" style="display: none;"><i class="octicon octicon-unmute"></i></button>
 
@@ -178,154 +178,154 @@
 								</span>
 
 
-                                <!-- chatty	 -->
-                                <span id="get-chatty" style="background-color: black; color: lightgreen; cursor: pointer;" class="item">
+								<!-- chatty	 -->
+								<span id="get-chatty" style="background-color: black; color: lightgreen; cursor: pointer;" class="item">
 												<i class="octicon octicon-squirrel"></i>
 												<span id="chat-unread-count"></span>
-                                </span>
+								</span>
 
-                                <!-- cat hack -->
-                                <a href="http://chat.areteh.co:5000/hack" style="color: #1e70bf; " target="_blank" class="item">
-                                    <i class="octicon octicon-file"></i></a>
+								<!-- cat hack -->
+								<a href="http://chat.areteh.co:5000/hack" style="color: #1e70bf; " target="_blank" class="item">
+									<i class="octicon octicon-file"></i></a>
 
-                                <!-- <sup><i class="octicon octicon-chevron-right"></i></sup> -->
+								<!-- <sup><i class="octicon octicon-chevron-right"></i></sup> -->
 
 
-                                <!-- etherpad -->
-                                <!-- <a href="http://ether.areteh.co:9001" class="item" style="color: darkblue;" target="_blank"> -->
-                                <!-- ether&nbsp;<i class="octicon octicon-keyboard"></i> -->
-                                <!-- &nbsp;<i class="octicon octicon-chevron-right"></i></a> -->
+								<!-- etherpad -->
+								<!-- <a href="http://ether.areteh.co:9001" class="item" style="color: darkblue;" target="_blank"> -->
+								<!-- ether&nbsp;<i class="octicon octicon-keyboard"></i> -->
+								<!-- &nbsp;<i class="octicon octicon-chevron-right"></i></a> -->
 
-                                <script>
-                                    $('span#get-chatty').click(function() {
-                                        $('#chatty').slideToggle(300);
-                                        window.setTimeout(function() {
-                                            $('#chat-messages-container').scrollTop($('#chat-messages-container').prop('scrollHeight') + 50);
-                                            // fancify animation...
-                                            // $('#chat-messages-container').animate({scrollTop: $('#chat-messages-container').prop('scrollHeight') + 50}, 500);
-                                            return false;
-                                        }, 100);
+								<script>
+									$('span#get-chatty').click(function() {
+										$('#chatty').slideToggle(300);
+										window.setTimeout(function() {
+											$('#chat-messages-container').scrollTop($('#chat-messages-container').prop('scrollHeight') + 50);
+											// fancify animation...
+											// $('#chat-messages-container').animate({scrollTop: $('#chat-messages-container').prop('scrollHeight') + 50}, 500);
+											return false;
+										}, 100);
 
-                                    });
+									});
 									$("#get-radio").click(function () {
 										$('#radio').slideToggle(300);
 									})
-                                </script>
+								</script>
 
 
-                                <div class="ui dropdown head link jump item poping up" data-content="{{.i18n.Tr " create_new "}}" data-variation="tiny inverted">
-                                    <span class="text">
+								<div class="ui dropdown head link jump item poping up" data-content="{{.i18n.Tr " create_new "}}" data-variation="tiny inverted">
+									<span class="text">
 													<i class="octicon octicon-plus"><span class="sr-only">{{.i18n.Tr "create_new"}}</span></i>
-                                    <i class="octicon octicon-triangle-down"></i>
-                                    </span>
-                                    <div class="menu">
-                                        <a class="item" href="{{AppSubUrl}}/repo/create">
-                                            <i class="octicon octicon-plus"></i> {{.i18n.Tr "new_repo"}}
-                                        </a>
-                                        <a class="item" href="{{AppSubUrl}}/repo/migrate">
-                                            <i class="octicon octicon-repo-clone"></i> {{.i18n.Tr "new_migrate"}}
-                                        </a>
-                                        <a class="item" href="{{AppSubUrl}}/org/create">
-                                            <i class="octicon octicon-organization"></i> {{.i18n.Tr "new_org"}}
-                                        </a>
-                                    </div>
-                                    <!-- end content create new menu -->
-                                </div>
-                                <!-- end dropdown menu create new -->
+									<i class="octicon octicon-triangle-down"></i>
+									</span>
+									<div class="menu">
+										<a class="item" href="{{AppSubUrl}}/repo/create">
+											<i class="octicon octicon-plus"></i> {{.i18n.Tr "new_repo"}}
+										</a>
+										<a class="item" href="{{AppSubUrl}}/repo/migrate">
+											<i class="octicon octicon-repo-clone"></i> {{.i18n.Tr "new_migrate"}}
+										</a>
+										<a class="item" href="{{AppSubUrl}}/org/create">
+											<i class="octicon octicon-organization"></i> {{.i18n.Tr "new_org"}}
+										</a>
+									</div>
+									<!-- end content create new menu -->
+								</div>
+								<!-- end dropdown menu create new -->
 
-                                <div class="ui dropdown head link jump item poping up" tabindex="-1" data-content="{{.i18n.Tr " user_profile_and_more "}}" data-variation="tiny inverted">
-                                    <span class="text avatar">
+								<div class="ui dropdown head link jump item poping up" tabindex="-1" data-content="{{.i18n.Tr " user_profile_and_more "}}" data-variation="tiny inverted">
+									<span class="text avatar">
 													<img class="ui small rounded image" src="{{.SignedUser.AvatarLink}}">
 													<span class="sr-only">{{.i18n.Tr "user_profile_and_more"}}</span>
-                                    <i class="octicon octicon-triangle-down" tabindex="-1"></i>
-                                    </span>
-                                    <div class="menu" tabindex="-1">
-                                        <div class="ui header">
-                                            {{.i18n.Tr "signed_in_as"}} <strong>{{.SignedUser.Name}}</strong>
-                                        </div>
+									<i class="octicon octicon-triangle-down" tabindex="-1"></i>
+									</span>
+									<div class="menu" tabindex="-1">
+										<div class="ui header">
+											{{.i18n.Tr "signed_in_as"}} <strong>{{.SignedUser.Name}}</strong>
+										</div>
 
-                                        <div class="divider"></div>
-                                        <a class="item" href="{{AppSubUrl}}/{{.SignedUser.Name}}">
-                                            <i class="octicon octicon-person"></i> {{.i18n.Tr "your_profile"}}
-                                            <!-- Your profile -->
-                                        </a>
-                                        <a class="{{if .PageIsUserSettings}}active{{end}} item" href="{{AppSubUrl}}/user/settings">
-                                            <i class="octicon octicon-settings"></i> {{.i18n.Tr "your_settings"}}
-                                            <!-- Your settings -->
-                                        </a>
-                                        <a class="item" target="_blank" href="http://gogs.io/docs" rel="noreferrer">
-                                            <i class="octicon octicon-question"></i> {{.i18n.Tr "help"}}
-                                            <!-- Help -->
-                                        </a>
-                                        {{if .IsAdmin}}
-                                        <div class="divider"></div>
+										<div class="divider"></div>
+										<a class="item" href="{{AppSubUrl}}/{{.SignedUser.Name}}">
+											<i class="octicon octicon-person"></i> {{.i18n.Tr "your_profile"}}
+											<!-- Your profile -->
+										</a>
+										<a class="{{if .PageIsUserSettings}}active{{end}} item" href="{{AppSubUrl}}/user/settings">
+											<i class="octicon octicon-settings"></i> {{.i18n.Tr "your_settings"}}
+											<!-- Your settings -->
+										</a>
+										<a class="item" target="_blank" href="http://gogs.io/docs" rel="noreferrer">
+											<i class="octicon octicon-question"></i> {{.i18n.Tr "help"}}
+											<!-- Help -->
+										</a>
+										{{if .IsAdmin}}
+										<div class="divider"></div>
 
-                                        <a class="{{if .PageIsAdmin}}active{{end}} item" href="{{AppSubUrl}}/admin">
-                                            <i class="icon settings"></i> {{.i18n.Tr "admin_panel"}}
-                                            <!-- Admin Panel -->
-                                        </a>
-                                        {{end}}
+										<a class="{{if .PageIsAdmin}}active{{end}} item" href="{{AppSubUrl}}/admin">
+											<i class="icon settings"></i> {{.i18n.Tr "admin_panel"}}
+											<!-- Admin Panel -->
+										</a>
+										{{end}}
 
-                                        <div class="divider"></div>
-                                        <a class="item" href="{{AppSubUrl}}/user/logout">
-                                            <i class="octicon octicon-sign-out"></i> {{.i18n.Tr "sign_out"}}
-                                            <!-- Sign Out -->
-                                        </a>
-                                    </div>
-                                    <!-- end content avatar menu -->
-                                </div>
-                                <!-- end dropdown avatar menu -->
-                            </div>
-                            <!-- end signed user right menu -->
+										<div class="divider"></div>
+										<a class="item" href="{{AppSubUrl}}/user/logout">
+											<i class="octicon octicon-sign-out"></i> {{.i18n.Tr "sign_out"}}
+											<!-- Sign Out -->
+										</a>
+									</div>
+									<!-- end content avatar menu -->
+								</div>
+								<!-- end dropdown avatar menu -->
+							</div>
+							<!-- end signed user right menu -->
 
-                            {{else}}
+							{{else}}
 
-                            <!-- 		<a class="item" target="_blank" href="http://gogs.io/docs" rel="noreferrer">{{.i18n.Tr "help"}}</a> -->
-                            <div class="right menu">
-                                {{if .ShowRegistrationButton}}
-                                <a class="item{{if .PageIsSignUp}} active{{end}}" href="{{AppSubUrl}}/user/sign_up">
-                                    <i class="octicon octicon-person"></i> {{.i18n.Tr "register"}}
-                                </a>
-                                {{end}}
-                                <a class="item{{if .PageIsSignIn}} active{{end}}" href="{{AppSubUrl}}/user/login">
-                                    <i class="octicon octicon-sign-in"></i> {{.i18n.Tr "sign_in"}}
-                                </a>
-                            </div>
-                            <!-- end anonymous right menu -->
+							<!-- 		<a class="item" target="_blank" href="http://gogs.io/docs" rel="noreferrer">{{.i18n.Tr "help"}}</a> -->
+							<div class="right menu">
+								{{if .ShowRegistrationButton}}
+								<a class="item{{if .PageIsSignUp}} active{{end}}" href="{{AppSubUrl}}/user/sign_up">
+									<i class="octicon octicon-person"></i> {{.i18n.Tr "register"}}
+								</a>
+								{{end}}
+								<a class="item{{if .PageIsSignIn}} active{{end}}" href="{{AppSubUrl}}/user/login">
+									<i class="octicon octicon-sign-in"></i> {{.i18n.Tr "sign_in"}}
+								</a>
+							</div>
+							<!-- end anonymous right menu -->
 
-                            {{end}}
-                        </div>
-                        <!-- end top menu -->
-                    </div>
-                    <!-- end column -->
-                </div>
-                <!-- end grid -->
-            </div>
-            <!-- end container -->
+							{{end}}
+						</div>
+						<!-- end top menu -->
+					</div>
+					<!-- end column -->
+				</div>
+				<!-- end grid -->
+			</div>
+			<!-- end container -->
 				<div id="song-progress"></div>
 		</div>
-        <!-- end bar -->
+		<!-- end bar -->
 
 
-        <!-- feeling chatty kathy? -->
-        {{if .IsSigned}}
-        <!-- <div id='chatty' class="ui container" style="display: none;"> -->
-        <!-- 	<iframe id="theFrame" src="http://www.chat.areteh.co:5000" style="width:100%; height: 60vh;" frameborder="0"> -->
-        <!-- 	</iframe> -->
-        <!-- </div> -->
+		<!-- feeling chatty kathy? -->
+		{{if .IsSigned}}
+		<!-- <div id='chatty' class="ui container" style="display: none;"> -->
+		<!-- 	<iframe id="theFrame" src="http://www.chat.areteh.co:5000" style="width:100%; height: 60vh;" frameborder="0"> -->
+		<!-- 	</iframe> -->
+		<!-- </div> -->
 
-        <div id="chatty" class="ui container " style="display: none; position: fixed; top: 55px; left: 0; right: 0; z-index: 1000; margin-left: auto; margin-right: auto; ">
-            {{ template "chat/chat.tmpl" . }}
-        </div>
+		<div id="chatty" class="ui container " style="display: none; position: fixed; top: 55px; left: 0; right: 0; z-index: 1000; margin-left: auto; margin-right: auto; ">
+			{{ template "chat/chat.tmpl" . }}
+		</div>
 
-            <div id="radio" class="ui container" style="display: none; position: fixed; top: 55px; left: 0; right: 0; z-index: 1000; margin-left: auto; margin-right: auto;">
+			<div id="radio" class="ui container" style="display: none; position: fixed; top: 55px; left: 0; right: 0; z-index: 1000; margin-left: auto; margin-right: auto;">
 				{{ template "chat/radio.tmpl" . }}
 			</div>
 		{{end}}
 
 
 		{{end}} {{/*
-    </div>
+	</div>
 </body>
 
 </html>
