@@ -119,7 +119,7 @@ function initializeChat() {
             // ps += strongifyHTML(line["userName"]);
             // ps += " $ ";
 
-            ps += "<img style='max-height: 28px; max-width: 28px; border: 14px; display: float; margin-right: 5px; margin-bottom: -.5em;' src='/avatars/" + line['userId'] + "'/>";
+            ps += "<img style='max-height: 1.6em; max-width: 1.6em; border: 14px; display: float; margin-right: 5px; margin-bottom: -.5em;' src='/avatars/" + line['userId'] + "'/>";
 
         } else {
             ps += strongifyHTML(line["city"]);
