@@ -110,20 +110,25 @@ function initializeChat() {
         var timeFormat = "kk:mmdddDMMM";
         // var ps = "<div style='display: table-cell;vertical-align: top; min-width:300px;' >";
         var ps = "<div class='ui five wide column' style='text-align: right;'>";
-        ps += "<span style='color: palegreen;'>" + formatDate(line["unix"], timeFormat) + ",";
+        ps += "<span style='color: palegreen; font-size: 0.823em;'>";
         // if have user id, we should
         if (line['userId'] > 0) {
             //ps += strongifyHTML(line["userName"] + "@" + line["city"]) + " $ " + "</div>";
-            ps += line["city"];
-            ps += " "
-            ps += strongifyHTML(line["userName"]);
-            ps += " $ ";
-            ps += "</span>"
-            ps += "</div>";
+            // ps += line["city"];
+            // ps += " "
+            // ps += strongifyHTML(line["userName"]);
+            // ps += " $ ";
+
+            ps += "<img style='max-height: 22px; max-width: 22px; border: 10px; display: block; margin: 0 auto;' src='/avatars/" + line['userId'] + "'/>";
+
         } else {
-            ps += strongifyHTML(line["city"]) + " $ " + "</div>";
+            ps += strongifyHTML(line["city"]);
         }
 
+        ps += formatDate(line["unix"], timeFormat) + " ";
+        ps += " $ " + "</span>";
+
+        ps += "</div>";
 
         if (line["message"].length > maxMessageLength) {
             m = line["message"].substring(0, maxMessageLength);
