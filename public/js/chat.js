@@ -110,7 +110,7 @@ function initializeChat() {
         var timeFormat = "kk:mmdddDMMM";
         // var ps = "<div style='display: table-cell;vertical-align: top; min-width:300px;' >";
         var ps = "<div class='ui five wide column' style='text-align: right;'>";
-        ps += "<span style='color: palegreen; font-size: 0.823em;'>";
+        ps += "<span style='color: palegreen;'>";
         // if have user id, we should
         if (line['userId'] > 0) {
             //ps += strongifyHTML(line["userName"] + "@" + line["city"]) + " $ " + "</div>";
@@ -119,7 +119,7 @@ function initializeChat() {
             // ps += strongifyHTML(line["userName"]);
             // ps += " $ ";
 
-            ps += "<img style='max-height: 22px; max-width: 22px; border: 10px; display: block; margin: 0 auto;' src='/avatars/" + line['userId'] + "'/>";
+            ps += "<img style='max-height: 28px; max-width: 28px; border: 14px; display: float; margin-right: 5px; margin-bottom: -.5em;' src='/avatars/" + line['userId'] + "'/>";
 
         } else {
             ps += strongifyHTML(line["city"]);
