@@ -112,6 +112,7 @@ function initializeChat() {
         var ps = "<div class='ui five wide column' style='text-align: right;'>";
         ps += "<span style='color: palegreen;'>";
         // if have user id, we should
+        ps += formatDate(line["unix"], timeFormat) + " ";
         if (line['userId'] > 0) {
             //ps += strongifyHTML(line["userName"] + "@" + line["city"]) + " $ " + "</div>";
             // ps += line["city"];
@@ -119,13 +120,13 @@ function initializeChat() {
             // ps += strongifyHTML(line["userName"]);
             // ps += " $ ";
 
-            ps += "<img style='max-height: 1.4em; max-width: 1.4em; border: 14px; display: float; margin-right: 5px; margin-top: 0.75em;' src='/avatars/" + line['userId'] + "'/>";
-
+            // ps += "<img style='max-height: 1.4em; max-width: 1.4em; border: 10px solid white; margin-right: 5px;' src='/avatars/" + line['userId'] + "'/>";
+            ps += "| " + line["userName"];
         } else {
             ps += strongifyHTML(line["city"]);
         }
 
-        ps += formatDate(line["unix"], timeFormat) + " ";
+
         ps += " $ " + "</span>";
 
         ps += "</div>";
