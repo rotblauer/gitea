@@ -310,12 +310,12 @@
 
 		<!-- feeling chatty kathy? -->
 		{{if .IsSigned}}
-		<!-- <div id='chatty' class="ui" style="display: none;"> -->
+		<!-- <div id='chatty' class="ui container" style="display: none;"> -->
 		<!-- 	<iframe id="theFrame" src="http://www.chat.areteh.co:5000" style="width:100%; height: 60vh;" frameborder="0"> -->
 		<!-- 	</iframe> -->
 		<!-- </div> -->
 
-		<div id="chatty" class="ui" style="display: none; position: fixed; top: 55px; left: 0; right: 0; z-index: 1000; margin-left: auto; margin-right: auto; ">
+		<div id="chatty" class="ui container " style="display: none; position: fixed; top: 55px; left: 0; right: 0; z-index: 1000; margin-left: auto; margin-right: auto; ">
 			{{ template "chat/chat.tmpl" . }}
 		</div>
 

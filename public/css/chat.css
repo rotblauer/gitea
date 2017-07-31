@@ -40,13 +40,15 @@ sup.operator-name-icon {
     color: lightgreen;
     font-family: monospace;
     /* overflow: scroll; */
-    max-height: 90vh;
+    max-height: 60vh;
     padding-top: 20px;
 }
 
-/*#chat-messages span, p, code {
+#chat-messages span,
+p,
+code {
     line-height: 1.6em;
-}*/
+}
 
 #catRoom code {
     color: darkred;
@@ -57,7 +59,6 @@ sup.operator-name-icon {
 
 div.chat-message p {
     text-overflow: wrap;
-    padding: 0.3rem;
 }
 
 #chat-messages-container:hover {
