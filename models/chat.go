@@ -1,14 +1,10 @@
 package models
 
 import (
-	"code.gitea.io/gitea/modules/setting"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/boltdb/bolt"
-	"github.com/olahol/melody"
-	ghfmd "github.com/shurcooL/github_flavored_markdown"
 	"image"
 	"image/png"
 	"io/ioutil"
@@ -17,22 +13,32 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
+
+	"code.gitea.io/gitea/modules/setting"
+	"github.com/boltdb/bolt"
+	"github.com/olahol/melody"
+	ghfmd "github.com/shurcooL/github_flavored_markdown"
 )
 
 // ChatMessageForm is exported.
 type ChatMessageForm struct {
-	Unix           string `json:"unix"`
-	UnixNano       string `json:"unixNano"`
-	Message        string `json:"message"`
-	IP             string `json:"ip"`
-	Lat            string `json:"lat"`
-	Lon            string `json:"lon"`
-	City           string `json:"city"`
-	Subdiv         string `json:"subdiv"`
-	CountryIsoCode string `json:"countryIsoCode"`
-	Tz             string `json:"tz"`
-	UserID         int    `json:"userId"`
-	UserName       string `json:"userName"`
+	Unix            string `json:"unix"`
+	UnixNano        string `json:"unixNano"`
+	Message         string `json:"message"`
+	RawMessage      string `json:"rawMessage"`
+	IP              string `json:"ip"`
+	Lat             string `json:"lat"`
+	Lon             string `json:"lon"`
+	City            string `json:"city"`
+	Subdiv          string `json:"subdiv"`
+	CountryIsoCode  string `json:"countryIsoCode"`
+	Tz              string `json:"tz"`
+	UserID          int    `json:"userId"`
+	UserName        string `json:"userName"`
+	IsQuery         bool   `json:"isQuery"`
+	IsQueryResponse bool   `json:"queryResponse"`
+	QueryResponseTo string `json:"queryResponseTo"`
 }
 
 // Drawing contains a JSONifies version of the canvas svg drawing and positioning and id/time data
@@ -355,10 +361,14 @@ func DeleteDrawing(did string) error {
 }
 
 // AllChatMsgs queries for all chat messages in bucket "chat."
-func AllChatMsgs() (ChatMessages, error) {
+func AllChatMsgs(withQueryResponses bool, limit int64) (ChatMessages, error) {
 
 	var msgs ChatMessages
 	var err error
+
+	if limit == 0 {
+		limit = 100
+	}
 
 	// GetDB() called directly because is in package in models/models.go
 	err = GetDB().View(func(tx *bolt.Tx) error {
@@ -371,6 +381,11 @@ func AllChatMsgs() (ChatMessages, error) {
 			for chatkey, chatval := c.First(); chatkey != nil; chatkey, chatval = c.Next() {
 				var msg ChatMessageForm
 				json.Unmarshal(chatval, &msg)
+				if !withQueryResponses {
+					if msg.IsQueryResponse {
+						continue
+					}
+				}
 				msgs = append(msgs, msg)
 			}
 		} else {
@@ -382,10 +397,94 @@ func AllChatMsgs() (ChatMessages, error) {
 
 	// Just last 100 if more than 100 msgs exist.
 	// TODO: Paginate.
+	// TODO: Only iterate and collect the number we need, don't store and ALL messages everytime
 	if len(msgs) > 100 {
 		return msgs[len(msgs)-100:], err
 	}
 	return msgs, err
+}
+
+func ChatMsgSearch(ps1 []byte) (ChatMessageForm, error) {
+	var p ChatMessageForm
+
+	// 1502037081073740949 <- robotcat
+	// 1502037081079600 <- js
+	var msgs ChatMessages
+	var out = ChatMessageForm{
+		UserID:          9999,
+		UserName:        "robotcat",
+		Unix:            fmt.Sprintf("%d", time.Now().Unix()),
+		UnixNano:        fmt.Sprintf("%16d", time.Now().UnixNano())[:16],
+		Message:         "\n",
+		IsQuery:         false,
+		IsQueryResponse: true,
+	}
+	if e := json.Unmarshal(ps1, &p); e != nil {
+		return out, e
+	}
+	// set reference id (for later lookup/get features)
+	out.QueryResponseTo = p.UnixNano
+
+	search := p.RawMessage
+	search = strings.TrimSuffix(search, "\n")
+	var err error
+
+	err = GetDB().View(func(tx *bolt.Tx) error {
+		var err error
+		b := tx.Bucket([]byte("chat"))
+
+		if b.Stats().KeyN > 0 {
+			c := b.Cursor()
+			for chatkey, chatval := c.First(); chatkey != nil; chatkey, chatval = c.Next() {
+				var msg ChatMessageForm
+				json.Unmarshal(chatval, &msg)
+				// Don't collect queries or responses.
+				if msg.IsQuery || msg.IsQueryResponse {
+					continue
+				}
+
+				switch search[:1] {
+				// begins with
+				case "^":
+					if strings.HasPrefix(msg.Message, search[1:]) || strings.HasPrefix(msg.RawMessage, search[1:]) {
+						msgs = append(msgs, msg)
+					}
+					// ends with
+				case "$":
+					if strings.HasSuffix(msg.Message, search[1:]) || strings.HasSuffix(msg.RawMessage, search[1:]) {
+						msgs = append(msgs, msg)
+					}
+					// contains
+				case "%":
+					if strings.Contains(msg.Message, search[1:]) || strings.Contains(msg.RawMessage, search[1:]) {
+						msgs = append(msgs, msg)
+					}
+				default:
+					err = errors.New("Not a search query.")
+				}
+			}
+		} else {
+			err = errors.New("No chat messages yet.") // return nil (no error, and msgs are gotten)
+		}
+		return err
+	})
+	if err != nil {
+		return out, err
+	}
+	sort.Sort(msgs)
+
+	if len(msgs) == 0 {
+		out.Message += "No matching results."
+		err = errors.New("No matching query results.")
+		return out, err
+	}
+
+	for _, msg := range msgs {
+		out.Message += fmt.Sprintf("- (%s) %s: %s\n", msg.Unix, msg.UserName, msg.Message)
+	}
+
+	return out, err
+
 }
 
 // SaveChatMsg processes and formats incoming chat messages.
@@ -400,8 +499,15 @@ func SaveChatMsg(s *melody.Session, msg []byte) ([]byte, error) {
 		fmt.Println(err)
 	}
 
+	// Save original plaintext message w/o formatting
+	chatMessage.RawMessage = strings.TrimSuffix(chatMessage.Message, "\n")
 	// Make markdowny
 	chatMessage.Message = string(ghfmd.Markdown([]byte(chatMessage.Message)))
+
+	// TODO: move this damn check to own func
+	if strings.HasPrefix(chatMessage.RawMessage, "^") || strings.HasPrefix(chatMessage.RawMessage, "$") || strings.HasPrefix(chatMessage.RawMessage, "%") {
+		chatMessage.IsQuery = true
+	}
 
 	// Make JSONy for Melody to broadcast.
 	chatMsgJSON, _ := json.Marshal(chatMessage)

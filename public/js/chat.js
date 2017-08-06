@@ -109,11 +109,21 @@ function initializeChat() {
         var out = "<div class='ui row ancatline' >";
         var timeFormat = "kk:mmdddDMMM";
         // var ps = "<div style='display: table-cell;vertical-align: top; min-width:300px;' >";
-        var ps = "<div class='ui five wide column' style='text-align: right;'>";
-        ps += "<span style='color: palegreen;'>";
+        var color = "palegreen";
+        if (line['userName'] === 'ia') {
+            color = "red";
+        }
+        if (line['userName'] === 'jl') {
+            color = "blue";
+        }
+        if (line['userName'] === 'robotcat') {
+            color = "purple";
+        }
+        var ps = "<div class='' style='padding-right: 1em;'>";
+        ps += "<span style='color: " + color + ";'>";
         // if have user id, we should
-        ps += formatDate(line["unix"], timeFormat) + " ";
-        if (line['userId'] > 0) {
+
+        if (line['userId'] > 0 && line['userName'] !== "robotcat") {
             //ps += strongifyHTML(line["userName"] + "@" + line["city"]) + " $ " + "</div>";
             // ps += line["city"];
             // ps += " "
@@ -121,13 +131,18 @@ function initializeChat() {
             // ps += " $ ";
 
             // ps += "<img style='max-height: 1.4em; max-width: 1.4em; border: 10px solid white; margin-right: 5px;' src='/avatars/" + line['userId'] + "'/>";
-            ps += "| " + line["userName"];
+            ps += "(" + formatDate(line["unix"], timeFormat) + ") ";
+            ps += " " + line["userName"];
+        } else if (line['userName'] === "robotcat") {
+            ps += "> "
         } else {
+            ps += "(" + formatDate(line["unix"], timeFormat) + ") ";
             ps += strongifyHTML(line["city"]);
         }
 
-
-        ps += " $ " + "</span>";
+        if (!(line['userName'] === 'robotcat')) {
+            ps += " $ " + "</span>";
+        }
 
         ps += "</div>";
 
@@ -137,11 +152,84 @@ function initializeChat() {
             m = line["message"];
         }
         // var says = '<div class="ui chat-message has-emoji" style="display: table-cell; padding-left: 10px;vertical-align: top;">' + m + '</div>';
-        var says = '<div class="ui eleven wide column chat-message">' + m + '</div>';
+        var says = '<div>' + m + '</div>';
         out += ps + says;
         out += "</div>";
         return out;
     }
+
+    // func formatPS1(line) {
+    //         /* console.log("formatting line: " + JSON.stringify(line));*/
+    //         if (line["unix"] === "") {
+    //             return "";
+    //         }
+    //
+    //         var timeFormat = "kk:mmdddDMMM";
+    //
+    //         var out = "<p class='command'>";
+    //         out += "(" + formatDate(line["unix"], timeFormat) + ") ";
+    //         if (line['userId'] > 0) {
+    //             out += line['userName'];
+    //         } else {
+    //             out += line['city'];
+    //         }
+    //         out += "</p>";
+    //
+    //         out += "<p class='response'>";
+    //
+    //         if (line["message"].length > maxMessageLength) {
+    //             out += line["message"].substring(0, maxMessageLength);
+    //         } else {
+    //             out += line["message"];
+    //         }
+    //         return out;
+    // }
+
+    // function formatPS1(line) {
+    //     /* console.log("formatting line: " + JSON.stringify(line));*/
+    //     var ps = "";
+    //     var m = ''; // printable message
+    //     // check if is a typing status...
+    //     if (line["unix"] === "") {
+    //         return "";
+    //     }
+    //     // var out = "<div style='display: table-row; margin-top: 10px; ' >";
+    //     var out = "<div class='ui row ancatline' >";
+    //     var timeFormat = "kk:mmdddDMMM";
+    //     // var ps = "<div style='display: table-cell;vertical-align: top; min-width:300px;' >";
+    //     var ps = "<div class='ui five wide column' style='text-align: right;'>";
+    //     ps += "<span style='color: palegreen;'>";
+    //     // if have user id, we should
+    //     ps += formatDate(line["unix"], timeFormat) + " ";
+    //     if (line['userId'] > 0) {
+    //         //ps += strongifyHTML(line["userName"] + "@" + line["city"]) + " $ " + "</div>";
+    //         // ps += line["city"];
+    //         // ps += " "
+    //         // ps += strongifyHTML(line["userName"]);
+    //         // ps += " $ ";
+    //
+    //         // ps += "<img style='max-height: 1.4em; max-width: 1.4em; border: 10px solid white; margin-right: 5px;' src='/avatars/" + line['userId'] + "'/>";
+    //         ps += "| " + line["userName"];
+    //     } else {
+    //         ps += strongifyHTML(line["city"]);
+    //     }
+    //
+    //
+    //     ps += " $ " + "</span>";
+    //
+    //     ps += "</div>";
+    //
+    //     if (line["message"].length > maxMessageLength) {
+    //         m = line["message"].substring(0, maxMessageLength);
+    //     } else {
+    //         m = line["message"];
+    //     }
+    //     // var says = '<div class="ui chat-message has-emoji" style="display: table-cell; padding-left: 10px;vertical-align: top;">' + m + '</div>';
+    //     var says = '<div class="ui eleven wide column chat-message">' + m + '</div>';
+    //     out += ps + says;
+    //     out += "</div>";
+    //     return out;
+    // }
 
 
     // get JSON.parsed data now
@@ -159,6 +247,7 @@ function initializeChat() {
 
         // add class .has-emoji to each chat-message's child element type 'p'
         $('.chat-message').children('p').addClass('has-emoji is-chat-p');
+        // $('.response').addClass('has-emoji is-chat-p');
 
         var hasEmoji = document.getElementsByClassName('has-emoji');
         for (var i = 0; i < hasEmoji.length; i++) {

@@ -19,7 +19,9 @@ import (
 
 // GetChatData is called by AJAX on /chat HTML inline JS page load.
 func GetChatData(c *context.Context) {
-	msgs, err := models.AllChatMsgs() // msgs are type []ChatMessageForm
+	wantQRs := c.QueryBool("qr")
+	limit := c.QueryInt64("limit")
+	msgs, err := models.AllChatMsgs(wantQRs, limit) // msgs are type []ChatMessageForm
 	if err != nil {
 		c.JSON(500, err.Error())
 	} else {

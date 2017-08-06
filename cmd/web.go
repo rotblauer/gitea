@@ -234,6 +234,21 @@ func runWeb(ctx *cli.Context) error {
 				fmt.Println(err)
 			}
 			mm.Broadcast(ps1)
+
+			if queryResponse, e := models.ChatMsgSearch(ps1); e == nil {
+				b, be := json.Marshal(queryResponse)
+				if be != nil {
+					fmt.Println(be)
+					return
+				}
+				models.SaveChatMsg(s, b)
+				if err != nil {
+					fmt.Println(err)
+				}
+				mm.Broadcast(b)
+			} else {
+				fmt.Println(e)
+			}
 		}
 	})
 	mm.HandleConnect(func(s *melody.Session) {
