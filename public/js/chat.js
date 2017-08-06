@@ -106,10 +106,10 @@ function initializeChat() {
             return "";
         }
         // var out = "<div style='display: table-row; margin-top: 10px; ' >";
-        var out = "<div class='ui row ancatline' >";
         var timeFormat = "kk:mmdddDMMM";
         // var ps = "<div style='display: table-cell;vertical-align: top; min-width:300px;' >";
         var color = "palegreen";
+        var messageType = "human-message";
         if (line['userName'] === 'ia') {
             color = "red";
         }
@@ -118,8 +118,10 @@ function initializeChat() {
         }
         if (line['userName'] === 'robotcat') {
             color = "purple";
+            messageType = "robot-message";
         }
-        var ps = "<div class='' style='padding-right: 1em;'>";
+        var out = "<div class='ui row ancatline " + messageType +"' >";
+        var ps = "<div style='padding-right: 1em;'>";
         ps += "<span style='color: " + color + ";'>";
         // if have user id, we should
 

@@ -16,6 +16,10 @@
 box-shadow: 1px 4px 5px 0px rgba(136,136,136,1);
 }
 
+.mess-message {
+    padding-right:
+}
+
 #chat-messages-container {
     height: 100%;
     overflow: scroll;
@@ -152,7 +156,10 @@ div.ui.row.ancatline {
     padding-top: 0;
     padding-bottom: 0 !important;
     margin-top: 0;
-    margin-bottom: 0;
+    margin-bottom: 1em;
+}
+div.ui.row.ancatline.robot-message {
+    margin-top: -1em;
 }
 
 
