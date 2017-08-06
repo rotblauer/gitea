@@ -396,7 +396,7 @@ func AllChatMsgs(withQueryResponses bool, limit int, username string, regx strin
 					if msg.IsQuery {
 						continue
 					}
-					if !re.MatchString(msg.RawMessage) {
+					if !re.MatchString(msg.RawMessage) && !re.MatchString(msg.Message) {
 						continue
 					}
 				}
