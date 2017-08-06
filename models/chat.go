@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -361,13 +362,14 @@ func DeleteDrawing(did string) error {
 }
 
 // AllChatMsgs queries for all chat messages in bucket "chat."
-func AllChatMsgs(withQueryResponses bool, limit int64) (ChatMessages, error) {
+func AllChatMsgs(withQueryResponses bool, limit int, username string, regx string) (ChatMessages, error) {
 
 	var msgs ChatMessages
 	var err error
 
-	if limit == 0 {
-		limit = 100
+	var re *regexp.Regexp
+	if regx != "" {
+		re = regexp.MustCompile(regx)
 	}
 
 	// GetDB() called directly because is in package in models/models.go
@@ -386,6 +388,18 @@ func AllChatMsgs(withQueryResponses bool, limit int64) (ChatMessages, error) {
 						continue
 					}
 				}
+				if username != "" && msg.UserName != username {
+					continue
+				}
+				if re != nil {
+					// Assume that if searching, not searching for past queries.
+					if msg.IsQuery {
+						continue
+					}
+					if !re.MatchString(msg.RawMessage) {
+						continue
+					}
+				}
 				msgs = append(msgs, msg)
 			}
 		} else {
@@ -398,8 +412,8 @@ func AllChatMsgs(withQueryResponses bool, limit int64) (ChatMessages, error) {
 	// Just last 100 if more than 100 msgs exist.
 	// TODO: Paginate.
 	// TODO: Only iterate and collect the number we need, don't store and ALL messages everytime
-	if len(msgs) > 100 {
-		return msgs[len(msgs)-100:], err
+	if len(msgs) > limit {
+		return msgs[len(msgs)-limit:], err
 	}
 	return msgs, err
 }
@@ -480,7 +494,16 @@ func ChatMsgSearch(ps1 []byte) (ChatMessageForm, error) {
 	}
 
 	for _, msg := range msgs {
-		out.Message += fmt.Sprintf("- (%s) %s: %s\n", msg.Unix, msg.UserName, msg.Message)
+		ot := msg.Unix
+
+		i, pe := strconv.ParseInt(ot, 10, 64)
+		if pe != nil {
+			fmt.Println(pe)
+		} else {
+			tm := time.Unix(i/1000, 0)
+			ot = tm.String()
+		}
+		out.Message += fmt.Sprintf("- (%s) %s: %s\n", ot, msg.UserName, msg.Message)
 	}
 
 	return out, err

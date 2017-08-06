@@ -151,8 +151,14 @@ function initializeChat() {
         } else {
             m = line["message"];
         }
+
+        if (line['isQuery']) {
+            color = "gray";
+        } else {
+            color= '';
+        }
         // var says = '<div class="ui chat-message has-emoji" style="display: table-cell; padding-left: 10px;vertical-align: top;">' + m + '</div>';
-        var says = '<div>' + m + '</div>';
+        var says = '<div class="has-emoji" style="color: ' + color + ';">' + m + '</div>';
         out += ps + says;
         out += "</div>";
         return out;
@@ -234,6 +240,7 @@ function initializeChat() {
 
     // get JSON.parsed data now
     function renderData(data) {
+        chat.html("");
         html = "";
         $.each(data, function() {
             // console.log(this);
@@ -246,7 +253,7 @@ function initializeChat() {
         });
 
         // add class .has-emoji to each chat-message's child element type 'p'
-        $('.chat-message').children('p').addClass('has-emoji is-chat-p');
+        // $('.chat-message').children('p').addClass('has-emoji is-chat-p');
         // $('.response').addClass('has-emoji is-chat-p');
 
         var hasEmoji = document.getElementsByClassName('has-emoji');
@@ -272,16 +279,21 @@ function initializeChat() {
         }, 100);
     }
 
-    function getChatJSON() {
+    function getChatJSON(qparams) {
+        url = "/r/chat";
+        if (typeof qparams !== 'undefined' && qparams !== "") {
+            url += "?" + qparams;
+        }
         $.ajax({
             type: "GET",
-            url: "/r/chat",
+            url: url,
             error: function(e) {
                 console.log("Error ajaxing chat data.");
                 console.log(e);
             },
             success: function(res) {
-                console.log('got messages')
+                console.log('got messages');
+                console.log(res);
                     /* console.log("Got AJAX chat/r: ", res);*/
                 data = res;
                 renderData(res);
@@ -382,7 +394,7 @@ function initializeChat() {
             /* console.log("ipData.ip: " + ipData.ip);*/
             /* console.log("formattedMsg['ip']: " + formattedMsg['ip']);*/
 
-            if (ipData.ip !== formattedMsg['ip']) {
+            if (ipData.ip !== formattedMsg['ip'] && !formattedMsg['IsQueryResponse']) {
                 notify({
                     text: strip(formattedMsg['message']),
                     body: formattedMsg['city'],
@@ -710,6 +722,17 @@ function initializeChat() {
     // Push return to send message.
     text.keyup(function(e) {
         if (!e.shiftKey && e.which == 13 && $.trim(text.val()).length > 0) {
+            if (text.val()[0] === "=") {
+                var reg = text.val().substring(1);
+                console.log(reg);
+                // remove newline from pushing enter
+                text.val(text.val().replace(/\s+$/g, ''));
+                // if just = is entered, clear box
+                if (text.val() === "=") {
+                    text.val("");
+                }
+                return getChatJSON(reg);
+            }
             var formattedMsg = makeOutgoingMessage(text.val());
             /* console.log("sending message: " + JSON.stringify(formattedMsg, null, 2));*/
             ws.send(JSON.stringify(formattedMsg));
@@ -723,5 +746,5 @@ function initializeChat() {
         }
     });
     // get data and handle it on doc ready
-    getChatJSON();
+    getChatJSON("");
 }

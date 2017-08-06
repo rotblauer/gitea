@@ -19,6 +19,7 @@ box-shadow: 1px 4px 5px 0px rgba(136,136,136,1);
 #chat-messages-container {
     height: 100%;
     overflow: scroll;
+    padding-top: 1em;
 }
 
 sup.operator-name-icon {
