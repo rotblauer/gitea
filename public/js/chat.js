@@ -721,30 +721,39 @@ function initializeChat() {
         return sendSMS(name, message)
 
     }
+
+    function sendem() {
+        if (text.val()[0] === "=") {
+            var reg = text.val().substring(1);
+            console.log(reg);
+            // remove newline from pushing enter
+            text.val(text.val().replace(/\s+$/g, ''));
+            // if just = is entered, clear box
+            if (text.val() === "=") {
+                text.val("");
+            }
+            return getChatJSON(reg);
+        }
+        var formattedMsg = makeOutgoingMessage(text.val());
+        /* console.log("sending message: " + JSON.stringify(formattedMsg, null, 2));*/
+        ws.send(JSON.stringify(formattedMsg));
+
+        // send sms if @someone
+        delegateSMS(text.val());
+
+        // Reset text value
+        text.val('');
+        $('#count-remaining-characters').text(maxMessageLength.toString() + "/" + maxMessageLength.toString());
+    }
     // Push return to send message.
     text.keyup(function(e) {
         if (!e.shiftKey && e.which == 13 && $.trim(text.val()).length > 0) {
-            if (text.val()[0] === "=") {
-                var reg = text.val().substring(1);
-                console.log(reg);
-                // remove newline from pushing enter
-                text.val(text.val().replace(/\s+$/g, ''));
-                // if just = is entered, clear box
-                if (text.val() === "=") {
-                    text.val("");
-                }
-                return getChatJSON(reg);
-            }
-            var formattedMsg = makeOutgoingMessage(text.val());
-            /* console.log("sending message: " + JSON.stringify(formattedMsg, null, 2));*/
-            ws.send(JSON.stringify(formattedMsg));
-
-            // send sms if @someone
-            delegateSMS(text.val());
-
-            // Reset text value
-            text.val('');
-            $('#count-remaining-characters').text(maxMessageLength.toString() + "/" + maxMessageLength.toString());
+            sendem();
+        }
+    });
+    $("#send-catms").on("click", function() {
+        if ($.trim(text.val()).length > 0) {
+            sendem();
         }
     });
     // get data and handle it on doc ready
