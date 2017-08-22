@@ -751,8 +751,9 @@ function initializeChat() {
             sendem();
         }
     });
-    $("#send-catms").on("click", function() {
+    $("#send-catmsg").on("click", function() {
         if ($.trim(text.val()).length > 0) {
+            console.log('sendiddd');
             sendem();
         }
     });
