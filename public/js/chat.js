@@ -691,13 +691,13 @@ function initializeChat() {
             unixNano: (1000 * (window.performance.timing.navigationStart + window.performance.now())).toString(), // awesome...
             unix: (Date.now() / 1).toString(),
             message: rawMessage.substring(0, maxMessageLength),
-            ip: ipData.ip,
-            lat: ipData.latitude.toString(),
-            lon: ipData.longitude.toString(),
-            city: ipData.city,
-            subdiv: ipData.region_name,
-            countryIsoCode: ipData.country_code,
-            tz: ipData.time_zone,
+            // ip: ipData.ip,
+            // lat: ipData.latitude.toString(),
+            // lon: ipData.longitude.toString(),
+            // city: ipData.city,
+            // subdiv: ipData.region_name,
+            // countryIsoCode: ipData.country_code,
+            // tz: ipData.time_zone,
             // sign it
             userName: username,
             userId: userid
